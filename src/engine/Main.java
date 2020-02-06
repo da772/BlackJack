@@ -2,7 +2,7 @@ package engine;
 
 import application.BlackJack;
 
-public class EntryPoint {
+public class Main {
 
 	public static void main(String[] args) {
 		Application app = new BlackJack();
