@@ -36,6 +36,9 @@
 	- Application
 		- Main Loop
 			- [X] Delta Time
+			- [ ] Frame Cap
+			- [ ] FPS Counter
+			- [ ] Profiling tools
 		- Events
 			- [X] Window Resized
 			- [X] Key Pressed/Released
@@ -45,4 +48,53 @@
 			- [X] Window Closed
 	- Audio
 - Gameplay
-	
+	- Scenes
+		- Main Menu
+			- Settings
+				- [ ] Volume Slider
+				- Window Settings
+					- [ ] Full screen
+					- [ ] Resolution
+			- Game Setup
+				- [ ] Load Game
+				- [ ] Starting cash
+				- [ ] Amount of players
+				- [ ] Amount of decks
+				- [ ] Gametype (BlackJack, Texas Hold Em?, Omaha?)
+		- [ ] BlackJack
+			- Graphical Objects
+				- [ ] Display user's cards
+				- [ ] Display dealer's cards
+				- [ ] Display opponnent's cards
+				- [ ] Display poker board
+				- [ ] Display poker chips on board
+			- UI
+				- [ ] Show player stats (current money)
+				- [ ] Betting options (Slider?, input box? Increase/Decrease Buttons?)
+				- [ ] Hit Button
+				- [ ] Stay Button
+				- [ ] Split Button
+				- [ ] Double Button
+				- [ ] Settings Icon
+				- [ ] Quit Game
+				- [ ] Save Game
+	- Game Manager
+		- BlackJack Manager
+			- [ ] State ( Waiting on players/Your Turn)
+			- [ ] Player Info (Money, Current Cards, Current Bet Amt)
+			- [ ] AI
+				- Info
+				- Logic
+					- [ ] Hitting Logic [Hit chart?](https://www.blackjackapprenticeship.com/wp-content/uploads/2018/08/BJA_Basic_Strategy.jpg)
+					- [ ] Betting Logic
+	- Assets
+		- Images
+			- [ ] Card Sprite Sheet
+			- [ ] Poker board
+			- [ ] UI backgrounds/borders
+		- Sounds
+			- [ ] Card Drawing sound
+			- [ ] Poker Chips falling sound
+			- [ ] Menu Clicks
+			- [ ] Background music
+		
