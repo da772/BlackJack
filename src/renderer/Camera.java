@@ -3,96 +3,62 @@ package renderer;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import math.MatrixMath;
 
+public abstract class Camera {
 
-public class Camera {
+	protected Matrix4f ProjectionMatrix, ViewMatrix, ViewProjectionMatrix;
+	protected Vector3f Position;
+	protected float rotation = 0f;
+	
+	public Camera() {
+		Position = new Vector3f(0,0,0);
+		ProjectionMatrix = new Matrix4f();
+		ViewMatrix = new Matrix4f();
+		ViewProjectionMatrix = new Matrix4f();
+	}
+	
+	protected abstract void RecalculateViewMatrix();
+	public abstract void SetProjection(float left, float right, float bottom, float top);
 
-	private Vector3f position;
-	
-	private Vector3f rotation;
-	
-	private Matrix4f viewMatrix;
-	private Matrix4f projectionMatrix;
-	private Matrix4f viewProjectionMatrix;
-	
-	float left, right, bottom, top,farPlane, nearPlane, fov;
-
-
-	Camera(float left, float right, float bottom, float top, float nearPlane, float farPlane, float fov) {
-		this.left = left;
-		this.bottom = bottom;
-		this.top = top;
-		this.right =right;
-		this.nearPlane = nearPlane;
-		this.farPlane = farPlane;
-		this.fov = fov;
-		
-		this.rotation = new Vector3f();
-		this.position = new Vector3f();
-		
-		CalculateViewProjectionMatrix();
-	}
-	
-	
-	
-	public Vector3f GetPosition() {
-		return position;
-	}
-	
-	public Vector3f GetRotation() {
-		return rotation;
-	}
-	
-	public void SetRotation(Vector3f rot) {
-		this.rotation = rot;
-		CalculateViewProjectionMatrix();
-	}
-	
-	public void SetPosition(Vector3f pos) {
-		this.position = pos;
-		CalculateViewProjectionMatrix();
-	}
-	
-	
-	public Matrix4f GetViewMatrix() {
-		return viewMatrix;
-	}
-	
-	public Matrix4f GetProjectionMatrix() {
-		return projectionMatrix;
-	}
 	public Matrix4f GetViewProjectionMatrix() {
-		return viewProjectionMatrix;
+		return ViewProjectionMatrix;
+	}
+
+	public void SetPosition(final Vector3f position) {
+		this.Position = position;
+		RecalculateViewMatrix();
 	}
 	
-	protected void CalculateViewProjectionMatrix() {
-		CalculateProjectionMatrix();
-		CalculateViewMatrix();
+	public void SetRotation(final float rot) {
+		this.rotation = rot;
+		RecalculateViewMatrix();
 	}
 	
-	protected void CalculateProjectionMatrix() {
-		float aspectRatio = 16.f/9.f;
-		float y_scale = (float)((1f / Math.tan(Math.toRadians(fov/2f))) * aspectRatio);
-		float x_scale = y_scale / aspectRatio;
+	public static class OrthographicCamera extends Camera {
 		
-		float frustum_length = farPlane - nearPlane;
+		public OrthographicCamera(float left, float right, float bottom, float top) {
+			super();
+			ProjectionMatrix.ortho(left, right, -1.f, 1.f, -1.f, 1.f, ProjectionMatrix);
+			RecalculateViewMatrix();
+		}
 		
-		projectionMatrix = new Matrix4f();
-		projectionMatrix.m00(x_scale);
-		projectionMatrix.m11(y_scale);
-		projectionMatrix.m22(((-farPlane+nearPlane)/frustum_length));
-		projectionMatrix.m23(-1);
-		projectionMatrix.m32(-((2*nearPlane*farPlane) / frustum_length));
-		projectionMatrix.m33(0);
+		@Override
+		protected void RecalculateViewMatrix() {
+			ViewMatrix = new Matrix4f();
+			ViewMatrix.identity().translate(Position).rotate((float)Math.toRadians(rotation), new Vector3f(0,0,1f)).invert(ViewMatrix);
+			ProjectionMatrix.mul(ViewMatrix, ViewProjectionMatrix);
+		}
+		
+		@Override
+		public void SetProjection(float left, float right, float bottom, float top) {
+			ProjectionMatrix = new Matrix4f().ortho(left, right, bottom, top, -1.f, 1.f, ProjectionMatrix);
+			ProjectionMatrix.mul(ViewMatrix, ViewProjectionMatrix);
+			RecalculateViewMatrix();
+		}
+		
+		
 		
 	}
-	
-	
-	protected void CalculateViewMatrix() {
-		viewMatrix = MatrixMath.createViewMatrix(position, rotation);
-	}
-	
 	
 	 
 }

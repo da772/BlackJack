@@ -53,23 +53,23 @@ public class ShaderLib {
 			"}" 
 			};
 	
-	public final static String[] Texture_PositionF3_CoordF2_V_T_Shader = new String[] {
-			"#version 330 core\r\n" + 
-			"\r\n" + 
+	public final static String[] Texture_PositionF3_CoordF2_V_MVP_Shader = new String[] {
+			"#version 330\r\n" + 
+			" \r\n" + 
 			"layout(location = 0) in vec3 a_Position;\r\n" + 
 			"layout(location = 1) in vec2 a_TexCoord;\r\n" + 
-			"\r\n" + 
-			"\r\n" + 
-			"uniform mat4 u_Projection;\r\n" + 
-			"uniform mat4 u_View;\r\n" + 
-			"uniform mat4 u_Transform;\r\n" + 
-			"\r\n" + 
+			" \r\n" + 
+			"uniform mat4 u_viewProjection;\r\n" + 
+			"uniform mat4 u_transform;\r\n" + 
 			"out vec2 v_TexCoord;\r\n" + 
-			"\r\n" + 
-			"void main() {\r\n" + 
+			" \r\n" + 
+			"void main() \r\n" + 
+			"{\r\n" + 
 			"	v_TexCoord = a_TexCoord;\r\n" + 
-			"	gl_Position = u_Projection * u_View * u_Transform * vec4(a_Position, 1.0);\r\n" + 
+			"    gl_Position = u_viewProjection * u_transform * vec4(a_Position,1.f);\r\n" + 
 			"}",
+			
+			
 			"#version 330 core\r\n" + 
 			"\r\n" + 
 			"layout(location = 0) out vec4 color;\r\n" + 
@@ -80,10 +80,42 @@ public class ShaderLib {
 			"\r\n" + 
 			"\r\n" + 
 			"void main() {\r\n" + 
-			"	vec4 c = texture(u_Texture, v_TexCoord);\r\n" + 
-			"	color = c;\r\n" + 
+			"	color = texture(u_Texture, v_TexCoord);\r\n" + 
 			"}" 
 			};
+	
+	
+	public final static String[] Texture_PositionF3_CoordF2_V_T_Shader = new String[] {
+			"#version 330\r\n" + 
+			" \r\n" + 
+			"layout(location = 0) in vec3 a_Position;\r\n" + 
+			"layout(location = 1) in vec2 a_TexCoord;\r\n" + 
+			" \r\n" + 
+			"uniform mat4 u_viewProjection;\r\n" + 
+			"uniform mat4 u_transform;\r\n" + 
+			"out vec2 v_TexCoord;\r\n" + 
+			" \r\n" + 
+			"void main() \r\n" + 
+			"{\r\n" + 
+			"	v_TexCoord = a_TexCoord;\r\n" + 
+			"    gl_Position = u_transform * vec4(a_Position,1.f);\r\n" + 
+			"}",
+			
+			
+			"#version 330 core\r\n" + 
+			"\r\n" + 
+			"layout(location = 0) out vec4 color;\r\n" + 
+			"\r\n" + 
+			"in vec2 v_TexCoord;\r\n" + 
+			"\r\n" + 
+			"uniform sampler2D u_Texture;\r\n" + 
+			"\r\n" + 
+			"\r\n" + 
+			"void main() {\r\n" + 
+			"	color = texture(u_Texture, v_TexCoord);\r\n" + 
+			"}" 
+			};
+	
 	
 
 	

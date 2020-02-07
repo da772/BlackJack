@@ -7,14 +7,13 @@ import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
+
 public class Renderer {
 
-	public static Camera cam;
-	
 	private static List<Integer> Buffers = new ArrayList<Integer>();
 	private static List<Integer> VertexArrays = new ArrayList<Integer>();
 	private static List<Shader> Shaders = new ArrayList<Shader>();
-	private static List<Integer> Textures = new ArrayList<Integer>();
+	private static List<Texture> Textures = new ArrayList<Texture>();
 
 	public static void Init() {
 		GL30.glEnable(GL11.GL_CULL_FACE);
@@ -22,8 +21,6 @@ public class Renderer {
 		GL30.glCullFace(GL11.GL_BACK);
 		GL30.glEnable(GL11.GL_BLEND);
 		GL30.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-	
-		cam = new Camera(0, 1280f, 0, 720f, .0001f, 10000f, 90f);
 	}
 
 	public static void Prepare() {
@@ -33,26 +30,12 @@ public class Renderer {
 
 	public static void SetViewport(int x, int y, int width, int height) {
 		GL30.glViewport(x, y, width, height);
-		GL30.glMatrixMode(GL11.GL_PROJECTION);
-		//GL30.glLoadIdentity();
-		//gluPerspective(45.f, (float) width / (float) height, 0.1f, 100.0f);
 	}
 
-	private static void gluPerspective(float fovy, float aspect, float near, float far) {
-		float bottom = -near * (float) Math.tan(fovy / 2);
-		float top = -bottom;
-		float left = aspect * bottom;
-		float right = -left;
-		GL30.glFrustum(left, right, bottom, top, near, far);
-	}
-
-	public static void Draw(Mesh mesh, Matrix4f transform) {
+	public static void Draw(Mesh mesh) {
 		if (mesh == null)
 			return;
-		mesh.GetShader().Bind();
-		if (mesh.GetTexture() != null)
-			mesh.GetTexture().Bind();
-		mesh.GetVertexArray().Bind();
+		mesh.Bind();
 		GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndexCount(), GL11.GL_UNSIGNED_INT, 0);
 	}
 
@@ -64,8 +47,8 @@ public class Renderer {
 		VertexArrays.add(id);
 	}
 	
-	public static void AddTexture(int id) {
-		Textures.add(id);
+	public static void AddTexture(Texture t) {
+		Textures.add(t);
 	}
 	
 	public static void AddShader(Shader s) {
@@ -82,8 +65,8 @@ public class Renderer {
 			GL30.glDeleteVertexArrays(id);
 		}
 		VertexArrays.clear();
-		for (int id : Textures) {
-			GL30.glDeleteTextures(id);
+		for (Texture t : Textures) {
+			t.CleanUp();
 		}
 		Textures.clear();
 		for (Shader s : Shaders) {

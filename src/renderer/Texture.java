@@ -1,9 +1,16 @@
 package renderer;
 
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+
+
 import static org.lwjgl.stb.STBImage.*;
 
+import org.apache.commons.io.IOUtils;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
@@ -16,14 +23,16 @@ public class Texture {
 	
 	public Texture(String fileName) {
 		rendererId = GL30.glGenTextures();
-		Renderer.AddTexture(rendererId);
+		
+		Renderer.AddTexture(this);
 		LoadImage(fileName);
 	}
+	
+	
 	
 	public void Bind() {
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, rendererId);
     }
-	
 	
 	public void UnBind() {
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
@@ -31,10 +40,6 @@ public class Texture {
 	
 	public void setParameter(int name, int value) {
 		GL30.glTexParameteri(GL30.GL_TEXTURE_2D, name, value);
-	}
-	
-	private void uploadData(int width, int height, ByteBuffer data) {
-       uploadData(GL30.GL_RGBA8, width, height, GL30.GL_RGBA, data);
 	}
 	
 	private void uploadData(int internalFormat, int width, int height, int format, ByteBuffer data) {
@@ -61,7 +66,14 @@ public class Texture {
 			
 			stbi_set_flip_vertically_on_load(true);
 			
-			data = stbi_load(path, w, h, comp,4);
+			InputStream ss = this.getClass().getClassLoader().getResourceAsStream(path);
+			byte[] bytes = IOUtils.toByteArray(ss);
+			
+			ByteBuffer buffer = BufferUtils.createByteBuffer(bytes.length);
+			buffer.put(bytes);
+			buffer.flip();
+			
+			data = stbi_load_from_memory(buffer, w, h, comp, 4);
 			
 			if (data == null) {
 				 throw new RuntimeException("Failed to load a texture file!"
@@ -71,9 +83,19 @@ public class Texture {
 			width = w.get();
 			height = h.get();
 			
-		}
-		
+			
+			
+	} catch (IOException e1) {
+		e1.printStackTrace();
+	}
+							
 		CreateTexture();
+	}
+	
+	public void CleanUp() {
+		GL30.glDeleteTextures(rendererId);
+		if (data.hasRemaining())
+			stbi_image_free(data);
 	}
 	
 

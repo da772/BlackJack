@@ -13,6 +13,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.system.MemoryStack;
 
 public class Shader {
 
@@ -110,30 +111,44 @@ public class Shader {
 	
 	public void UploadUniformFloat4(String name, Vector4f data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
-		GL30.glUniform4f(loc, data.x, data.y, data.z, data.w);
+		FloatBuffer ptr = BufferUtils.createFloatBuffer(4);
+		data.get(ptr);
+		ptr.flip();
+		GL30.glUniform4fv(loc, ptr);
 	}
 	
 	public void UploadUniformFloat3(String name, Vector3f data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
-		GL30.glUniform3f(loc, data.x, data.y, data.z);
+		FloatBuffer ptr = BufferUtils.createFloatBuffer(3);
+		data.get(ptr);
+		ptr.flip();
+		GL30.glUniform3fv(loc, ptr);
 	}
 	
 	public void UploadUniformFloat2(String name, Vector2f data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
-		GL30.glUniform2f(loc, data.x, data.y);
+		FloatBuffer ptr = BufferUtils.createFloatBuffer(2);
+		data.get(ptr);
+		ptr.flip();
+		GL30.glUniform2fv(loc, ptr);
 	}
 	
-	public void UploadUniformFloat2(String name, float data) {
+	public void UploadUniformFloat(String name, float data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
+		FloatBuffer ptr = BufferUtils.createFloatBuffer(1);
+		ptr.put(data);
+		ptr.flip();
 		GL30.glUniform1f(loc, data);
 	}
 	
 	public void UploadUniformMat4(String name, Matrix4f data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
-		FloatBuffer ptr = BufferUtils.createFloatBuffer(16);
-		data.get(ptr);
-		ptr.flip();
-		GL30.glUniformMatrix4fv(loc, false, ptr);
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			FloatBuffer fb = stack.mallocFloat(16);
+			data.get(fb);
+			GL30.glUniformMatrix4fv(loc, false, fb);
+		}
 	}
 	
 	public void UploadUniformMat3(String name, Matrix3f data) {

@@ -28,6 +28,7 @@ public class Application {
 	protected int width = 1280, height = 720;
 	protected String title = "Application";
 	protected boolean running = true;
+	private float lastFrameTime = 0;
 	
 		
 	public Application() {
@@ -64,7 +65,7 @@ public class Application {
 		window = new Window(title, width, height);
 		if (window != null) {
 			window.Init();
-			window.SetWindowEventCallback(new Window.EventFunction() { @Override public boolean run(Event e) { OnEvent(e); return false; } });
+			window.SetWindowEventCallback(new Window.EventFunction() { @Override public boolean run(Event e) { Event(e); return false; } });
 		}
 		Renderer.Init();
 		OnInit();
@@ -75,7 +76,7 @@ public class Application {
 	
 	
 	/*
-	 * OnEvent(Event event)
+	 * Event(Event event)
 	 * 		event - event the window is telling us about
 	 * 
 	 * 		1. Create dispatcher (checks each event then runs function based on class)
@@ -88,7 +89,7 @@ public class Application {
 	 * 
 	 */
 	
-	public void OnEvent(Event event) {
+	public void Event(Event event) {
 		Events.EventDispatcher<Event> dispatcher = new Events.EventDispatcher<Event>(event);
 		dispatcher.Dispatch(KeyEvent.GetGenericType(), new Events.EventFunction<Event>(event) {
 			@Override public boolean run(Event t) { return KeyEvent((KeyEvent) t);} });
@@ -107,8 +108,11 @@ public class Application {
 		
 		dispatcher.Dispatch(WindowClosedEvent.GetGenericType(), new Events.EventFunction<Event>(event) {
 			@Override public boolean run(Event t) {return WindowClosedEvent((WindowClosedEvent)t ); } });
-		
+	
+		OnEvent(event);
 	}
+	
+	protected void OnEvent(Event event) {};
 	
 	/*
 	 * To be overridden by child class
@@ -206,8 +210,11 @@ public class Application {
 	 */
 	public void Run() {
 		while (running) {
+			float time = window.GetTime();
+			float timeStep = time - lastFrameTime;
+			lastFrameTime = time;
 			Renderer.Prepare();
-			OnUpdate();
+			OnUpdate(timeStep);
 			if (window != null && !window.IsClosed()) {
 				window.Update();
 			}
@@ -244,7 +251,7 @@ public class Application {
 	 * To be overridden by child class
 	 * 	
 	 */
-	protected void OnUpdate() {};
+	protected void OnUpdate(float timeStep) {};
 	/*
 	 * To be overridden by child class
 	 * 	

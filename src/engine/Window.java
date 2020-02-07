@@ -180,6 +180,10 @@ public class Window {
 		glfwPollEvents();
 	}
 	
+	public float GetTime() {
+		return (float)glfwGetTime();
+	}
+	
 	public boolean IsClosed() {
 		return glfwWindowShouldClose(window);
 	}

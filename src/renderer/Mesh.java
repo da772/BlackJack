@@ -1,18 +1,43 @@
 package renderer;
 
+import org.joml.Matrix4f;
+
 import renderer.Buffer.IndexBuffer;
 import renderer.Buffer.VertexBuffer;
 
+
+
+
 public class Mesh {
 
-	private float[] vertices;
-	private int[] indices;
-	private VertexArray.BufferLayout layout ;
-	private VertexBuffer vb;
-	private IndexBuffer ib;
-	private VertexArray va;
-	private Shader shader;
-	private Texture texture;
+	
+	public static class Hud extends Mesh {
+		
+		public Hud(float[] vertices, VertexArray.BufferElement[] layout ,int[] indices, Shader shader, Texture texture, Matrix4f transform, Camera cam) {
+			super(vertices, layout, indices, shader, texture, transform, cam);
+		}
+		
+		@Override
+		public void Bind() {
+			GetShader().Bind();
+			GetShader().UploadUniformMat4("u_transform", transform);
+			if (GetTexture() != null)
+				GetTexture().Bind();
+			GetVertexArray().Bind();
+		}
+		
+	}
+	
+	protected float[] vertices;
+	protected int[] indices;
+	protected VertexArray.BufferLayout layout ;
+	protected VertexBuffer vb;
+	protected IndexBuffer ib;
+	protected VertexArray va;
+	protected Shader shader;
+	protected Texture texture;
+	protected Camera cam;
+	protected Matrix4f transform;
 	
 	public Mesh(float[] vertices, VertexArray.BufferElement[] layout ,int[] indices, Shader shader){
 		this.vertices = vertices;
@@ -28,11 +53,13 @@ public class Mesh {
 			
 	}
 	
-	public Mesh(float[] vertices, VertexArray.BufferElement[] layout ,int[] indices, Shader shader, Texture texture){
+	public Mesh(float[] vertices, VertexArray.BufferElement[] layout ,int[] indices, Shader shader, Texture texture, Matrix4f transform, Camera cam){
 		this.vertices = vertices;
 		this.indices = indices;
 		this.shader = shader;
 		this.texture = texture;
+		this.transform = transform;
+		this.cam = cam;
 		this.layout = new VertexArray.BufferLayout(layout);
 		vb = new VertexBuffer(vertices, vertices.length);
 		ib = new IndexBuffer(indices, indices.length);
@@ -74,6 +101,15 @@ public class Mesh {
 		va.AddVertexBuffer(vb, this.layout);
 		va.AddIndexBuffer(ib);
 			
+	}
+	
+	public void Bind() {
+		GetShader().Bind();
+		GetShader().UploadUniformMat4("u_transform", transform);
+		GetShader().UploadUniformMat4("u_viewProjection", cam.GetViewProjectionMatrix());
+		if (GetTexture() != null)
+			GetTexture().Bind();
+		GetVertexArray().Bind();
 	}
 	
 	public Shader GetShader() {
