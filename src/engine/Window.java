@@ -174,8 +174,6 @@ public class Window {
 	}
 	
 	public void Update() {
-		// Clear buffer
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// Swap buffers
 		glfwSwapBuffers(window);
 		// Poll events

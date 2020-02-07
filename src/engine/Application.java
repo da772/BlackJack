@@ -7,6 +7,8 @@ import engine.Events.MouseMovedEvent;
 import engine.Events.MouseScrolledEvent;
 import engine.Events.WindowClosedEvent;
 import engine.Events.WindowResizedEvent;
+//TEMP
+import renderer.Renderer;
 
 
 /* 
@@ -26,6 +28,7 @@ public class Application {
 	protected int width = 1280, height = 720;
 	protected String title = "Application";
 	protected boolean running = true;
+	
 		
 	public Application() {
 		
@@ -63,7 +66,9 @@ public class Application {
 			window.Init();
 			window.SetWindowEventCallback(new Window.EventFunction() { @Override public boolean run(Event e) { OnEvent(e); return false; } });
 		}
+		Renderer.Init();
 		OnInit();
+		
 	}
 	
 	protected void OnInit() {};
@@ -115,7 +120,8 @@ public class Application {
 	 * 		
 	 */
 	protected boolean WindowResizedEvent(WindowResizedEvent e) {
-		System.out.println(e);
+		//System.out.println(e);
+		Renderer.SetViewport(0, 0, (int)e.GetWidth(), (int)e.GetHeight());
 		return false;
 	}
 	
@@ -129,7 +135,7 @@ public class Application {
 	 */
 	protected boolean WindowClosedEvent(WindowClosedEvent e) {
 	
-		System.out.println(e);
+		//System.out.println(e);
 		running = false;
 		return true;
 	}
@@ -143,7 +149,7 @@ public class Application {
 	 * 		
 	 */
 	protected boolean MouseScrolledEvent(MouseScrolledEvent e) {
-		System.out.println(e);
+		//System.out.println(e);
 		return false;
 	}
 	/*
@@ -169,7 +175,7 @@ public class Application {
 	 * 		
 	 */
 	protected boolean MouseButtonEvent(MouseButtonEvent e) {
-		System.out.println(e);
+		//System.out.println(e);
 		return false;
 	}
 	/*
@@ -182,7 +188,7 @@ public class Application {
 	 * 		
 	 */
 	protected boolean KeyEvent (KeyEvent e) {
-		System.out.println(e);
+		//System.out.println(e);
 		return false;
 	}
 	
@@ -200,6 +206,7 @@ public class Application {
 	 */
 	public void Run() {
 		while (running) {
+			Renderer.Prepare();
 			OnUpdate();
 			if (window != null && !window.IsClosed()) {
 				window.Update();
@@ -220,6 +227,7 @@ public class Application {
 	 */
 	public void Shutdown() {
 		OnShutdown();
+		Renderer.Cleanup();
 		if (window != null) {
 			window.Shutdown();
 		}
