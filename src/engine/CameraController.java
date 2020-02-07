@@ -43,9 +43,12 @@ public abstract class CameraController {
 			super();
 			this.aspectRatio = aspectRatio;
 			camera = new Camera.OrthographicCamera(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
-
 		}
 
+		public float GetZoomLevel() {
+			return this.zoomLevel;
+		}
+		
 		public boolean OnZoom(float x, float y, float amt) {
 			zoomLevel = MatrixMath.Clamp(zoomLevel - (y*amt), 0.01f, 100f);
 			camera.SetProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);

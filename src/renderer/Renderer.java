@@ -3,7 +3,6 @@ package renderer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
@@ -21,8 +20,18 @@ public class Renderer {
 		GL30.glCullFace(GL11.GL_BACK);
 		GL30.glEnable(GL11.GL_BLEND);
 		GL30.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL30.glEnable(GL30.GL_MULTISAMPLE);  
 	}
 
+	public static void DisableCulling() {
+		GL30.glDisable(GL11.GL_CULL_FACE);
+	}
+	
+	public static void EnableCulling() {
+		GL30.glEnable(GL11.GL_CULL_FACE);
+		GL30.glCullFace(GL11.GL_BACK);
+	}
+	
 	public static void Prepare() {
 		GL30.glClearColor(1, 0, 1, 1);
 		GL30.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);

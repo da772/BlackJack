@@ -153,10 +153,12 @@ public class Shader {
 	
 	public void UploadUniformMat3(String name, Matrix3f data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
-		FloatBuffer ptr = BufferUtils.createFloatBuffer(12);
-		data.get(ptr);
-		ptr.flip();
-		GL30.glUniformMatrix3fv(loc, false, ptr);
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			FloatBuffer fb = stack.mallocFloat(12);
+			data.get(fb);
+			GL30.glUniformMatrix3fv(loc, false, fb);
+		}
 	}
 	
 	

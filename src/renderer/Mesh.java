@@ -112,6 +112,10 @@ public class Mesh {
 		GetVertexArray().Bind();
 	}
 	
+	public void SetTransform(Matrix4f trans) {
+		this.transform = trans;
+	}
+	
 	public Shader GetShader() {
 		return shader;
 	}
