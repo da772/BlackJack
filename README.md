@@ -1,46 +1,48 @@
 # BlackJack project for CSC 478
 
-##@Todo
--[ ]Engine
-	-[ ]Graphics
-		-[ ]Object Rendering
-			-[ ]Vertex/Index Buffers
-			-[ ]VertexArrays
-			-[ ] Shader
-				-[ ]Textures
-				-[ ]Transparency
-				-[ ]Layouts
-				-[ ]Uniforms
-				-[ ]Projection Matrix
-		-[ ] Hud Rendering
-			-[ ]Text Rendering
-			-[ ]Buttons
-			-[ ]Static pos
-		-[ ] Renderer
-			-[ ] Z-[ ]Ordering
-			-[ ] Batching
-			-[ ] Quad Rendering
-			-[ ] Anti-[ ]Aliasing
-			-[ ] Camera
-		-[ ] Window
-			-[ ]Events
-			-[ ]Viewport
-			-[ ]Input
-		-[ ]Camera
-			-[ ]Orthographic Camera
-				-[ ]Zoom
-				-[ ]Move
-				-[ ]Rotate
-	-[ ]Application
-		-[ ]Main Loop
-			-[ ]Delta Time
-		-[ ]Events
-			-[ ]Window Resized
-			-[ ]Key Pressed/Released
-			-[ ]Mouse Moved
-			-[ ]Mouse Button Pressed/Released
-			-[ ]Mouse Scrolled
-			-[ ]Window Closed
--[ ]Audio
--[ ]Gameplay
+## @Todo
+- Engine
+	- Graphics
+		- Object Rendering
+			- [X] Vertex/Index Buffers
+			- [X] VertexArrays
+			- [ ] Collision Detection
+		- Shader
+			- Textures
+				- [X] Transparency
+				- [ ] Texture Pool
+			- [X] Layouts
+			- [X] Uniforms
+			- [X] View Projection Matrix
+			- [ ] Shader Pool
+		- Hud Rendering
+			- [ ] Text Rendering
+			- [ ] Buttons
+			- [X] Static position
+			- [ ] Mouse Detection
+		- Renderer
+			- [ ]  Z-Ordering
+			- [ ]  Batching
+			- [X]  Anti-Aliasing
+		- Window
+			- [X] Events
+			- [X] Viewport
+			- [X] Input
+		- Camera
+			- Orthographic Camera
+				- [X] Zoom
+				- [X] Move
+				- [X] Rotate
+	- Application
+		- Main Loop
+			- [X] Delta Time
+		- Events
+			- [X] Window Resized
+			- [X] Key Pressed/Released
+			- [X] Mouse Moved
+			- [X] Mouse Button Pressed/Released
+			- [X] Mouse Scrolled
+			- [X] Window Closed
+	- Audio
+- Gameplay
 	
