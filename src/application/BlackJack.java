@@ -45,10 +45,10 @@ public class BlackJack extends Application {
 				 -.5f,  .5f,  0f,  1.f, 1.f,
 				 -1.5f, .5f,  0f,  0.f, 1.f,
 				 
-				  .5f,  -.5f, 0f,  0.f,0.f, 
-				 1.5f, -.5f,  0f,  1.f, 0.f,
-				 1.5f,  .5f,  0f,  1.f, 1.f,
-				 .5f, .5f,  0f,  0.f, 1.f
+				 -1.5f + .75f,  -.5f, 0f,  0.f,0.f, 
+				 -.5f +.75f, -.5f,  0f,  1.f, 0.f,
+				 -.5f+.75f,  .5f,  0f,  1.f, 1.f,
+				 -1.5f+.75f, .5f,  0f,  0.f, 1.f
 		};
 		int[] indices = {
 			0,1,2,
