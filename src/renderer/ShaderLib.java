@@ -3,7 +3,7 @@ package renderer;
 public class ShaderLib {
 
 	
-	public final static String[] PositionF3_ColorF3_V_Shader = new String[] {
+	public final static String[] Shader_L_V3Pos_V3Col = new String[] {
 			"#version 330 core\r\n" + 
 			"layout (location = 0) in vec3 aPos; // the position variable has attribute position 0\r\n" + 
 			"layout (location = 1) in vec3 aColor; // the position variable has attribute position 0\r\n" + 
@@ -26,7 +26,7 @@ public class ShaderLib {
 			"} " 
 			};
 	
-	public final static String[] Texture_PositionF3_CoordF2_V_Shader = new String[] {
+	public final static String[] Shader_U_Texture_L_V3Pos_V2Coord = new String[] {
 			"#version 330 core\r\n" + 
 			"\r\n" + 
 			"layout(location = 0) in vec3 a_Position;\r\n" + 
@@ -53,7 +53,7 @@ public class ShaderLib {
 			"}" 
 			};
 	
-	public final static String[] Texture_PositionF3_CoordF2_V_MVP_Shader = new String[] {
+	public final static String[] Shader_U_Texture_ViewProj_Transform_L_V3Pos_V2Coord = new String[] {
 			"#version 330\r\n" + 
 			" \r\n" + 
 			"layout(location = 0) in vec3 a_Position;\r\n" + 
@@ -85,13 +85,12 @@ public class ShaderLib {
 			};
 	
 	
-	public final static String[] Texture_PositionF3_CoordF2_V_T_Shader = new String[] {
+	public final static String[] Shader_U_Texture_Transform_L_Vec3Pos_Vec2Coord = new String[] {
 			"#version 330\r\n" + 
 			" \r\n" + 
 			"layout(location = 0) in vec3 a_Position;\r\n" + 
 			"layout(location = 1) in vec2 a_TexCoord;\r\n" + 
 			" \r\n" + 
-			"uniform mat4 u_viewProjection;\r\n" + 
 			"uniform mat4 u_transform;\r\n" + 
 			"out vec2 v_TexCoord;\r\n" + 
 			" \r\n" + 
@@ -119,7 +118,7 @@ public class ShaderLib {
 	
 
 	
-	public final static String[] PositionF3_ColorF4_V_Shader = new String[] {
+	public final static String[] Shader_L_V3Pos_V4Color = new String[] {
 			"#version 330 core\r\n" + 
 			"layout (location = 0) in vec3 aPos; // the position variable has attribute position 0\r\n" + 
 			"layout (location = 1) in vec4 aColor; // the position variable has attribute position 0\r\n" + 
@@ -142,7 +141,7 @@ public class ShaderLib {
 			"} " 
 			};
 	
-	public final static String[] PositionF3_V_Shader = new String[] {
+	public final static String[] Shader_L_V3Pos = new String[] {
 			"#version 330 core\r\n" + 
 			"layout (location = 0) in vec3 aPos; // the position variable has attribute position 0\r\n" + 
 			"  \r\n" + 

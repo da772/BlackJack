@@ -36,8 +36,8 @@ public class Shader {
 	}
 	
 	public Shader() {
-		vertex = ShaderLib.PositionF3_V_Shader[0];
-		fragment = ShaderLib.PositionF3_V_Shader[1];
+		vertex = ShaderLib.Shader_L_V3Pos[0];
+		fragment = ShaderLib.Shader_L_V3Pos[1];
 		CompileShader();
 	}
 	

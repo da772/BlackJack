@@ -80,7 +80,7 @@ public class BlackJack extends Application {
 		background = new Mesh(vertices1, new VertexArray.BufferElement[]{
 				new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position"),
 				new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
-				},indices1, new Shader(ShaderLib.Texture_PositionF3_CoordF2_V_MVP_Shader), new Texture("Images/Checkerboard.png"),
+				},indices1, new Shader(ShaderLib.Shader_U_Texture_ViewProj_Transform_L_V3Pos_V2Coord), new Texture("Images/Checkerboard.png"),
 				transform, cam.GetCamera());
 		
 		pos = new Vector3f(0.f,0.f,.01f);
@@ -90,7 +90,7 @@ public class BlackJack extends Application {
 				new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position"),
 				new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
 				},
-		indices, new Shader(ShaderLib.Texture_PositionF3_CoordF2_V_MVP_Shader), new Texture("Images/Anchor.png"),
+		indices, new Shader(ShaderLib.Shader_U_Texture_ViewProj_Transform_L_V3Pos_V2Coord), new Texture("Images/Anchor.png"),
 		transform, cam.GetCamera());
 		
 		pos = new Vector3f(0f,0.f,-1f);
@@ -102,7 +102,7 @@ public class BlackJack extends Application {
 				new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position"),
 				new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
 				},
-		indices1, new Shader(ShaderLib.Texture_PositionF3_CoordF2_V_T_Shader), new Texture("Images/titleBar.png"),
+		indices1, new Shader(ShaderLib.Shader_U_Texture_Transform_L_Vec3Pos_Vec2Coord), new Texture("Images/titleBar.png"),
 		transform, cam.GetCamera());
 		
 		pos = new Vector3f(0.f,0.f,-.1f);
@@ -114,7 +114,7 @@ public class BlackJack extends Application {
 				new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position"),
 				new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
 				},
-		indices1, new Shader(ShaderLib.Texture_PositionF3_CoordF2_V_T_Shader), new Texture("Images/2_of_diamonds.png"),
+		indices1, new Shader(ShaderLib.Shader_U_Texture_Transform_L_Vec3Pos_Vec2Coord), new Texture("Images/2_of_diamonds.png"),
 		transform, cam.GetCamera());
 
 		
