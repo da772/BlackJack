@@ -67,7 +67,6 @@ public class Mesh {
 		va = new VertexArray();
 		va.AddVertexBuffer(vb, this.layout);
 		va.AddIndexBuffer(ib);
-			
 	}
 	
 	public Mesh(float[] vertices ,int[] indices, Shader shader){
@@ -110,6 +109,13 @@ public class Mesh {
 		if (GetTexture() != null)
 			GetTexture().Bind();
 		GetVertexArray().Bind();
+	}
+	
+	public void UnBind() {
+		GetShader().UnBind();
+		if (GetTexture() != null)
+			GetTexture().UnBind();
+		GetVertexArray().UnBind();
 	}
 	
 	public void SetTransform(Matrix4f trans) {

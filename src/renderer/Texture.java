@@ -72,7 +72,7 @@ public class Texture {
 		uploadData(GL30.GL_RGBA, width, height, GL30.GL_RGBA, data);
 	    setParameter(GL30.GL_TEXTURE_WRAP_S, GL30.GL_REPEAT);
 	    setParameter(GL30.GL_TEXTURE_WRAP_T, GL30.GL_REPEAT);
-	    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_NEAREST);
+	    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
 	    setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
 	    GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
 	    

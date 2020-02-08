@@ -34,14 +34,15 @@ public class VertexArray {
 			GL30.glEnableVertexAttribArray(i);
 			GL30.glVertexAttribPointer(i, layout.get(i).GetComponentCount(), layout.get(i).GetGLBaseType(), layout.get(i).normalized, layout.GetStride(), layout.get(i).offset);
 		}
-		
-		
-		
+		vb.UnBind();
+		UnBind();
 	}
 	
 	public void AddIndexBuffer(IndexBuffer ib) {
 		Bind();
 		ib.Bind();
+		UnBind();
+		ib.UnBind();
 	}
 	
 	

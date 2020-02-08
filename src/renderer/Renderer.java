@@ -54,6 +54,7 @@ public class Renderer {
 			return;
 		mesh.Bind();
 		GL30.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndexCount(), GL11.GL_UNSIGNED_INT, 0);
+		mesh.UnBind();
 	}
 	
 	public static void Draw(VertexArray ar, int size) {
@@ -61,7 +62,7 @@ public class Renderer {
 			return;
 		ar.Bind();
 		GL30.glDrawArrays(GL11.GL_TRIANGLES, 0, size);
-		
+		ar.UnBind();
 	}
 	
 	
@@ -70,6 +71,7 @@ public class Renderer {
 			return;
 		mesh.Bind();
 		GL30.glDrawArrays(GL11.GL_TRIANGLES, 0, mesh.GetVertexCount());
+		mesh.UnBind();
 	}
 
 	public static void AddBuffer(int id) {
