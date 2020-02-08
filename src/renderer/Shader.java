@@ -4,7 +4,9 @@ package renderer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -18,26 +20,62 @@ import org.lwjgl.system.MemoryStack;
 public class Shader {
 
 	String vertex, fragment;
+	String shaderSrc;
 	
 	int rendererId;
 	List<Integer> shaderIds = new ArrayList<Integer>();
+	private static Map<String, Shader> shaders = new HashMap<String, Shader>();
+	int referenceCount;
 	
+	public static Shader Create(String[] source) {
+		return Shader.Create(source[0], source[1]);
+	}
 	
-	public Shader(String vertexSource, String fragmentSource) {
+	public static Shader Create() {
+		return Shader.Create(ShaderLib.Shader_L_V3Pos);
+	}
+	
+	public static Shader Create(String vertexSource, String fragmentSource) {
+		String src = vertexSource+fragmentSource;
+		if (shaders.containsKey(src)) {
+			Shader t =  shaders.get(src);
+			t.AddReferenceCount(1);
+			return t;
+		}
+		Shader t = new Shader(vertexSource, fragmentSource);
+		t.shaderSrc = src;
+		t.AddReferenceCount(1);
+		shaders.put(src, t);
+		return t;
+		
+	}
+	
+	public static int GetPoolSize() {
+		return shaders.size();
+	}
+	
+	public static void Remove(Shader s) {
+		if (shaders.containsValue(s)) {
+			s.AddReferenceCount(-1);
+		}
+	}
+	
+	public String GetShaderSrc() {
+		return this.shaderSrc;
+	}
+	
+	private void AddReferenceCount(int i ) {
+		this.referenceCount += i;
+		if (this.referenceCount <= 0) {
+			shaders.remove(this.shaderSrc);
+			this.Cleanup();
+			Renderer.RemoveShader(this);
+		}
+	}
+	
+	protected Shader(String vertexSource, String fragmentSource) {
 		vertex = vertexSource;
 		fragment = fragmentSource;
-		CompileShader();
-	}
-	
-	public Shader(String[] src) {
-		vertex = src[0];
-		fragment = src[1];
-		CompileShader();
-	}
-	
-	public Shader() {
-		vertex = ShaderLib.Shader_L_V3Pos[0];
-		fragment = ShaderLib.Shader_L_V3Pos[1];
 		CompileShader();
 	}
 	

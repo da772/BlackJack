@@ -1,4 +1,4 @@
-package renderer.font;
+package renderer.text;
 
 
 import org.joml.Matrix4f;
@@ -7,6 +7,7 @@ import org.joml.Vector3f;
 import renderer.Buffer.VertexBuffer;
 import renderer.Texture;
 import renderer.VertexArray;
+import util.MathLib;
 
 
 public class GUIText {
@@ -19,7 +20,10 @@ public class GUIText {
 	private int verticesSize;
 
 	private Vector3f color = new Vector3f(0f, 0f, 0f);
-
+	private Vector3f position = new Vector3f(0f, 0f, 0f);
+	private Vector3f scale = new Vector3f(0f, 0f, 0f);
+	private Vector3f rotation = new Vector3f(0f, 0f, 0f);
+	
 	private Matrix4f transform;
 	private float lineMaxSize;
 	private int numberOfLines;
@@ -53,28 +57,37 @@ public class GUIText {
 	 * @param centered
 	 *            - whether the text should be centered or not.
 	 */
-	public GUIText(String text, float fontSize, String font, Matrix4f transform, float maxLineLength,
+	public GUIText(String text, float fontSize, String font,  Vector3f pos, Vector3f rot, Vector3f scale, float maxLineLength,
 			boolean centered) {
 		this.textString = text;
 		this.fontSize = fontSize;
-		this.font = new FontType(new Texture(font+".png", true), font);
-		this.transform = transform;
+		this.font = new FontType(Texture.Create(font+".png", true), font);
+		this.transform = MathLib.createTransformMatrix(new Vector3f(pos.x+1,  pos.y+1, pos.z), rot, scale);
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
 		TextRenderer.loadText(this);;
 	}
 	
 	
-	public GUIText(String text, float fontSize, String font, Matrix4f transform, Vector3f color, float maxLineLength,
+	public GUIText(String text, float fontSize, String font, Vector3f pos, Vector3f rot, Vector3f scale, Vector3f color, float maxLineLength,
 			boolean centered) {
 		this.textString = text;
 		this.fontSize = fontSize;
-		this.font = new FontType(new Texture(font+".png", true), font);
-		this.transform = transform;
+		this.font = new FontType(Texture.Create(font+".png", true), font);
+		this.position = pos;
+		this.rotation = rot;
+		this.scale = scale;
 		this.color = color;
+		CalculateTransform();
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
 		TextRenderer.loadText(this);;
+	}
+	
+	public void SetText(String text) {
+		this.textString = text;
+		TextRenderer.removeText(this);
+		TextRenderer.loadText(this);
 	}
 
 	/**
@@ -103,6 +116,16 @@ public class GUIText {
 	 */
 	public void setColor(float r, float g, float b) {
 		color.set(r, g, b);
+	}
+	
+	public void setPosition(float x, float y, float z) {
+		this.position = new Vector3f(x,y,z);
+		CalculateTransform();
+	}
+	
+	private void CalculateTransform() {
+		this.transform = MathLib.createTransformMatrix(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, 0, 2, MathLib.Clamp(position.x, -1, 1)), 
+				-MathLib.GetMappedRangeValueUnclamped(-1, 1, 0, 2,MathLib.Clamp(-position.y, -1, 1)), position.z  ), rotation, scale);
 	}
 
 	/**

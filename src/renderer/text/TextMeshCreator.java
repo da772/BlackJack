@@ -1,4 +1,4 @@
-package renderer.font;
+package renderer.text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ public class TextMeshCreator {
 
 	protected static final double LINE_HEIGHT = 0.03f;
 	protected static final int SPACE_ASCII = 32;
+	protected static final int NEWLINE_ASCII = 10;
 
 	private MetaFile metaData;
 
@@ -38,6 +39,13 @@ public class TextMeshCreator {
 				currentWord = new Word(text.getFontSize());
 				continue;
 			}
+			if (ascii == NEWLINE_ASCII) {
+				currentLine.attemptToAddWord(currentWord);
+				lines.add(currentLine);
+				currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
+				currentWord = new Word(text.getFontSize());
+				continue;
+			}
 			Character character = metaData.getCharacter(ascii);
 			currentWord.addCharacter(character);
 		}
@@ -57,25 +65,25 @@ public class TextMeshCreator {
 
 	private TextMeshData createQuadVertices(GUIText text, List<Line> lines) {
 		text.setNumberOfLines(lines.size());
-		double curserX = 0f;
-		double curserY = 0f;
+		double cursorX = 0f;
+		double cursorY = 0f;
 		List<Float> vertices = new ArrayList<Float>();
 		List<Float> textureCoords = new ArrayList<Float>();
 		for (Line line : lines) {
 			if (text.isCentered()) {
-				curserX = (line.getMaxLength() - line.getLineLength()) / 2;
+				cursorX = (line.getMaxLength() - line.getLineLength()) / 2;
 			}
 			for (Word word : line.getWords()) {
 				for (Character letter : word.getCharacters()) {
-					addVerticesForCharacter(curserX, curserY, letter, text.getFontSize(), vertices);
+					addVerticesForCharacter(cursorX, cursorY, letter, text.getFontSize(), vertices);
 					addTexCoords(textureCoords, letter.getxTextureCoord(), letter.getyTextureCoord(),
 							letter.getXMaxTextureCoord(), letter.getYMaxTextureCoord());
-					curserX += letter.getxAdvance() * text.getFontSize();
+					cursorX += letter.getxAdvance() * text.getFontSize();
 				}
-				curserX += metaData.getSpaceWidth() * text.getFontSize();
+				cursorX += metaData.getSpaceWidth() * text.getFontSize();
 			}
-			curserX = 0;
-			curserY += LINE_HEIGHT * text.getFontSize();
+			cursorX = 0;
+			cursorY += LINE_HEIGHT * text.getFontSize();
 		}		
 		return new TextMeshData(listToArray(vertices), listToArray(textureCoords));
 	}

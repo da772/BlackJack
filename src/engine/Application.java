@@ -32,7 +32,7 @@ public class Application {
 	private float lastFrameTime = 0;
 	protected long lastTime = 0;
 	protected int fps = 0, frames = 0;
-	protected int fpsCap = 0;
+	protected int fpsCap = 255;
 	
 		
 	public Application() {

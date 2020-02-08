@@ -1,4 +1,4 @@
-package renderer.font;
+package renderer.text;
 
 public class Character {
 

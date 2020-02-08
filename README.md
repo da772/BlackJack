@@ -12,11 +12,11 @@
 		- Shader
 			- Textures
 				- [X] Transparency
-				- [ ] Texture Pool
+				- [X] Texture Pool
 			- [X] Layouts
 			- [X] Uniforms
 			- [X] View Projection Matrix
-			- [ ] Shader Pool
+			- [X] Shader Pool
 		- Hud Rendering
 			- [X] Text Rendering
 				- [X] Text Batching

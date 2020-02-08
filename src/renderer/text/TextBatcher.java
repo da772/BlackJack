@@ -1,4 +1,4 @@
-package renderer.font;
+package renderer.text;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +12,7 @@ public class TextBatcher {
 	private Shader shader;
 
 	public TextBatcher() {
-		shader = new Shader(ShaderLib.Shader_Font);
+		shader = Shader.Create(ShaderLib.Shader_Font);
 	}
 	
 	public void render(Map<FontType, List<GUIText>> texts){

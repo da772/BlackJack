@@ -77,17 +77,33 @@ public class Renderer {
 	public static void AddBuffer(int id) {
 		Buffers.add(id);
 	}
+	
+	public static void RemoveBuffer(int id) {
+		Buffers.remove((Object)id);
+	}
 
 	public static void AddVertexArray(int id) {
 		VertexArrays.add(id);
+	}
+	
+	public static void RemoveVertexArray(int id) {
+		VertexArrays.remove((Object)id);
 	}
 	
 	public static void AddTexture(Texture t) {
 		Textures.add(t);
 	}
 	
+	public static void RemoveTexture(Texture t) {
+		Textures.remove(t);
+	}
+	
 	public static void AddShader(Shader s) {
 		Shaders.add(s);
+	}
+	
+	public static void RemoveShader(Shader s) {
+		Shaders.remove(s);
 	}
 
 	public static void Cleanup() {

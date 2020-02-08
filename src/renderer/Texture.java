@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.lwjgl.stb.STBImage.*;
 
@@ -14,25 +15,64 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
+
 public class Texture {
 	
 	int width;
 	int height;
 	ByteBuffer data;
 	private int rendererId;
+	int referenceCount = 0;
+	String fileName;
 	
-	public Texture() {
-		
+	private static Map<String, Texture> textures = new HashMap<String, Texture>();
+	
+	public static Texture Create(String fileName) {
+		return Texture.Create(fileName, false);
 	}
 	
-	public Texture(String fileName) {
+	public static Texture Create(String fileName, boolean flip) {
+		if (textures.containsKey(fileName)) {
+			Texture t =  textures.get(fileName);
+			t.AddReferenceCount(1);
+			return t;
+		}
+		Texture t = new Texture(fileName, flip);
+		t.fileName = fileName;
+		t.AddReferenceCount(1);
+		textures.put(fileName, t);
+		return t;
+	}
+	
+	
+	public static int GetPoolSize() {
+		return textures.size();
+	}
+	
+	public static void Remove(String fileName) {
+		if (textures.containsKey(fileName)) {
+			Texture t = textures.get(fileName);
+			t.AddReferenceCount(-1);
+		}
+	}
+	
+	private void AddReferenceCount(int i) {
+		this.referenceCount += i;
+		if (this.referenceCount <= 0) {
+			textures.remove(this.fileName);
+			this.CleanUp();
+			Renderer.RemoveTexture(this);
+		}
+	}
+	
+	protected Texture(String fileName) {
 		rendererId = GL30.glGenTextures();
 		
 		Renderer.AddTexture(this);
 		LoadImage(fileName, true);
 	}
 	
-	public Texture(String fileName, boolean fontTexture) {
+	protected Texture(String fileName, boolean fontTexture) {
 		rendererId = GL30.glGenTextures();
 		
 		Renderer.AddTexture(this);

@@ -5,7 +5,7 @@ import org.joml.Vector3f;
 import engine.Events.Event;
 import engine.Events.WindowResizedEvent;
 import renderer.Camera;
-import util.MatrixMath;
+import util.MathLib;
 
 public abstract class CameraController {
 
@@ -50,7 +50,7 @@ public abstract class CameraController {
 		}
 		
 		public boolean OnZoom(float x, float y, float amt) {
-			zoomLevel = MatrixMath.Clamp(zoomLevel - (y*amt), 0.01f, 100f);
+			zoomLevel = MathLib.Clamp(zoomLevel - (y*amt), 0.01f, 100f);
 			camera.SetProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
 			return false;
 		}

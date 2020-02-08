@@ -1,4 +1,4 @@
-package renderer.font;
+package renderer.text;
 
 import java.util.ArrayList;
 import java.util.List;
