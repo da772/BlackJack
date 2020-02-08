@@ -111,26 +111,35 @@ public class Shader {
 	
 	public void UploadUniformFloat4(String name, Vector4f data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
-		FloatBuffer ptr = BufferUtils.createFloatBuffer(4);
-		data.get(ptr);
-		ptr.flip();
-		GL30.glUniform4fv(loc, ptr);
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			FloatBuffer fb = stack.mallocFloat(4);
+			data.get(fb);
+			GL30.glUniformMatrix4fv(loc, false, fb);
+			GL30.glUniform3fv(loc, fb);
+		}
 	}
 	
 	public void UploadUniformFloat3(String name, Vector3f data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
-		FloatBuffer ptr = BufferUtils.createFloatBuffer(3);
-		data.get(ptr);
-		ptr.flip();
-		GL30.glUniform3fv(loc, ptr);
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			FloatBuffer fb = stack.mallocFloat(3);
+			data.get(fb);
+			GL30.glUniformMatrix4fv(loc, false, fb);
+			GL30.glUniform3fv(loc, fb);
+		}
 	}
 	
 	public void UploadUniformFloat2(String name, Vector2f data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
-		FloatBuffer ptr = BufferUtils.createFloatBuffer(2);
-		data.get(ptr);
-		ptr.flip();
-		GL30.glUniform2fv(loc, ptr);
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			FloatBuffer fb = stack.mallocFloat(2);
+			data.get(fb);
+			GL30.glUniformMatrix4fv(loc, false, fb);
+			GL30.glUniform3fv(loc, fb);
+		}
 	}
 	
 	public void UploadUniformFloat(String name, float data) {

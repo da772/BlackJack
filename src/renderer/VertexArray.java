@@ -30,11 +30,11 @@ public class VertexArray {
 	public void AddVertexBuffer(VertexBuffer vb, BufferLayout layout) {
 		Bind();
 		vb.Bind();
-		
 		for (int i = 0; i < layout.size(); i++) {
 			GL30.glEnableVertexAttribArray(i);
 			GL30.glVertexAttribPointer(i, layout.get(i).GetComponentCount(), layout.get(i).GetGLBaseType(), layout.get(i).normalized, layout.GetStride(), layout.get(i).offset);
 		}
+		
 		
 		
 	}
@@ -54,7 +54,7 @@ public class VertexArray {
 		List<BufferElement> layout;
 		private int stride;
 		
-		BufferLayout(BufferElement[] e) {
+		public BufferLayout(BufferElement[] e) {
 			layout = new ArrayList<BufferElement>(Arrays.asList(e));
 			CalculateOffsetsAndStride();
 		}

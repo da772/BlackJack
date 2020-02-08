@@ -1,7 +1,10 @@
 package application;
 
 
+
+
 import org.joml.Matrix4f;
+
 import org.joml.Vector3f;
 
 import engine.Application;
@@ -16,6 +19,9 @@ import renderer.Shader;
 import renderer.ShaderLib;
 import renderer.Texture;
 import renderer.VertexArray;
+import renderer.font.TextBatcher;
+import renderer.font.GUIText;
+import renderer.font.TextRenderer;
 import util.MatrixMath;
 
 public class BlackJack extends Application {
@@ -27,6 +33,11 @@ public class BlackJack extends Application {
 	Matrix4f transform;
 	
 	CameraController.OrthographicCameraController cam;
+	
+	
+	TextBatcher fr;
+	
+	GUIText text;
 	
 	int count =1 ;
 	
@@ -105,7 +116,7 @@ public class BlackJack extends Application {
 		indices1, new Shader(ShaderLib.Shader_U_Texture_Transform_L_Vec3Pos_Vec2Coord), new Texture("Images/titleBar.png"),
 		transform, cam.GetCamera());
 		
-		pos = new Vector3f(0.f,0.f,-.1f);
+		pos = new Vector3f(0.f,.3f,-.1f);
 		scale = new Vector3f(1.f,1.f,1.f);
 		transform = new Matrix4f();
 		transform = MatrixMath.createTransformMatrix(pos, new Vector3f(0, 0, 0f), scale);
@@ -116,7 +127,17 @@ public class BlackJack extends Application {
 				},
 		indices1, new Shader(ShaderLib.Shader_U_Texture_Transform_L_Vec3Pos_Vec2Coord), new Texture("Images/2_of_diamonds.png"),
 		transform, cam.GetCamera());
-
+		
+		
+		
+		text = new GUIText("Hello World!", 5f,"Fonts/blackjack", MatrixMath.createTransformMatrix(new Vector3f(.5f,0f,-1f),
+				new Vector3f(0f,0f,0f), new Vector3f(1f,1f,1f)) 
+				, .5f, true  );
+		text.setColor(1, 0, 0);
+		
+		
+		TextRenderer.init();
+		
 		
 		
 	}
@@ -125,16 +146,13 @@ public class BlackJack extends Application {
 	@Override
 	protected void OnUpdate(float timeStep) {
 		count++;
+		
 		// Render by Z-Order (Not including HUD)
-		Renderer.Draw(background);
-		Renderer.Draw(mesh);
-		//Renderer.Draw(hud2);
-		Renderer.Draw(hud);
-		
-		
-		
-
-
+		Renderer.DrawIndexed(background);
+		Renderer.DrawIndexed(mesh);
+		Renderer.Draw(hud2);
+		Renderer.DrawIndexed(hud);
+		TextRenderer.render();
 		
 		
 		if (Input.IsMouseButtonPressed(KeyCodes.MOUSE_RIGHT)) {
@@ -160,6 +178,14 @@ public class BlackJack extends Application {
 		
 		if (Input.IsKeyPressed(KeyCodes.KEY_E)) {
 			cam.rotation -= 10 * timeStep;
+		}
+		
+		if (Input.IsKeyPressed(KeyCodes.KEY_BACKSPACE)) {
+			TextRenderer.removeText(text);
+		}
+		
+		if (Input.IsKeyPressed(KeyCodes.KEY_ENTER)) {
+			TextRenderer.loadText(text);
 		}
 		
 		cam.OnUpdate(timeStep);

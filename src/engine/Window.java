@@ -2,6 +2,7 @@ package engine;
 
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
+import org.lwjgl.system.MemoryStack;
 
 import engine.Events.Event;
 
@@ -10,20 +11,35 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import java.nio.FloatBuffer;
+
 public class Window {
 
 	String title;
 	int width, height;
 	long window;
+	long monitor;
 	int vsync = 1;
+	float contentScaleX, contentScaleY;
 	EventFunction OnEventCallback;
 	
+	
+	public static Window window_context;
 	
 	public long GetWindowContext() {
 		return window;
 	}
 	
-	public static abstract class EventFunction {
+	
+	public int GetWidth() {
+		return width;
+	}
+	
+	public int GetHeight() {
+		return height;
+	}
+	
+ 	public static abstract class EventFunction {
 		public abstract boolean run(Event e);
 	}
 	
@@ -54,6 +70,7 @@ public class Window {
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 		glfwWindowHint(GLFW_SAMPLES, 4); // MSAA x4
+		monitor = glfwGetPrimaryMonitor();
 		
 		// Create the window
 		window = glfwCreateWindow(width, height, title, NULL, NULL);
@@ -62,6 +79,19 @@ public class Window {
 		
 		// Print success
 		System.out.println("GLFW Initialized: " + this.title + " ( " + width + ", " + height + " )");
+		
+		
+		try (MemoryStack s = MemoryStack.stackPush()) {
+            FloatBuffer px = s.mallocFloat(1);
+            FloatBuffer py = s.mallocFloat(1);
+
+            glfwGetMonitorContentScale(monitor, px, py);
+
+            contentScaleX = px.get(0);
+            contentScaleY = py.get(0);
+		}
+		
+		
 
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -171,6 +201,8 @@ public class Window {
 		// Set the clear color
 		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 		
+		window_context = this;
+		
 	}
 	
 	public void Update() {
@@ -188,6 +220,15 @@ public class Window {
 		return glfwWindowShouldClose(window);
 	}
 
+	
+	public float GetContentScaleX() {
+		return contentScaleX;
+	}
+	
+	public float GetContentScaleY() {
+		return contentScaleY;
+	}
+	
 	public void Shutdown() {
 		// Clean up
 		OnEventCallback = null;

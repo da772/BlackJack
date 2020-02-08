@@ -41,11 +41,19 @@ public class Renderer {
 		GL30.glViewport(x, y, width, height);
 	}
 
+	public static void DrawIndexed(Mesh mesh) {
+		if (mesh == null)
+			return;
+		mesh.Bind();
+		GL30.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndexCount(), GL11.GL_UNSIGNED_INT, 0);
+	}
+	
 	public static void Draw(Mesh mesh) {
 		if (mesh == null)
 			return;
 		mesh.Bind();
-		GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndexCount(), GL11.GL_UNSIGNED_INT, 0);
+		GL30.glDrawArrays(GL11.GL_TRIANGLES, 0, mesh.GetVertexCount());
+		GL30.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndexCount(), GL11.GL_UNSIGNED_INT, 0);
 	}
 
 	public static void AddBuffer(int id) {

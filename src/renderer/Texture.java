@@ -21,11 +21,30 @@ public class Texture {
 	ByteBuffer data;
 	private int rendererId;
 	
+	public Texture() {
+		
+	}
+	
 	public Texture(String fileName) {
 		rendererId = GL30.glGenTextures();
 		
 		Renderer.AddTexture(this);
-		LoadImage(fileName);
+		LoadImage(fileName, true);
+	}
+	
+	public Texture(String fileName, boolean fontTexture) {
+		rendererId = GL30.glGenTextures();
+		
+		Renderer.AddTexture(this);
+		LoadImage(fileName, !fontTexture);
+		
+		if (fontTexture) {
+			setParameter(GL30.GL_TEXTURE_WRAP_S, GL30.GL_CLAMP_TO_EDGE);
+		    setParameter(GL30.GL_TEXTURE_WRAP_T, GL30.GL_CLAMP_TO_EDGE);
+		    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
+		    setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
+		}
+		
 	}
 	
 	public void Bind() {
@@ -35,6 +54,10 @@ public class Texture {
 	public void UnBind() {
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
     }
+	
+	public int GetID() {
+		return rendererId;
+	}
 	
 	public void setParameter(int name, int value) {
 		GL30.glTexParameteri(GL30.GL_TEXTURE_2D, name, value);
@@ -55,14 +78,14 @@ public class Texture {
 	    
 	}
 	
-	public void LoadImage(String path) {
+	private void LoadImage(String path, boolean flip) {
 	try (MemoryStack stack = MemoryStack.stackPush()){
 			
 			IntBuffer w = stack.mallocInt(1);
 			IntBuffer h = stack.mallocInt(1);
 			IntBuffer comp = stack.mallocInt(1);
 			
-			stbi_set_flip_vertically_on_load(true);
+			stbi_set_flip_vertically_on_load(flip);
 			
 			InputStream ss = this.getClass().getClassLoader().getResourceAsStream(path);
 			byte[] bytes = IOUtils.toByteArray(ss);
