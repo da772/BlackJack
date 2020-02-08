@@ -14,8 +14,8 @@ public class Timing {
 	 *
 	 * @param fps The desired frame rate, in frames per second
 	 */
-	public static void sync(int fps) {
-	    if (fps <= 0) return;
+	public static void sync(int fps, boolean vsync) {
+	    if (fps <= 0 || vsync) return;
 	     
 	    long errorMargin = 1000*1000; // 1 millisecond error margin for Thread.sleep()
 	    long sleepTime = 1000000000 / fps; // nanoseconds to sleep this frame

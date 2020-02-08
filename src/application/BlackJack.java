@@ -44,15 +44,15 @@ public class BlackJack extends Application {
 	public BlackJack() {
 		// Call super - Set window Title to "Blackjack" set width to 1280 set height to 720
 		super("BlackJack", 1280, 720);
-		cam = new CameraController.OrthographicCameraController(16.f/9.f);
-		
-		fpsCap = 60;
 		
 	}
 	
 	@Override
 	protected void OnInit() {
 		System.out.println("Black Jack Init!");
+		
+		cam = new CameraController.OrthographicCameraController(16.f/9.f);
+		fpsCap = 0;
 		
 		float[] vertices = {
 				-1.5f,  -.5f, 0f,  0.f,0.f, 
@@ -138,10 +138,10 @@ public class BlackJack extends Application {
 				2f, // Font height
 				"Fonts/verdana", // Font path without png or fnt
 				MatrixMath.createTransformMatrix( // Create transform
-				new Vector3f(.5f,0f,-1f), // Position (x, y,z)
+				new Vector3f(.5f,-.85f,-1f), // Position (x, y,z)
 				new Vector3f(0f,0f,0f),  // Rotation (x, y ,z)
 				new Vector3f(1f,1f,1f)),  // Scale (x, y, z)
-				new Vector3f(0.f,0.f,1.f), // Color (r, g, b)
+				new Vector3f(.23f,32.f,.9f), // Color (r, g, b)
 				.5f, // Text Length 0-1 (Percentage of screen)
 				true // Center Text   
 				);
@@ -158,7 +158,7 @@ public class BlackJack extends Application {
 		// Render by Z-Order (Not including HUD)
 		Renderer.DrawIndexed(background);
 		Renderer.DrawIndexed(mesh);
-		Renderer.DrawIndexed(hud2);
+		//Renderer.DrawIndexed(hud2);
 		Renderer.DrawIndexed(hud);
 		TextRenderer.render();
 		

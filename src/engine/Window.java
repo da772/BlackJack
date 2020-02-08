@@ -225,6 +225,10 @@ public class Window {
 		return glGetString(GL_VENDOR) + ", " + glGetString(GL_RENDERER) + ", " +  glGetString(GL_VERSION);
 	}
 	
+	public boolean Vsync() {
+		return vsync > 0;
+	}
+	
 	public float GetTime() {
 		return (float)glfwGetTime();
 	}

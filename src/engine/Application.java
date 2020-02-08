@@ -224,7 +224,7 @@ public class Application {
 				window.Update();
 			}
 			
-			Timing.sync(fpsCap);
+			Timing.sync(fpsCap, window.Vsync());
 		}
 	}
 	
