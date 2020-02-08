@@ -3,9 +3,7 @@ package renderer.font;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
-
+import renderer.Renderer;
 import renderer.Shader;
 import renderer.ShaderLib;
 
@@ -20,8 +18,7 @@ public class TextBatcher {
 	public void render(Map<FontType, List<GUIText>> texts){
 		prepare();
 		for(FontType font : texts.keySet()){
-			GL30.glActiveTexture(GL30.GL_TEXTURE0);
-			GL30.glBindTexture(GL30.GL_TEXTURE_2D, font.getTextureAtlas());
+			font.getTextureAtlas().Bind();
 			for(GUIText text : texts.get(font)){
 				renderText(text);
 			}
@@ -30,7 +27,7 @@ public class TextBatcher {
 	}
 
 	private void prepare(){
-		GL30.glDisable(GL11.GL_DEPTH_TEST);
+		Renderer.SetDepth(false);
 		shader.Bind();
 	}
 	
@@ -38,12 +35,12 @@ public class TextBatcher {
 		text.getVertexArray().Bind();
 		shader.UploadUniformFloat3("color",text.getColor());
 		shader.UploadUniformMat4("u_transform",text.getTransform());
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVerticesSize());
+		Renderer.Draw(text.getVertexArray(), text.getVerticesSize());
 	}
 	
 	private void endRendering(){
 		shader.UnBind();
-		GL30.glEnable(GL11.GL_DEPTH_TEST);
+		Renderer.SetDepth(true);
 	}
 
 }

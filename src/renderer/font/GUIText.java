@@ -57,7 +57,7 @@ public class GUIText {
 			boolean centered) {
 		this.textString = text;
 		this.fontSize = fontSize;
-		this.font = new FontType(new Texture(font+".png", true).GetID(), font);
+		this.font = new FontType(new Texture(font+".png", true), font);
 		this.transform = transform;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;

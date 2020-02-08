@@ -150,7 +150,7 @@ public class BlackJack extends Application {
 		// Render by Z-Order (Not including HUD)
 		Renderer.DrawIndexed(background);
 		Renderer.DrawIndexed(mesh);
-		Renderer.Draw(hud2);
+		Renderer.DrawIndexed(hud2);
 		Renderer.DrawIndexed(hud);
 		TextRenderer.render();
 		

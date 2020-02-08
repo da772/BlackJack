@@ -36,6 +36,14 @@ public class Renderer {
 		GL30.glClearColor(1, 0, 1, 1);
 		GL30.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 	}
+	
+	public static void SetDepth(boolean t) {
+		if (t) {
+			GL30.glEnable(GL11.GL_DEPTH_TEST);
+		} else {
+			GL30.glDisable(GL11.GL_DEPTH_TEST);
+		}
+	}
 
 	public static void SetViewport(int x, int y, int width, int height) {
 		GL30.glViewport(x, y, width, height);
@@ -48,12 +56,20 @@ public class Renderer {
 		GL30.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndexCount(), GL11.GL_UNSIGNED_INT, 0);
 	}
 	
+	public static void Draw(VertexArray ar, int size) {
+		if (ar == null)
+			return;
+		ar.Bind();
+		GL30.glDrawArrays(GL11.GL_TRIANGLES, 0, size);
+		
+	}
+	
+	
 	public static void Draw(Mesh mesh) {
 		if (mesh == null)
 			return;
 		mesh.Bind();
 		GL30.glDrawArrays(GL11.GL_TRIANGLES, 0, mesh.GetVertexCount());
-		GL30.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndexCount(), GL11.GL_UNSIGNED_INT, 0);
 	}
 
 	public static void AddBuffer(int id) {

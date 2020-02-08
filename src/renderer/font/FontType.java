@@ -1,11 +1,12 @@
 package renderer.font;
 
+import renderer.Texture;
 import util.FileLoader;
 
 
 public class FontType {
 
-	private int textureAtlas;
+	private Texture textureAtlas;
 	private TextMeshCreator loader;
 
 	/**
@@ -18,7 +19,7 @@ public class FontType {
 	 *            - the font file containing information about each character in
 	 *            the texture atlas.
 	 */
-	public FontType(int textureAtlas, String fontFile) {
+	public FontType(Texture textureAtlas, String fontFile) {
 		this.textureAtlas = textureAtlas;
 		this.loader = new TextMeshCreator(FileLoader.getResourceAsFile(fontFile+".fnt"));
 		
@@ -27,7 +28,7 @@ public class FontType {
 	/**
 	 * @return The font texture atlas.
 	 */
-	public int getTextureAtlas() {
+	public Texture getTextureAtlas() {
 		return textureAtlas;
 	}
 
