@@ -45,6 +45,9 @@ public class BlackJack extends Application {
 		// Call super - Set window Title to "Blackjack" set width to 1280 set height to 720
 		super("BlackJack", 1280, 720);
 		cam = new CameraController.OrthographicCameraController(16.f/9.f);
+		
+		fpsCap = 60;
+		
 	}
 	
 	@Override
@@ -130,21 +133,26 @@ public class BlackJack extends Application {
 		
 		
 		
-		text = new GUIText("Hello World!", 5f,"Fonts/blackjack", MatrixMath.createTransformMatrix(new Vector3f(.5f,0f,-1f),
-				new Vector3f(0f,0f,0f), new Vector3f(1f,1f,1f)) 
-				, .5f, true  );
-		text.setColor(1, 0, 0);
-		
+		text = new GUIText(
+				"The quick brown fox jumped over the lazy dog0123456789", // Text to display
+				2f, // Font height
+				"Fonts/verdana", // Font path without png or fnt
+				MatrixMath.createTransformMatrix( // Create transform
+				new Vector3f(.5f,0f,-1f), // Position (x, y,z)
+				new Vector3f(0f,0f,0f),  // Rotation (x, y ,z)
+				new Vector3f(1f,1f,1f)),  // Scale (x, y, z)
+				new Vector3f(0.f,0.f,1.f), // Color (r, g, b)
+				.5f, // Text Length 0-1 (Percentage of screen)
+				true // Center Text   
+				);
 		
 		TextRenderer.init();
-		
-		
-		
+
 	}
 	
 	// Called every frame
 	@Override
-	protected void OnUpdate(float timeStep) {
+	protected void OnUpdate(float deltaTime) {
 		count++;
 		
 		// Render by Z-Order (Not including HUD)
@@ -160,24 +168,24 @@ public class BlackJack extends Application {
 		}
 		
 		if (Input.IsKeyPressed(KeyCodes.KEY_D)) {
-			cam.Position.x += 1 * timeStep;
+			cam.Position.x += 1 * deltaTime;
 		}
 		if (Input.IsKeyPressed(KeyCodes.KEY_A)) {
-			cam.Position.x -= 1 * timeStep;
+			cam.Position.x -= 1 * deltaTime;
 		}
 		if (Input.IsKeyPressed(KeyCodes.KEY_W)) {
-			cam.Position.y += 1 * timeStep;
+			cam.Position.y += 1 * deltaTime;
 		}
 		if (Input.IsKeyPressed(KeyCodes.KEY_S)) {
-			cam.Position.y -= 1 * timeStep;
+			cam.Position.y -= 1 * deltaTime;
 		}
 		
 		if (Input.IsKeyPressed(KeyCodes.KEY_Q)) {
-			cam.rotation += 10 * timeStep;
+			cam.rotation += 10 * deltaTime;
 		}
 		
 		if (Input.IsKeyPressed(KeyCodes.KEY_E)) {
-			cam.rotation -= 10 * timeStep;
+			cam.rotation -= 10 * deltaTime;
 		}
 		
 		if (Input.IsKeyPressed(KeyCodes.KEY_BACKSPACE)) {
@@ -188,8 +196,10 @@ public class BlackJack extends Application {
 			TextRenderer.loadText(text);
 		}
 		
-		cam.OnUpdate(timeStep);
+		cam.OnUpdate(deltaTime);
 		
+		
+		window.SetTitle("BlackJack - " + fps + " FPS - OpenGL" + window.GetGLInfo() );
 		
 	}
 	

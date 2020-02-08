@@ -19,7 +19,7 @@ public class Window {
 	int width, height;
 	long window;
 	long monitor;
-	int vsync = 1;
+	int vsync = 0;
 	float contentScaleX, contentScaleY;
 	EventFunction OnEventCallback;
 	
@@ -191,7 +191,7 @@ public class Window {
 		// Make the OpenGL context current
 		glfwMakeContextCurrent(window);
 		// Enable v-sync
-		glfwSwapInterval((int)vsync);
+		glfwSwapInterval(vsync);
 		// Make the window visible
 		glfwShowWindow(window);
 		// Setup OpenGL
@@ -205,11 +205,24 @@ public class Window {
 		
 	}
 	
+	public void SetVSync(boolean b) {
+		vsync = b ? 1 : 0;
+		glfwSwapInterval(vsync);
+	}
+	
+	public void SetTitle(String title) {
+		glfwSetWindowTitle(window, title);
+	}
+	
 	public void Update() {
 		// Swap buffers
 		glfwSwapBuffers(window);
 		// Poll events
 		glfwPollEvents();
+	}
+	
+	public String GetGLInfo() {
+		return glGetString(GL_VENDOR) + ", " + glGetString(GL_RENDERER) + ", " +  glGetString(GL_VERSION);
 	}
 	
 	public float GetTime() {

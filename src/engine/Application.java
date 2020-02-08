@@ -9,6 +9,7 @@ import engine.Events.WindowClosedEvent;
 import engine.Events.WindowResizedEvent;
 //TEMP
 import renderer.Renderer;
+import util.Timing;
 
 
 /* 
@@ -29,6 +30,9 @@ public class Application {
 	protected String title = "Application";
 	protected boolean running = true;
 	private float lastFrameTime = 0;
+	protected long lastTime = 0;
+	protected int fps = 0, frames = 0;
+	protected int fpsCap = 0;
 	
 		
 	public Application() {
@@ -210,17 +214,30 @@ public class Application {
 	 */
 	public void Run() {
 		while (running) {
+			CalcFPS();
 			float time = window.GetTime();
-			float timeStep = time - lastFrameTime;
+			float deltaTime = time - lastFrameTime;
 			lastFrameTime = time;
 			Renderer.Prepare();
-			OnUpdate(timeStep);
+			OnUpdate(deltaTime);
 			if (window != null && !window.IsClosed()) {
 				window.Update();
 			}
+			
+			Timing.sync(fpsCap);
 		}
 	}
 	
+	
+	private void CalcFPS() {
+		frames++;
+		long newTime = System.nanoTime();
+		if (newTime >= lastTime + 1e9) {
+			fps = frames;
+			frames = 0;
+			lastTime = newTime;
+		}	
+	}
 	
 	/*
 	 * Application Shutdown
@@ -251,7 +268,7 @@ public class Application {
 	 * To be overridden by child class
 	 * 	
 	 */
-	protected void OnUpdate(float timeStep) {};
+	protected void OnUpdate(float deltaTime) {};
 	/*
 	 * To be overridden by child class
 	 * 	

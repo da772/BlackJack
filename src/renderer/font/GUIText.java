@@ -18,7 +18,7 @@ public class GUIText {
 	private VertexBuffer vbuffer;
 	private int verticesSize;
 
-	private Vector3f colour = new Vector3f(0f, 0f, 0f);
+	private Vector3f color = new Vector3f(0f, 0f, 0f);
 
 	private Matrix4f transform;
 	private float lineMaxSize;
@@ -63,6 +63,19 @@ public class GUIText {
 		this.centerText = centered;
 		TextRenderer.loadText(this);;
 	}
+	
+	
+	public GUIText(String text, float fontSize, String font, Matrix4f transform, Vector3f color, float maxLineLength,
+			boolean centered) {
+		this.textString = text;
+		this.fontSize = fontSize;
+		this.font = new FontType(new Texture(font+".png", true), font);
+		this.transform = transform;
+		this.color = color;
+		this.lineMaxSize = maxLineLength;
+		this.centerText = centered;
+		TextRenderer.loadText(this);;
+	}
 
 	/**
 	 * Remove the text from the screen.
@@ -89,14 +102,14 @@ public class GUIText {
 	 *            - blue value, between 0 and 1.
 	 */
 	public void setColor(float r, float g, float b) {
-		colour.set(r, g, b);
+		color.set(r, g, b);
 	}
 
 	/**
-	 * @return the colour of the text.
+	 * @return the color of the text.
 	 */
 	public Vector3f getColor() {
-		return colour;
+		return color;
 	}
 
 	/**

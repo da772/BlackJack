@@ -6,6 +6,8 @@
 		- Object Rendering
 			- [X] Vertex/Index Buffers
 			- [X] VertexArrays
+			- [ ] Quad Renderer
+				- [ ] Batching
 			- [ ] Collision Detection
 		- Shader
 			- Textures
@@ -16,13 +18,15 @@
 			- [X] View Projection Matrix
 			- [ ] Shader Pool
 		- Hud Rendering
-			- [ ] Text Rendering
+			- [X] Text Rendering
+				- [X] Text Batching
+				- [X] Multiple fonts
+				- [X] Lines of text
 			- [ ] Buttons
 			- [X] Static position
 			- [ ] Mouse Detection
 		- Renderer
 			- [ ]  Z-Ordering
-			- [ ]  Batching
 			- [X]  Anti-Aliasing
 		- Window
 			- [X] Events
@@ -36,8 +40,8 @@
 	- Application
 		- Main Loop
 			- [X] Delta Time
-			- [ ] Frame Cap
-			- [ ] FPS Counter
+			- [X] Frame Cap
+			- [X] FPS Counter
 			- [ ] Profiling tools
 		- Events
 			- [X] Window Resized
