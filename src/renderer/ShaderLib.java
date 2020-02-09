@@ -207,7 +207,7 @@ public class ShaderLib {
 					"\r\n" + 
 					"\r\n" + 
 					"void main() {\r\n" + 
-					"	color = v_color*texture(u_Texture, v_TexCoord);\r\n" + 
+					"	color = v_color*vec4(v_color.r, v_color.g, v_color.b, texture(u_Texture, v_TexCoord).a);\r\n" + 
 					"}" 
 					};
 			

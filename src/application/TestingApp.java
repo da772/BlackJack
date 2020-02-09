@@ -169,7 +169,7 @@ public class TestingApp extends Application {
 		debugText = new GUIText(
 				"", // Text to display
 				.9f, // Font height
-				"Fonts/arial", // Font path without png or fnt
+				"Fonts/verdana", // Font path without png or fnt
 				 // Create transform
 				new Vector3f(-.25f + guiOffset,.2f + guiOffset,-1f), // Position (x, y,z)
 				new Vector3f(0f,0f,0f),  // Rotation (x, y ,z)

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="res"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-assimp.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-assimp-javadoc.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/Linux/lwjgl-assimp-natives-linux.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-assimp-sources.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-glfw.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-glfw-javadoc.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/Linux/lwjgl-glfw-natives-linux.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-glfw-sources.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-javadoc.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-openal.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-openal-javadoc.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/Linux/lwjgl-openal-natives-linux.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-openal-sources.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-opengl.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-opengl-javadoc.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/Linux/lwjgl-opengl-natives-linux.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-opengl-sources.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-sources.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-stb.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-stb-javadoc.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/Linux/lwjgl-stb-natives-linux.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-stb-sources.jar"/>
+	<classpathentry kind="lib" path="vendor/joml/joml-1.9.20.jar"/>
+	<classpathentry kind="lib" path="vendor/commons-io-2.6/commons-io-2.6.jar"/>
+	<classpathentry kind="lib" path="vendor/lwjgl3/Linux/lwjgl-natives-linux.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
