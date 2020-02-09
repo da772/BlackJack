@@ -91,6 +91,10 @@ public class GUIText {
 		TextRenderer.loadText(this);
 	}
 
+	public void add() {
+		TextRenderer.loadText(this);
+	}
+	
 	/**
 	 * Remove the text from the screen.
 	 */

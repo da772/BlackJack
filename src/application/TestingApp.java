@@ -278,9 +278,9 @@ public class TestingApp extends Application {
 				toggleDebug = !toggleDebug;
 				
 				if (toggleDebug == false) {
-					//TextRenderer.removeText(debugText);
+					debugText.remove();
 				} else {
-					//TextRenderer.loadText(debugText);
+					debugText.add();
 				}
 				
 			}
