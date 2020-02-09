@@ -37,7 +37,7 @@
 			- [X] Shader Pool
 		- Hud Rendering
 			- [X] Text Rendering
-				- [X] Text Batching
+				- [ ] Text Batching
 				- [X] Multiple fonts
 				- [X] Lines of text
 			- [ ] Buttons
