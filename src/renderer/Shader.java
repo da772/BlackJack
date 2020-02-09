@@ -100,7 +100,7 @@ public class Shader {
 				String err = GL30.glGetShaderInfoLog(shader);
 				
 				GL30.glDeleteShader(shader);
-				
+				System.out.println(shaders.get(i));
 				System.out.println("OpenGL Shader Error: " + err);
 				return;	
 			}

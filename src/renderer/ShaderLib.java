@@ -179,37 +179,38 @@ public class ShaderLib {
 	
 	public final static String[] Shader_Font = new String[] {
 			"#version 330\r\n" + 
-			"\r\n" + 
-			"in vec2 position;\r\n" + 
-			"in vec2 textureCoords;\r\n" + 
-			"\r\n" + 
-			"out vec2 pass_textureCoords;\r\n" + 
-			"out vec4 pass_color;\r\n" + 
-			"\r\n" + 
-			"uniform mat4 u_transform;\r\n" + 
-			"uniform vec4 color;\r\n" + 
-			"\r\n" + 
-			"void main(void){\r\n" + 
-			"\r\n" + 
-			"	gl_Position = u_transform * vec4(position, 0f, 1.f);\r\n" + 
-			"	pass_textureCoords = textureCoords;\r\n" + 
-			"	pass_color = color;\r\n" + 
-			"\r\n" + 
-			"}","#version 330\r\n" + 
+					" \r\n" + 
+					"layout(location = 0) in vec3 a_Position;\r\n" + 
+					"layout(location = 1) in vec2 a_TexCoord;\r\n" + 
+					" \r\n" + 
+					"uniform mat4 u_transform;\r\n" + 
+					"uniform vec4 u_color;\r\n" + 
+					"out vec2 v_TexCoord;\r\n" + 
+					"out vec4 v_color;\r\n" + 
+					" \r\n" + 
+					"void main() \r\n" + 
+					"{\r\n" + 
+					"	v_TexCoord = a_TexCoord;\r\n" + 
+					"	v_color = u_color;\r\n" + 
+					"    gl_Position = u_transform * vec4(a_Position,1.f);\r\n" + 
+					"}",
+					
+					
+					"#version 330 core\r\n" + 
 					"\r\n" + 
-					"in vec2 pass_textureCoords;\r\n" + 
-					"in vec4 pass_color;\r\n" + 
+					"layout(location = 0) out vec4 color;\r\n" + 
 					"\r\n" + 
-					"out vec4 out_colour;\r\n" + 
+					"in vec2 v_TexCoord;\r\n" + 
+					"in vec4 v_color;\r\n" + 
 					"\r\n" + 
-					"uniform sampler2D fontAtlas;\r\n" + 
+					"uniform sampler2D u_Texture;\r\n" + 
 					"\r\n" + 
-					"void main(void){\r\n" + 
 					"\r\n" + 
-					"	out_colour =  pass_color*vec4(vec3(pass_color.r, pass_color.g, pass_color.b), texture(fontAtlas, pass_textureCoords).a);\r\n" + 
-					"\r\n" + 
-					"}"
-	};
+					"void main() {\r\n" + 
+					"	color = v_color*texture(u_Texture, v_TexCoord);\r\n" + 
+					"}" 
+					};
+			
 	
 	
 
