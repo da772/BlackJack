@@ -104,7 +104,7 @@ public class Shader {
 				System.out.println("OpenGL Shader Error: " + err);
 				return;	
 			}
-			
+			isCompiled.clear();
 			GL30.glAttachShader(rendererId, shader);
 			shaderIds.add(shader);
 			
@@ -114,7 +114,6 @@ public class Shader {
 		IntBuffer isLinked = BufferUtils.createIntBuffer(1);
 		isLinked.put(0);
 		isLinked.flip();
-		
 		GL30.glGetProgramiv(rendererId, GL30.GL_LINK_STATUS, isLinked);
 		
 		if (isLinked.get() == GL30.GL_FALSE) {
@@ -128,6 +127,7 @@ public class Shader {
 			return;
 			
 		}
+		isLinked.clear();
 		Renderer.AddShader(this);
 	}
 	
@@ -155,6 +155,7 @@ public class Shader {
 			data.get(fb);
 			GL30.glUniformMatrix4fv(loc, false, fb);
 			GL30.glUniform3fv(loc, fb);
+			fb.clear();
 		}
 	}
 	
@@ -166,6 +167,7 @@ public class Shader {
 			data.get(fb);
 			GL30.glUniformMatrix4fv(loc, false, fb);
 			GL30.glUniform3fv(loc, fb);
+			fb.clear();
 		}
 	}
 	
@@ -177,6 +179,7 @@ public class Shader {
 			data.get(fb);
 			GL30.glUniformMatrix4fv(loc, false, fb);
 			GL30.glUniform3fv(loc, fb);
+			fb.clear();
 		}
 	}
 	
@@ -195,6 +198,7 @@ public class Shader {
 			FloatBuffer fb = stack.mallocFloat(16);
 			data.get(fb);
 			GL30.glUniformMatrix4fv(loc, false, fb);
+			fb.clear();
 		}
 	}
 	
@@ -205,6 +209,7 @@ public class Shader {
 			FloatBuffer fb = stack.mallocFloat(12);
 			data.get(fb);
 			GL30.glUniformMatrix3fv(loc, false, fb);
+			fb.clear();
 		}
 	}
 	

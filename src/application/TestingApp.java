@@ -34,7 +34,7 @@ public class TestingApp extends Application {
 	
 	
 	TextBatcher fr;
-	
+	boolean toggleDebug = true, vsync = false;
 	GUIText text, debugText;
 	
 	int count =1 ;
@@ -50,7 +50,7 @@ public class TestingApp extends Application {
 		System.out.println("Black Jack Init!");
 		
 		cam = new CameraController.OrthographicCameraController(16.f/9.f);
-		window.SetVSync(true);
+		window.SetVSync(vsync);
 		
 		float[] vertices = {
 				-1.5f,  -.5f, 0f,  0.f,0.f, 
@@ -138,7 +138,7 @@ public class TestingApp extends Application {
 		transform, cam.GetCamera());
 		
 		
-		float guiOffset = .5f;
+		float guiOffset = .75f;
 		
 		pos = new Vector3f(guiOffset,guiOffset,0f);
 		scale = new Vector3f(.25f,.25f,1.f);
@@ -195,7 +195,9 @@ public class TestingApp extends Application {
 		Renderer.DrawIndexed(mesh);
 		
 		Renderer.SetDepth(false);
-		Renderer.DrawIndexed(hud2);
+		if (toggleDebug) {
+			Renderer.DrawIndexed(hud2);
+		}
 		Renderer.DrawIndexed(hud);
 		Renderer.SetDepth(true);
 		
@@ -216,8 +218,10 @@ public class TestingApp extends Application {
 			r+= 1 * deltaTime;
 			
 		}
-		
-		debugText.SetText(fps + " fps | VSync: " + true + "\nTexture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() );
+		if (toggleDebug) {
+		debugText.SetText(fps + " fps | VSync: " + vsync + "\nTexture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() + 
+				"\nMouseX: " + (int)Input.GetMouseX() + " | MouseY: " + (int)Input.GetMouseY() );
+		}
 		text.setColor(1, r, 1);
 		
 		
@@ -267,8 +271,25 @@ public class TestingApp extends Application {
 	
 	@Override
 	protected boolean KeyEvent(Events.KeyEvent e) {
+	
+		if (e instanceof Events.KeyPressedEvent) {
+			Events.KeyPressedEvent ev = (Events.KeyPressedEvent) e;
+			if (ev.GetKeyCode() == KeyCodes.KEY_G) {
+				toggleDebug = !toggleDebug;
+				
+				if (toggleDebug == false) {
+					//TextRenderer.removeText(debugText);
+				} else {
+					//TextRenderer.loadText(debugText);
+				}
+				
+			}
+		}
+		
 		return false;
 	}
+	
+	
 	
 	@Override
 	protected boolean MouseScrolledEvent(Events.MouseScrolledEvent e) {

@@ -24,7 +24,9 @@ public class FileLoader {
 	            while ((bytesRead = in.read(buffer)) != -1) {
 	                out.write(buffer, 0, bytesRead);
 	            }
+	            out.close();
 	        }
+	        in.close();
 	        return tempFile;
 	    } catch (IOException e) {
 	        e.printStackTrace();

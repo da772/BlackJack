@@ -40,7 +40,6 @@ public class TextRenderer {
 	}
 
 	public static void cleanUp() {
-
 	}
 
 }

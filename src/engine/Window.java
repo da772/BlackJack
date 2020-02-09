@@ -89,6 +89,8 @@ public class Window {
 
             contentScaleX = px.get(0);
             contentScaleY = py.get(0);
+            px.clear();
+            py.clear();
 		}
 		
 		

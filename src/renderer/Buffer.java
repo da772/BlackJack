@@ -5,6 +5,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL30;
 
 public class Buffer {
 
@@ -24,6 +25,7 @@ public class Buffer {
 			ptr.put(vertices);
 			ptr.flip();
 			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, ptr, GL15.GL_STATIC_DRAW);
+			ptr.clear();
 			Renderer.AddBuffer(rendererId);
 		}
 		
@@ -33,6 +35,11 @@ public class Buffer {
 		
 		public void UnBind() {
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		}
+		
+		public void CleanUp() {
+			GL30.glDeleteBuffers(rendererId);
+			Renderer.RemoveBuffer(rendererId);
 		}
 		
 	}
@@ -52,6 +59,7 @@ public class Buffer {
 			ptr.put(indices);
 			ptr.flip();
 			GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, ptr, GL15.GL_STATIC_DRAW);
+			ptr.clear();
 			Renderer.AddBuffer(rendererId);
 		}
 		
@@ -62,6 +70,12 @@ public class Buffer {
 		public void UnBind() {
 			GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
 		}
+		
+		public void CleanUp() {
+			GL30.glDeleteBuffers(rendererId);
+			Renderer.RemoveBuffer(rendererId);
+		}
+		
 	}
 	
 	

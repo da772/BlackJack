@@ -5,6 +5,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import renderer.Buffer.VertexBuffer;
+import renderer.Renderer;
 import renderer.Texture;
 import renderer.VertexArray;
 import util.MathLib;
@@ -86,7 +87,7 @@ public class GUIText {
 	
 	public void SetText(String text) {
 		this.textString = text;
-		TextRenderer.removeText(this);
+		this.remove();
 		TextRenderer.loadText(this);
 	}
 
@@ -95,6 +96,8 @@ public class GUIText {
 	 */
 	public void remove() {
 		TextRenderer.removeText(this);
+		varray.CleanUp();
+		vbuffer.CleanUp();
 	}
 
 	/**

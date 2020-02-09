@@ -332,7 +332,7 @@ public class Events {
 		protected int m_Keycode;
 		public final int Type = EventCategory.Keyboard.getValue() | EventCategory.Input.getValue();
 		
-		final int GetKeyCode() { return m_Keycode; };
+		public final int GetKeyCode() { return m_Keycode; };
 		
 		protected KeyEvent(final int keycode) {
 			m_Keycode = keycode;
@@ -346,6 +346,7 @@ public class Events {
 		
 		@Override
 		abstract public String GetName();
+		
 
 		@Override
 		public int GetCategoryFlags() {

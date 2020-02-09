@@ -115,6 +115,7 @@ public class Texture {
 	    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
 	    setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
 	    GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
+	    stbi_image_free(data);
 	    
 	}
 	
@@ -137,13 +138,17 @@ public class Texture {
 			data = stbi_load_from_memory(buffer, w, h, comp, 4);
 			
 			if (data == null) {
+				ss.close();
 				 throw new RuntimeException("Failed to load a texture file!"
                          + System.lineSeparator() + stbi_failure_reason());
 			}
 			
 			width = w.get();
 			height = h.get();
-			
+			ss.close();
+			w.clear();
+			h.clear();
+			comp.clear();
 			
 			
 	} catch (IOException e1) {
@@ -155,8 +160,6 @@ public class Texture {
 	
 	public void CleanUp() {
 		GL30.glDeleteTextures(rendererId);
-		if (data.hasRemaining())
-			stbi_image_free(data);
 	}
 	
 

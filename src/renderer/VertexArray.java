@@ -17,6 +17,7 @@ public class VertexArray {
 	
 	public VertexArray() {
 		rendererId = GL30.glGenVertexArrays();
+		Renderer.AddVertexArray(rendererId);
 	}
 	
 	public void Bind() {
@@ -25,6 +26,11 @@ public class VertexArray {
 	
 	public void UnBind() {
 		GL30.glBindVertexArray(0);
+	}
+	
+	public void CleanUp() {
+		Renderer.RemoveVertexArray(rendererId);
+		GL30.glDeleteVertexArrays(rendererId);
 	}
 	
 	public void AddVertexBuffer(VertexBuffer vb, BufferLayout layout) {

@@ -26,7 +26,9 @@ public class Input {
 		if (Application.app != null && Application.app.GetWindow() != null) {
 			DoubleBuffer posX = BufferUtils.createDoubleBuffer(1);
 			glfwGetCursorPos(Application.app.GetWindow().GetWindowContext(), posX, null);
-			return (float)posX.get(0);
+			float x = (float)posX.get(0);
+			posX.clear();
+			return x;
 		}
 		return 0;
 	}
@@ -35,7 +37,9 @@ public class Input {
 		if (Application.app != null && Application.app.GetWindow() != null) {
 			DoubleBuffer posY = BufferUtils.createDoubleBuffer(1);
 			glfwGetCursorPos(Application.app.GetWindow().GetWindowContext(), null, posY);
-			return (float)posY.get(0);
+			float y = (float)posY.get(0);
+			posY.clear();
+			return y;
 		}
 		return 0;
 	}
