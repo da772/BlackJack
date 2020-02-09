@@ -42,13 +42,13 @@ public class TestingApp extends Application {
 	
 	public TestingApp() {
 		// Call super - Set window Title to "Blackjack" set width to 1280 set height to 720
-		super("BlackJack", 1280, 720);
+		super("Testing", 1280, 720);
 		
 	}
 	
 	@Override
 	protected void OnInit() {
-		System.out.println("Black Jack Init!");
+		System.out.println(title+" Init!");
 		
 		cam = new CameraController.OrthographicCameraController(16.f/9.f);
 		window.SetVSync(vsync);
@@ -225,7 +225,7 @@ public class TestingApp extends Application {
 		"\nMouseX: " + (int)Input.GetMouseX() + " | MouseY: " + (int)Input.GetMouseY()  +
 		"\nTexture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() +
 				"\n Memory Usage: " + Math.round( (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1e6 ) +"mb"  +
-				"\nMemory Alloc: "+ Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/" +(Math.round(Runtime.getRuntime().totalMemory()/1e6) + "mb"));
+				"\nMemory Alloc: "+ Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/" +(Math.round(Runtime.getRuntime().totalMemory()/1e6) + "mb "));
 		}
 		text.setColor(1, r, 1, 1f);
 		
@@ -266,7 +266,7 @@ public class TestingApp extends Application {
 		cam.OnUpdate(deltaTime);
 		
 		
-		window.SetTitle("BlackJack - " + fps + " FPS - OpenGL" + window.GetGLInfo() );
+		window.SetTitle(title+" - " + fps + " FPS - OpenGL" + window.GetGLInfo() );
 		
 	}
 	

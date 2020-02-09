@@ -247,7 +247,7 @@ public class Window {
 	}
 	
 	public String GetGLInfo() {
-		return glGetString(GL_VENDOR) + ", " + glGetString(GL_RENDERER) + ", " +  glGetString(GL_VERSION);
+		return glGetString(GL_VENDOR) +  glGetString(GL_VERSION) + ", " + glGetString(GL_RENDERER);
 	}
 	
 	public boolean Vsync() {
