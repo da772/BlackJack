@@ -224,8 +224,8 @@ public class TestingApp extends Application {
 		"\nWidth: " + window.GetWidth() + " | Height: " + window.GetHeight() +
 		"\nMouseX: " + (int)Input.GetMouseX() + " | MouseY: " + (int)Input.GetMouseY()  +
 		"\nTexture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() +
-				"\n Memory Usage: " + Math.round( (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/2e6 ) +"mb"  +
-				"\nMemory Alloc: "+ Math.round(Runtime.getRuntime().freeMemory()/2e6) +"mb/" +(Math.round(Runtime.getRuntime().totalMemory()/2e6) + "mb"));
+				"\n Memory Usage: " + Math.round( (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1e6 ) +"mb"  +
+				"\nMemory Alloc: "+ Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/" +(Math.round(Runtime.getRuntime().totalMemory()/1e6) + "mb"));
 		}
 		text.setColor(1, r, 1, 1f);
 		
