@@ -170,6 +170,8 @@ public class Window {
 		
 		// Set up a  window resized callback it will be called everytime the window is resized
 		glfwSetWindowSizeCallback(window, (window, width, height) -> {
+			this.width = width;
+			this.height = height;
 			Events.WindowResizedEvent e = new Events.WindowResizedEvent(width,height);
 			OnEvent( (Events.Event) e );
 		});

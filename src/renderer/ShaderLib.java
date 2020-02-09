@@ -184,10 +184,10 @@ public class ShaderLib {
 			"in vec2 textureCoords;\r\n" + 
 			"\r\n" + 
 			"out vec2 pass_textureCoords;\r\n" + 
-			"out vec3 pass_color;\r\n" + 
+			"out vec4 pass_color;\r\n" + 
 			"\r\n" + 
 			"uniform mat4 u_transform;\r\n" + 
-			"uniform vec3 color;\r\n" + 
+			"uniform vec4 color;\r\n" + 
 			"\r\n" + 
 			"void main(void){\r\n" + 
 			"\r\n" + 
@@ -198,7 +198,7 @@ public class ShaderLib {
 			"}","#version 330\r\n" + 
 					"\r\n" + 
 					"in vec2 pass_textureCoords;\r\n" + 
-					"in vec3 pass_color;\r\n" + 
+					"in vec4 pass_color;\r\n" + 
 					"\r\n" + 
 					"out vec4 out_colour;\r\n" + 
 					"\r\n" + 
@@ -206,7 +206,7 @@ public class ShaderLib {
 					"\r\n" + 
 					"void main(void){\r\n" + 
 					"\r\n" + 
-					"	out_colour =  vec4(pass_color, texture(fontAtlas, pass_textureCoords).a);\r\n" + 
+					"	out_colour =  pass_color*vec4(vec3(pass_color.r, pass_color.g, pass_color.b), texture(fontAtlas, pass_textureCoords).a);\r\n" + 
 					"\r\n" + 
 					"}"
 	};

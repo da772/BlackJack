@@ -3,6 +3,7 @@ package application;
 import org.joml.Matrix4f;
 
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import engine.Application;
 import engine.CameraController;
@@ -152,28 +153,28 @@ public class TestingApp extends Application {
 		transform, cam.GetCamera());
 		
 		text = new GUIText(
-				"a", // Text to display
+				"Hello World!", // Text to display
 				1.75f, // Font height
 				"Fonts/verdana", // Font path without png or fnt
 				 // Create transform
-				new Vector3f(0f,0f,-1f), // Position (x, y,z)
+				new Vector3f(-.15f,0f,-1f), // Position (x, y,z)
 				new Vector3f(0f,0f,0f),  // Rotation (x, y ,z)
 				new Vector3f(1f,1f,1f),  // Scale (x, y, z)
-				new Vector3f(0f,0f,0f), // Color (r, g, b)
-				.1f, // Text Length 0-1 (Percentage of screen)
+				new Vector4f(0f,0f,0f, 1f), // Color (r, g, b)
+				.3f, // Text Length 0-1 (Percentage of screen)
 				false // Center Text   
 				);
 		
 		
 		debugText = new GUIText(
-				"0000 Fps", // Text to display
-				1f, // Font height
-				"Fonts/verdana", // Font path without png or fnt
+				"", // Text to display
+				.9f, // Font height
+				"Fonts/arial", // Font path without png or fnt
 				 // Create transform
 				new Vector3f(-.25f + guiOffset,.2f + guiOffset,-1f), // Position (x, y,z)
 				new Vector3f(0f,0f,0f),  // Rotation (x, y ,z)
 				new Vector3f(1f,1f,1f),  // Scale (x, y, z)
-				new Vector3f(1f,0f,1f), // Color (r, g, b)
+				new Vector4f(1f,0f,1f, 1f), // Color (r, g, b, a)
 				.25f, // Text Length 0-1 (Percentage of screen)
 				true // Center Text   
 				);
@@ -219,10 +220,14 @@ public class TestingApp extends Application {
 			
 		}
 		if (toggleDebug) {
-		debugText.SetText(fps + " fps | VSync: " + vsync + "\nTexture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() + 
-				"\nMouseX: " + (int)Input.GetMouseX() + " | MouseY: " + (int)Input.GetMouseY() );
+		debugText.SetText(fps + " fps | VSync: " + vsync +
+		"\nWidth: " + window.GetWidth() + " | Height: " + window.GetHeight() +
+		"\nMouseX: " + (int)Input.GetMouseX() + " | MouseY: " + (int)Input.GetMouseY()  +
+		"\nTexture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() +
+				"\n Memory Usage: " + Math.round( (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/2e6 ) +"mb"  +
+				"\nMemory Alloc: "+ Math.round(Runtime.getRuntime().freeMemory()/2e6) +"mb/" +(Math.round(Runtime.getRuntime().totalMemory()/2e6) + "mb"));
 		}
-		text.setColor(1, r, 1);
+		text.setColor(1, r, 1, 1f);
 		
 		
 		if (Input.IsMouseButtonPressed(KeyCodes.MOUSE_RIGHT)) {

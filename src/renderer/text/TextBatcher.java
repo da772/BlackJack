@@ -33,7 +33,7 @@ public class TextBatcher {
 	
 	private void renderText(GUIText text){
 		text.getVertexArray().Bind();
-		shader.UploadUniformFloat3("color",text.getColor());
+		shader.UploadUniformFloat4("color",text.getColor());
 		shader.UploadUniformMat4("u_transform",text.getTransform());
 		Renderer.Draw(text.getVertexArray(), text.getVerticesSize());
 	}

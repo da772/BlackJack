@@ -153,8 +153,7 @@ public class Shader {
 		{
 			FloatBuffer fb = stack.mallocFloat(4);
 			data.get(fb);
-			GL30.glUniformMatrix4fv(loc, false, fb);
-			GL30.glUniform3fv(loc, fb);
+			GL30.glUniform4fv(loc, fb);
 			fb.clear();
 		}
 	}
@@ -165,7 +164,6 @@ public class Shader {
 		{
 			FloatBuffer fb = stack.mallocFloat(3);
 			data.get(fb);
-			GL30.glUniformMatrix4fv(loc, false, fb);
 			GL30.glUniform3fv(loc, fb);
 			fb.clear();
 		}
@@ -177,18 +175,20 @@ public class Shader {
 		{
 			FloatBuffer fb = stack.mallocFloat(2);
 			data.get(fb);
-			GL30.glUniformMatrix4fv(loc, false, fb);
-			GL30.glUniform3fv(loc, fb);
+			GL30.glUniform2fv(loc, fb);
 			fb.clear();
 		}
 	}
 	
 	public void UploadUniformFloat(String name, float data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
-		FloatBuffer ptr = BufferUtils.createFloatBuffer(1);
-		ptr.put(data);
-		ptr.flip();
-		GL30.glUniform1f(loc, data);
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			FloatBuffer fb = stack.mallocFloat(1);
+			fb.put(data);
+			GL30.glUniform1fv(loc, fb);
+			fb.clear();
+		}
 	}
 	
 	public void UploadUniformMat4(String name, Matrix4f data) {

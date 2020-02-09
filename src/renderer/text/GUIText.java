@@ -3,6 +3,7 @@ package renderer.text;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import renderer.Buffer.VertexBuffer;
 import renderer.Renderer;
@@ -20,7 +21,7 @@ public class GUIText {
 	private VertexBuffer vbuffer;
 	private int verticesSize;
 
-	private Vector3f color = new Vector3f(0f, 0f, 0f);
+	private Vector4f color = new Vector4f(0f, 0f, 0f, 1f);
 	private Vector3f position = new Vector3f(0f, 0f, 0f);
 	private Vector3f scale = new Vector3f(0f, 0f, 0f);
 	private Vector3f rotation = new Vector3f(0f, 0f, 0f);
@@ -70,7 +71,7 @@ public class GUIText {
 	}
 	
 	
-	public GUIText(String text, float fontSize, String font, Vector3f pos, Vector3f rot, Vector3f scale, Vector3f color, float maxLineLength,
+	public GUIText(String text, float fontSize, String font, Vector3f pos, Vector3f rot, Vector3f scale, Vector4f color, float maxLineLength,
 			boolean centered) {
 		this.textString = text;
 		this.fontSize = fontSize;
@@ -121,8 +122,8 @@ public class GUIText {
 	 * @param b
 	 *            - blue value, between 0 and 1.
 	 */
-	public void setColor(float r, float g, float b) {
-		color.set(r, g, b);
+	public void setColor(float r, float g, float b, float a) {
+		color.set(r, g, b, a);
 	}
 	
 	public void setPosition(float x, float y, float z) {
@@ -138,7 +139,7 @@ public class GUIText {
 	/**
 	 * @return the color of the text.
 	 */
-	public Vector3f getColor() {
+	public Vector4f getColor() {
 		return color;
 	}
 
