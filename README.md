@@ -3,13 +3,13 @@
 ## Build Instructions
 ### Windows
 	1. Clone repository
-	2. Run scripts/GenerateProjectWindows.bat
+	2. Run scripts/GenerateProject_Windows.bat
 	3. Eclipse -> File -> Import -> BlackJack
 	4. Run src/engine.main.java
 	
 ### Mac
 	1. Clone repository
-	2. Run scripts/GenerateProjectMac.command
+	2. Run scripts/GenerateProject_Mac.command
 	3. Eclipse -> File -> Import -> BlackJack
 	4. Right click src/engine/Main.java -> Properties
 	5. Run/Debug Settings -> New... -> Java Application -> Arguments Tab
