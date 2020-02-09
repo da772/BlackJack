@@ -134,13 +134,13 @@ public class Application {
 	 * 		
 	 */
 	protected boolean WindowResizedEvent(WindowResizedEvent e) {
-		//System.out.println(e);
-		IntBuffer width = BufferUtils.createIntBuffer(1);
-		IntBuffer height = BufferUtils.createIntBuffer(1);
-		window.GetFrameBuffers(width, height);
-		Renderer.SetViewport(0, 0, width.get(), height.get());
-		width.clear();
-		height.clear();
+		
+		IntBuffer w = BufferUtils.createIntBuffer(1);
+		IntBuffer h = BufferUtils.createIntBuffer(1);
+		window.GetFrameBuffers(w, h);
+		Renderer.SetViewport(0, 0, w.get(),h.get());
+		w.clear();
+		h.clear();
 		return false;
 	}
 	

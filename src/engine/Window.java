@@ -231,9 +231,19 @@ public class Window {
 	}
 	
 	public void GetFrameBuffers(IntBuffer width, IntBuffer height) {
-		glfwGetFramebufferSize(window, width, height);
-		width.flip();
-		height.flip();
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			IntBuffer w = stack.mallocInt(1);
+			IntBuffer h = stack.mallocInt(1);	
+			glfwGetFramebufferSize(window, w, h);
+			width.put(w.get());
+			height.put(h.get());
+			width.flip();
+			height.flip();
+			w.clear();
+			h.clear();	
+		}
+		
 	}
 	
 	public String GetGLInfo() {
