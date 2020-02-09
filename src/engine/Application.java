@@ -1,5 +1,9 @@
 package engine;
 
+import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
+
 import engine.Events.Event;
 import engine.Events.KeyEvent;
 import engine.Events.MouseButtonEvent;
@@ -7,9 +11,11 @@ import engine.Events.MouseMovedEvent;
 import engine.Events.MouseScrolledEvent;
 import engine.Events.WindowClosedEvent;
 import engine.Events.WindowResizedEvent;
+import util.Timing;
+
 //TEMP
 import renderer.Renderer;
-import util.Timing;
+
 
 
 /* 
@@ -129,7 +135,12 @@ public class Application {
 	 */
 	protected boolean WindowResizedEvent(WindowResizedEvent e) {
 		//System.out.println(e);
-		Renderer.SetViewport(0, 0, (int)e.GetWidth(), (int)e.GetHeight());
+		IntBuffer width = BufferUtils.createIntBuffer(1);
+		IntBuffer height = BufferUtils.createIntBuffer(1);
+		window.GetFrameBuffers(width, height);
+		Renderer.SetViewport(0, 0, width.get(), height.get());
+		width.clear();
+		height.clear();
 		return false;
 	}
 	

@@ -12,6 +12,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 public class Window {
 
@@ -227,6 +228,12 @@ public class Window {
 		glfwSwapBuffers(window);
 		// Poll events
 		glfwPollEvents();
+	}
+	
+	public void GetFrameBuffers(IntBuffer width, IntBuffer height) {
+		glfwGetFramebufferSize(window, width, height);
+		width.flip();
+		height.flip();
 	}
 	
 	public String GetGLInfo() {
