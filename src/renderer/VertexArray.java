@@ -33,7 +33,7 @@ public class VertexArray {
 		GL30.glDeleteVertexArrays(rendererId);
 	}
 	
-	public void AddVertexBuffer(VertexBuffer vb, BufferLayout layout) {
+	public VertexArray AddVertexBuffer(VertexBuffer vb, BufferLayout layout) {
 		Bind();
 		vb.Bind();
 		for (int i = 0; i < layout.size(); i++) {
@@ -42,13 +42,15 @@ public class VertexArray {
 		}
 		vb.UnBind();
 		UnBind();
+		return this;
 	}
 	
-	public void AddIndexBuffer(IndexBuffer ib) {
+	public VertexArray AddIndexBuffer(IndexBuffer ib) {
 		Bind();
 		ib.Bind();
 		UnBind();
 		ib.UnBind();
+		return this;
 	}
 	
 	

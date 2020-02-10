@@ -56,6 +56,11 @@ public class Renderer {
 		GL30.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndexCount(), GL11.GL_UNSIGNED_INT, 0);
 		mesh.UnBind();
 	}
+		
+	public static void DrawElements(int count) {
+		GL30.glDrawElements(GL11.GL_TRIANGLES, count, GL11.GL_UNSIGNED_INT, 0);
+	}
+	
 	
 	public static void Draw(VertexArray ar, int size) {
 		if (ar == null)

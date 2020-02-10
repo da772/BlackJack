@@ -35,11 +35,15 @@
 			- [X] Uniforms
 			- [X] View Projection Matrix
 			- [X] Shader Pool
-		- Hud Rendering
+		- GUI Rendering
 			- [X] Text Rendering
 				- [ ] Text Batching
 				- [X] Multiple fonts
 				- [X] Lines of text
+				- [ ] Add to GUI renderer
+			- [X] Gui Rendering
+				- [X] Draw quads with transforms, textures, colors, uv scales
+				- [X] Use Z position as render order
 			- [ ] Buttons
 			- [X] Static position
 			- [ ] Mouse Detection

@@ -56,6 +56,21 @@ public class Texture {
 		}
 	}
 	
+	public static void Remove(String fileName, boolean remove) {
+		if (textures.containsKey(fileName)) {
+			Texture t = textures.get(fileName);
+			if (remove)
+				t.AddReferenceCount(-1);
+		}
+	}
+	
+	public static void Remove(Texture texture) {
+		if (textures.containsKey(texture.fileName)) {
+			Texture t = textures.get(texture.fileName);
+			t.AddReferenceCount(-1);
+		}
+	}
+	
 	private void AddReferenceCount(int i) {
 		this.referenceCount += i;
 		if (this.referenceCount <= 0) {
@@ -158,7 +173,7 @@ public class Texture {
 		CreateTexture();
 	}
 	
-	public void CleanUp() {
+	protected void CleanUp() {
 		GL30.glDeleteTextures(rendererId);
 	}
 	

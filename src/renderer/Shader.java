@@ -59,6 +59,7 @@ public class Shader {
 			s.AddReferenceCount(-1);
 		}
 	}
+
 	
 	public String GetShaderSrc() {
 		return this.shaderSrc;
@@ -131,7 +132,7 @@ public class Shader {
 		Renderer.AddShader(this);
 	}
 	
-	public void Cleanup() {
+	protected void Cleanup() {
 		GL30.glDeleteProgram(rendererId);
 		for (int id : shaderIds) {
 			GL30.glDeleteShader(id);

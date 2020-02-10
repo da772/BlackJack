@@ -11,6 +11,8 @@ import engine.Events;
 import engine.Input;
 import engine.KeyCodes;
 import engine.Events.Event;
+import renderer.GUI;
+import renderer.GUIRenderer;
 import renderer.Mesh;
 import renderer.Renderer;
 import renderer.Shader;
@@ -20,6 +22,7 @@ import renderer.VertexArray;
 import renderer.text.GUIText;
 import renderer.text.TextBatcher;
 import renderer.text.TextRenderer;
+import renderer.Transform;
 import util.MathLib;
 
 public class TestingApp extends Application {
@@ -37,6 +40,9 @@ public class TestingApp extends Application {
 	TextBatcher fr;
 	boolean toggleDebug = true, vsync = false;
 	GUIText text, debugText;
+	
+	GUI h ;
+	
 	
 	int count =1 ;
 	
@@ -123,7 +129,7 @@ public class TestingApp extends Application {
 				new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
 				},
 		indices1, Shader.Create(ShaderLib.Shader_U_Texture_ViewProj_Transform_L_V3Pos_V2Coord),
-		Texture.Create("Images/2_of_diamonds.png"),
+		Texture.Create("Images/Cards/5D.png"),
 		transform, cam.GetCamera());
 		
 		pos = new Vector3f(0f,-.5f,0f);
@@ -157,12 +163,12 @@ public class TestingApp extends Application {
 				1.75f, // Font height
 				"Fonts/verdana", // Font path without png or fnt
 				 // Create transform
-				new Vector3f(-.15f,0f,-1f), // Position (x, y,z)
+				new Vector3f(-.75f,0f,-1f), // Position (x, y,z)
 				new Vector3f(0f,0f,0f),  // Rotation (x, y ,z)
 				new Vector3f(1f,1f,1f),  // Scale (x, y, z)
-				new Vector4f(0f,0f,0f, 1f), // Color (r, g, b)
-				.3f, // Text Length 0-1 (Percentage of screen)
-				false // Center Text   
+				new Vector4f(0f,0f,0f,1f), // Color (r, g, b)
+				1f, // Text Length 0-1 (Percentage of screen)
+				true // Center Text   
 				);
 		
 		
@@ -180,6 +186,23 @@ public class TestingApp extends Application {
 				);
 		
 		TextRenderer.init();
+		
+		h = new GUI (
+				new Transform( // Transform of the HUD
+						new Vector3f(0f,0f,1.f), // Position of the hud -1 far left 1 far right 0 center
+						new Vector3f(), // Rotation of the hud
+						new Vector3f(.25f,.25f,1f)), // Scale of the hud
+				"Images/debugPanel.png", // Texture of the hud
+				new Vector4f(1.f,0.f,0.f,1.f) // Color of the hud
+				);
+		new GUI (
+				new Transform( // Transform of the HUD
+						new Vector3f(0f,.15f,0f), // Position of the hud -1 far left 1 far right 0 center
+						new Vector3f(), // Rotation of the hud
+						new Vector3f(.25f,.25f,1f)), // Scale of the hud
+				"Images/debugPanel.png", // Texture of the hud
+				new Vector4f(0.f,1.f,0.f,1.f) // Color of the hud
+				);
 	
 	}
 	
@@ -202,7 +225,9 @@ public class TestingApp extends Application {
 		Renderer.DrawIndexed(hud);
 		Renderer.SetDepth(true);
 		
-		TextRenderer.render();
+		
+		GUIRenderer.Render();
+		TextRenderer.Render();
 		
 		float r = text.getColor().y;
 		if (r >= 1) {
@@ -225,7 +250,8 @@ public class TestingApp extends Application {
 		"\nMouseX: " + (int)Input.GetMouseX() + " | MouseY: " + (int)Input.GetMouseY()  +
 		"\nTexture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() +
 				"\n Memory Usage: " + Math.round( (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1e6 ) +"mb"  +
-				"\nMemory Alloc: "+ Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/" +(Math.round(Runtime.getRuntime().totalMemory()/1e6) + "mb "));
+				"\nMemory Alloc: "+ Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/" +(Math.round(Runtime.getRuntime().totalMemory()/1e6) + "mb "
+				));
 		}
 		text.setColor(1, r, 1, 1f);
 		
@@ -253,6 +279,30 @@ public class TestingApp extends Application {
 		
 		if (Input.IsKeyPressed(KeyCodes.KEY_E)) {
 			cam.rotation -= 10 * deltaTime;
+		}
+		
+		if (Input.IsKeyPressed(KeyCodes.KEY_LEFT)) {
+			h.SetPosition(new Vector3f(h.GetTransform().GetPosition().x - .1f*deltaTime, h.GetTransform().GetPosition().y, h.GetTransform().GetPosition().z ));
+		}
+		
+		if (Input.IsKeyPressed(KeyCodes.KEY_RIGHT)) {
+			h.SetPosition(new Vector3f(h.GetTransform().GetPosition().x + .1f*deltaTime , h.GetTransform().GetPosition().y, (h.GetTransform().GetPosition().z )));
+		}
+		
+		if (Input.IsKeyPressed(KeyCodes.KEY_UP)) {
+			h.SetPosition(new Vector3f(h.GetTransform().GetPosition().x , h.GetTransform().GetPosition().y + .1f*deltaTime , (h.GetTransform().GetPosition().z )));
+		}
+		
+		if (Input.IsKeyPressed(KeyCodes.KEY_DOWN)) {
+			h.SetPosition(new Vector3f(h.GetTransform().GetPosition().x , h.GetTransform().GetPosition().y - .1f*deltaTime , (h.GetTransform().GetPosition().z )));
+		}
+		
+		if (Input.IsKeyPressed(KeyCodes.KEY_T)) {
+			h.SetScale(new Vector3f(h.GetTransform().GetScale().x - .1f*deltaTime, h.GetTransform().GetScale().y - .1f*deltaTime, 1f));
+		}
+		
+		if (Input.IsKeyPressed(KeyCodes.KEY_R)) {
+			h.SetScale(new Vector3f(h.GetTransform().GetScale().x + .1f*deltaTime, h.GetTransform().GetScale().y + .1f*deltaTime, 1f));
 		}
 		
 		if (Input.IsKeyPressed(KeyCodes.KEY_BACKSPACE)) {

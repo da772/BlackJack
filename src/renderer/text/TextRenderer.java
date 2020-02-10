@@ -14,7 +14,7 @@ public class TextRenderer {
 		renderer = new TextBatcher();
 	}
 
-	public static void render() {
+	public static void Render() {
 		renderer.render(texts);
 	}
 
