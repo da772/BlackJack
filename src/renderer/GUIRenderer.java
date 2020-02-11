@@ -17,6 +17,7 @@ public class GUIRenderer {
 			huds.sort((h1, h2) -> {
 				return h1.zOrder > h2.zOrder ? 1 : h1.zOrder == h2.zOrder ? 0 : -1;
 			});
+			
 		}
 	}
 	
@@ -32,10 +33,13 @@ public class GUIRenderer {
 		for (int i =0; i < huds.size(); i++) {
 			GUI h = huds.get(i);
 			h.Bind();
-			Renderer.DrawElements(h.IndicesCount());
+			if (h.GetRenderType() == 0) {
+				Renderer.DrawArrays(h.VertexCount());
+			} else {
+				Renderer.DrawElements(h.IndicesCount());
+			}
 			h.UnBind();
 		}
-
 		Renderer.SetDepth(true);
 	}
 	

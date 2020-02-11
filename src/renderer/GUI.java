@@ -5,41 +5,20 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import renderer.Buffer.IndexBuffer;
-import renderer.Buffer.VertexBuffer;
 import util.MathLib;
 
-public class GUI {
+public abstract class GUI {
 
-	
-	protected static final float[] vertices = {
-			-1f,  -1f,   0,  0f, 0f,
-			 1f,  -1f,   0f, 1f, 0f,
-			 1f,   1f,   0f, 1f, 1f,
-			-1f,   1f,   0f, 0f, 1f
-	};
-	
-	protected static final int[] indices = {
-			0,1,2,
-			2,3,0
-	};
-	
-	
-	protected static IndexBuffer ibuffer = new IndexBuffer(indices, indices.length);
-	protected static VertexBuffer vbuffer = new VertexBuffer(vertices, vertices.length);
-	protected static VertexArray varray = new VertexArray().AddVertexBuffer(vbuffer,  new VertexArray.BufferLayout(new VertexArray.BufferElement[]{
-			new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position"),
-			new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
-			})).AddIndexBuffer(ibuffer);;
-
-
-	
 	protected Transform transform;
 	protected Transform _transform;
 	protected Texture texture;
 	protected Vector4f color;
 	protected Vector2f UVScale;
 
+	protected int renderType = 1;
+	
+	protected String[] shader_strings = ShaderLib.Shader_HUD;
+	
 	protected Vector3f position;
 	
 	public float zOrder = 0f;
@@ -56,12 +35,12 @@ public class GUI {
 		GUIRenderer.Add(this);
 	}
 	
-	public GUI(Transform transform, Texture texture, Vector4f color, Vector2f UVScale, Shader shader) {
+	public GUI(Transform transform, Texture texture, Vector4f color, Vector2f UVScale, String[] shaders) {
 		this.texture = texture;
 		this.transform = transform;
 		this.color = color;
 		this.UVScale = UVScale;
-		this.shader = shader;
+		this.shader_strings = shaders;
 		GUIRenderer.Add(this);
 	}
 	
@@ -99,8 +78,13 @@ public class GUI {
 	
 	
 	public void Init() {
-		SetTransform(transform);
-		shader = Shader.Create(ShaderLib.Shader_HUD);
+		UpdateTransform();
+		shader = Shader.Create(shader_strings);
+		_Init();
+	}
+	
+	protected void _Init() {
+		
 	}
 	
 	public void Add() {
@@ -111,24 +95,11 @@ public class GUI {
 		GUIRenderer.Remove(this);
 	}
 	
-	public void Bind() {
-		shader.Bind();
-		texture.Bind();
-		shader.UploadUniformFloat4("u_Color", color);
-		shader.UploadUniformFloat2("u_UVScale", UVScale);
-		shader.UploadUniformMat4("u_Transform", _transform.GetTransformMatrix() );
-		varray.Bind();
-	}
+	public abstract void Bind();
 	
-	public void UnBind() {
-		shader.UnBind();
-		texture.UnBind();
-		varray.UnBind();
-	}
+	public abstract void UnBind();
 	
-	public int IndicesCount() {
-		return indices.length;
-	}
+	public abstract int IndicesCount();
 	
 	public Transform GetTransform() {
 		return transform;
@@ -150,24 +121,33 @@ public class GUI {
 		SetTransform(new Transform(transform.GetPosition(), transform.GetRotation(), scale));
 	}
 	
+	public void SetColor(Vector4f color) {
+		this.color = color;
+	}
+	
+	public void SetColor(float r, float g, float b, float a) {
+		this.color = new Vector4f(r,g,b,a);
+	}
+	
 	public void SetTransform(Transform transform) {
 		this.transform = transform;
+		UpdateTransform();
+	}
+	
+	protected void UpdateTransform() {
 		this.zOrder = transform.GetPosition().z;
 		this.transform.SetPosition(transform.GetPosition().x, transform.GetPosition().y, 0f);
 		this._transform = new Transform(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
 		this._transform.SetPosition(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, MathLib.Clamp(_transform.GetPosition().x,-1,1)), 
 				-MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -MathLib.Clamp(_transform.GetPosition().y,-1,1)),_transform.GetPosition().z ));
 		this._transform = Transform.ScaleBasedPosition(_transform);
-		
 	}
 	
-	public void CleanUp () {
-		varray.CleanUp();
-		ibuffer.CleanUp();
-		vbuffer.CleanUp();
-		Texture.Remove(texture);
-		Shader.Remove(shader);
-	}
+	public abstract int GetRenderType();
+	
+	public abstract void CleanUp ();
+	
+	public abstract int VertexCount();
 	
 	
 	

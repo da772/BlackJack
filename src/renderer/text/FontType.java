@@ -1,13 +1,68 @@
 package renderer.text;
 
-import renderer.Texture;
+import java.util.HashMap;
+import java.util.Map;
+
 import util.FileLoader;
 
 
 public class FontType {
 
-	private Texture textureAtlas;
+
 	private TextMeshCreator loader;
+	private String fontFile;
+	private int referenceCount = 0;
+
+	private static Map<String, FontType> Fonts = new HashMap<String, FontType>();
+	
+	public static FontType Create(String fontFile) {
+		
+		if (Fonts.containsKey(fontFile)) {
+			FontType t =  Fonts.get(fontFile);
+			t.AddReferenceCount(1);
+			return t;
+		}
+		FontType t = new FontType(fontFile);
+		t.fontFile = fontFile;
+		t.AddReferenceCount(1);
+		Fonts.put(fontFile, t);
+		return t;
+	
+	}
+	
+	public static int GetPoolSize() {
+		return Fonts.size();
+	}
+	
+	public static void Remove(String fileName) {
+		if (Fonts.containsKey(fileName)) {
+			FontType t = Fonts.get(fileName);
+			t.AddReferenceCount(-1);
+		}
+	}
+	
+	public static void Remove(String fileName, boolean remove) {
+		if (Fonts.containsKey(fileName)) {
+			FontType t = Fonts.get(fileName);
+			if (remove)
+				t.AddReferenceCount(-1);
+		}
+	}
+	
+	public static void Remove(FontType fontType) {
+		if (Fonts.containsKey(fontType.fontFile)) {
+			FontType t = Fonts.get(fontType.fontFile);
+			t.AddReferenceCount(-1);
+		}
+	}
+	
+	private void AddReferenceCount(int i) {
+		this.referenceCount += i;
+		if (this.referenceCount <= 0) {
+			Fonts.remove(this.fontFile);
+		}
+	}
+	
 
 	/**
 	 * Creates a new font and loads up the data about each character from the
@@ -19,18 +74,12 @@ public class FontType {
 	 *            - the font file containing information about each character in
 	 *            the texture atlas.
 	 */
-	public FontType(Texture textureAtlas, String fontFile) {
-		this.textureAtlas = textureAtlas;
+	private FontType(String fontFile) {
+		this.fontFile = fontFile;
 		this.loader = new TextMeshCreator(FileLoader.getResourceAsFile(fontFile+".fnt"));
-		
 	}
 
-	/**
-	 * @return The font texture atlas.
-	 */
-	public Texture getTextureAtlas() {
-		return textureAtlas;
-	}
+	
 
 	/**
 	 * Takes in an unloaded text and calculate all of the vertices for the quads

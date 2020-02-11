@@ -12,6 +12,7 @@ import engine.Input;
 import engine.KeyCodes;
 import engine.Events.Event;
 import renderer.GUI;
+import renderer.GUIQuad;
 import renderer.GUIRenderer;
 import renderer.Mesh;
 import renderer.Renderer;
@@ -19,9 +20,8 @@ import renderer.Shader;
 import renderer.ShaderLib;
 import renderer.Texture;
 import renderer.VertexArray;
+import renderer.text.FontType;
 import renderer.text.GUIText;
-import renderer.text.TextBatcher;
-import renderer.text.TextRenderer;
 import renderer.Transform;
 import util.MathLib;
 
@@ -37,7 +37,6 @@ public class TestingApp extends Application {
 	CameraController.OrthographicCameraController cam;
 	
 	
-	TextBatcher fr;
 	boolean toggleDebug = true, vsync = false;
 	GUIText text, debugText;
 	
@@ -159,51 +158,55 @@ public class TestingApp extends Application {
 		transform, cam.GetCamera());
 		
 		text = new GUIText(
-				"Hello World!", // Text to display
-				1.75f, // Font height
+				"Hello World! this is my text box i hope u like it or enjoy it", // Text to display
+				2f, // Font height
 				"Fonts/verdana", // Font path without png or fnt
 				 // Create transform
-				new Vector3f(-.75f,0f,-1f), // Position (x, y,z)
+				new Transform(
+				new Vector3f(0f,.1f,2f), // Position (x, y,z)
 				new Vector3f(0f,0f,0f),  // Rotation (x, y ,z)
-				new Vector3f(1f,1f,1f),  // Scale (x, y, z)
+				new Vector3f(1f,1f,1f)),  // Scale (x, y, z)
 				new Vector4f(0f,0f,0f,1f), // Color (r, g, b)
-				1f, // Text Length 0-1 (Percentage of screen)
+				.5f, // Text Length 0-1 (Percentage of screen)
 				true // Center Text   
 				);
+
+		
 		
 		
 		debugText = new GUIText(
-				"", // Text to display
+				"HELLO", // Text to display
 				.9f, // Font height
 				"Fonts/verdana", // Font path without png or fnt
 				 // Create transform
-				new Vector3f(-.25f + guiOffset,.2f + guiOffset,-1f), // Position (x, y,z)
+				new Transform(
+				new Vector3f(0f,0f,1.1f), // Position (x, y,z)
 				new Vector3f(0f,0f,0f),  // Rotation (x, y ,z)
-				new Vector3f(1f,1f,1f),  // Scale (x, y, z)
+				new Vector3f(1f,1f,1f)),  // Scale (x, y, z)
 				new Vector4f(1f,0f,1f, 1f), // Color (r, g, b, a)
-				.25f, // Text Length 0-1 (Percentage of screen)
+				.2f, // Text Length 0-1 (Percentage of screen)
 				true // Center Text   
 				);
 		
-		TextRenderer.init();
 		
-		h = new GUI (
+		
+		h = new GUIQuad (
 				new Transform( // Transform of the HUD
-						new Vector3f(0f,0f,1.f), // Position of the hud -1 far left 1 far right 0 center
+						new Vector3f(-.50f,0f,1.f), // Position of the hud -1 far left 1 far right 0 center
 						new Vector3f(), // Rotation of the hud
-						new Vector3f(.25f,.25f,1f)), // Scale of the hud
+						new Vector3f(.65f,.25f,1f)), // Scale of the hud
 				"Images/debugPanel.png", // Texture of the hud
 				new Vector4f(1.f,0.f,0.f,1.f) // Color of the hud
 				);
-		new GUI (
+		new GUIQuad (
 				new Transform( // Transform of the HUD
-						new Vector3f(0f,.15f,0f), // Position of the hud -1 far left 1 far right 0 center
+						new Vector3f(.25f,0f,0f), // Position of the hud -1 far left 1 far right 0 center
 						new Vector3f(), // Rotation of the hud
 						new Vector3f(.25f,.25f,1f)), // Scale of the hud
 				"Images/debugPanel.png", // Texture of the hud
 				new Vector4f(0.f,1.f,0.f,1.f) // Color of the hud
 				);
-	
+		
 	}
 	
 	boolean flip = false ;
@@ -227,9 +230,9 @@ public class TestingApp extends Application {
 		
 		
 		GUIRenderer.Render();
-		TextRenderer.Render();
+		//TextRenderer.Render();
 		
-		float r = text.getColor().y;
+		float r = 0;//text.GetColor().y;
 		if (r >= 1) {
 			flip = true;
 		}
@@ -244,16 +247,18 @@ public class TestingApp extends Application {
 			r+= 1 * deltaTime;
 			
 		}
+		
 		if (toggleDebug) {
 		debugText.SetText(fps + " fps | VSync: " + vsync +
 		"\nWidth: " + window.GetWidth() + " | Height: " + window.GetHeight() +
 		"\nMouseX: " + (int)Input.GetMouseX() + " | MouseY: " + (int)Input.GetMouseY()  +
 		"\nTexture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() +
-				"\n Memory Usage: " + Math.round( (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1e6 ) +"mb"  +
+		"\nFont Pool: " + FontType.GetPoolSize() +
+				"\nMemory Usage: " + Math.round( (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1e6 ) +"mb"  +
 				"\nMemory Alloc: "+ Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/" +(Math.round(Runtime.getRuntime().totalMemory()/1e6) + "mb "
 				));
 		}
-		text.setColor(1, r, 1, 1f);
+		text.SetColor(1f, r, 1f, 1f);
 		
 		
 		if (Input.IsMouseButtonPressed(KeyCodes.MOUSE_RIGHT)) {
@@ -306,11 +311,11 @@ public class TestingApp extends Application {
 		}
 		
 		if (Input.IsKeyPressed(KeyCodes.KEY_BACKSPACE)) {
-			TextRenderer.removeText(text);
+			GUIRenderer.Remove(text);
 		}
 		
 		if (Input.IsKeyPressed(KeyCodes.KEY_ENTER)) {
-			TextRenderer.loadText(text);
+			//TextRenderer.loadText(text);
 		}
 		
 		cam.OnUpdate(deltaTime);

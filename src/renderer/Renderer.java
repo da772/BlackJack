@@ -6,6 +6,8 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
+import renderer.text.FontType;
+
 
 public class Renderer {
 
@@ -13,7 +15,6 @@ public class Renderer {
 	private static List<Integer> VertexArrays = new ArrayList<Integer>();
 	private static List<Shader> Shaders = new ArrayList<Shader>();
 	private static List<Texture> Textures = new ArrayList<Texture>();
-
 	public static void Init() {
 		GL30.glEnable(GL11.GL_CULL_FACE);
 		GL30.glEnable(GL11.GL_DEPTH_TEST);
@@ -49,6 +50,10 @@ public class Renderer {
 		GL30.glViewport(x, y, width, height);
 	}
 
+	public static void DrawArrays(int size) {
+		GL30.glDrawArrays(GL11.GL_TRIANGLES, 0, size);
+	}
+	
 	public static void DrawIndexed(Mesh mesh) {
 		if (mesh == null)
 			return;
@@ -107,6 +112,7 @@ public class Renderer {
 		Shaders.add(s);
 	}
 	
+
 	public static void RemoveShader(Shader s) {
 		Shaders.remove(s);
 	}

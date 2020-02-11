@@ -1,18 +1,21 @@
 package renderer.text;
 
-
-import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import renderer.Buffer.VertexBuffer;
-import renderer.Renderer;
-import renderer.Texture;
-import renderer.VertexArray;
 import util.MathLib;
+import renderer.GUI;
+import renderer.GUIRenderer;
+import renderer.Shader;
+import renderer.ShaderLib;
+import renderer.Texture;
+import renderer.Transform;
+import renderer.VertexArray;
 
 
-public class GUIText {
+public class GUIText extends GUI {
 
 	private String textString;
 	private float fontSize;
@@ -20,17 +23,16 @@ public class GUIText {
 	private VertexArray varray;
 	private VertexBuffer vbuffer;
 	private int verticesSize;
-
-	private Vector4f color = new Vector4f(0f, 0f, 0f, 1f);
-	private Vector3f position = new Vector3f(0f, 0f, 0f);
-	private Vector3f scale = new Vector3f(0f, 0f, 0f);
-	private Vector3f rotation = new Vector3f(0f, 0f, 0f);
 	
-	private Matrix4f transform;
+	private Texture texture;
+	protected int renderType = 0;
+	
 	private float lineMaxSize;
 	private int numberOfLines;
+		
 
 	private FontType font;
+	private String fontString;
 
 	private boolean centerText = false;
 
@@ -59,50 +61,40 @@ public class GUIText {
 	 * @param centered
 	 *            - whether the text should be centered or not.
 	 */
-	public GUIText(String text, float fontSize, String font,  Vector3f pos, Vector3f rot, Vector3f scale, float maxLineLength,
+	
+	
+	public GUIText(String text, float fontSize, String font,  Transform transform, Vector4f color, float maxLineLength,
 			boolean centered) {
+		shader_strings = ShaderLib.Shader_Font;
 		this.textString = text;
 		this.fontSize = fontSize;
-		this.font = new FontType(Texture.Create(font+".png", true), font);
-		this.transform = MathLib.createTransformMatrix(new Vector3f(pos.x+1,  pos.y+1, pos.z), rot, scale);
+		this.fontString = font;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-		TextRenderer.loadText(this);;
-	}
-	
-	
-	public GUIText(String text, float fontSize, String font, Vector3f pos, Vector3f rot, Vector3f scale, Vector4f color, float maxLineLength,
-			boolean centered) {
-		this.textString = text;
-		this.fontSize = fontSize;
-		this.font = new FontType(Texture.Create(font+".png", true), font);
-		this.position = pos;
-		this.rotation = rot;
-		this.scale = scale;
+		this.transform = transform;
 		this.color = color;
-		CalculateTransform();
-		this.lineMaxSize = maxLineLength;
-		this.centerText = centered;
-		TextRenderer.loadText(this);;
+		this.UVScale = new Vector2f(1.f,1.f);
+		add();
+
 	}
 	
 	public void SetText(String text) {
 		this.textString = text;
-		this.remove();
-		TextRenderer.loadText(this);
+		varray.CleanUp();
+		vbuffer.CleanUp();
+		SetUp();
 	}
 
 	public void add() {
-		TextRenderer.loadText(this);
+		SetUp();
+		GUIRenderer.Add(this);
 	}
 	
 	/**
 	 * Remove the text from the screen.
 	 */
 	public void remove() {
-		TextRenderer.removeText(this);
-		varray.CleanUp();
-		vbuffer.CleanUp();
+		GUIRenderer.Remove(this);
 	}
 
 	/**
@@ -112,36 +104,6 @@ public class GUIText {
 		return font;
 	}
 
-	/**
-	 * Set the colour of the text.
-	 * 
-	 * @param r
-	 *            - red value, between 0 and 1.
-	 * @param g
-	 *            - green value, between 0 and 1.
-	 * @param b
-	 *            - blue value, between 0 and 1.
-	 */
-	public void setColor(float r, float g, float b, float a) {
-		color.set(r, g, b, a);
-	}
-	
-	public void setPosition(float x, float y, float z) {
-		this.position = new Vector3f(x,y,z);
-		CalculateTransform();
-	}
-	
-	private void CalculateTransform() {
-		this.transform = MathLib.createTransformMatrix(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, 0, 2, MathLib.Clamp(position.x, -1, 1)), 
-				-MathLib.GetMappedRangeValueUnclamped(-1, 1, 0, 2,MathLib.Clamp(-position.y, -1, 1)), position.z  ), rotation, scale);
-	}
-
-	/**
-	 * @return the color of the text.
-	 */
-	public Vector4f getColor() {
-		return color;
-	}
 
 	/**
 	 * @return The number of lines of text. This is determined when the text is
@@ -150,15 +112,6 @@ public class GUIText {
 	 */
 	public int getNumberOfLines() {
 		return numberOfLines;
-	}
-
-	/**
-	 * @return The position of the top-left corner of the text in screen-space.
-	 *         (0, 0) is the top left corner of the screen, (1, 1) is the bottom
-	 *         right.
-	 */
-	public Matrix4f getTransform() {
-		return transform;
 	}
 
 	/**
@@ -234,6 +187,78 @@ public class GUIText {
 	 */
 	protected String getTextString() {
 		return textString;
+	}
+
+
+	@Override
+	public void Bind() {
+		shader.Bind();
+		texture.Bind();
+		shader.UploadUniformFloat4("u_Color", color);
+		shader.UploadUniformMat4("u_Transform", _transform.GetTransformMatrix() );
+		varray.Bind();
+	}
+
+
+	@Override
+	public void UnBind() {
+		shader.UnBind();
+		texture.UnBind();
+		varray.UnBind();
+	}
+
+	
+	protected void SetUp() {
+		this.texture = Texture.Create(fontString+".png", true);
+		this.font = FontType.Create(fontString);
+		shader = Shader.Create(shader_strings);
+		TextMeshData data = font.loadText(this);
+		setMeshInfo(data.getVertices());
+		
+	}
+	
+	@Override
+	protected void _Init() {
+		
+		
+	}
+	
+
+	@Override
+	public int IndicesCount() {
+		return this.getVerticesSize();
+	}
+
+
+	@Override
+	public void CleanUp() {
+		varray.CleanUp();
+		vbuffer.CleanUp();
+		Texture.Remove(texture);
+		Shader.Remove(shader);
+		FontType.Remove(font);
+	}
+
+	@Override
+	public int GetRenderType() {
+		return 0;
+	}
+
+	@Override
+	public int VertexCount() {
+		return getVerticesSize();
+	}
+	
+	@Override
+	protected void UpdateTransform() {
+		this.zOrder = transform.GetPosition().z;
+		this.transform.SetPosition(transform.GetPosition().x, transform.GetPosition().y, 0f);
+		this._transform = new Transform(transform.GetPosition(), transform.GetRotation(), 
+				new Vector3f(1f));
+		this._transform.SetPosition(new Vector3f(
+				MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, _transform.GetPosition().x )+(1-this.lineMaxSize), 
+				MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -_transform.GetPosition().y),
+				_transform.GetPosition().z ));
 	}
 
 }
