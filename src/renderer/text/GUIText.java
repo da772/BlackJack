@@ -8,6 +8,7 @@ import renderer.Buffer.VertexBuffer;
 import util.MathLib;
 import renderer.GUI;
 import renderer.GUIRenderer;
+import renderer.Renderer;
 import renderer.Shader;
 import renderer.ShaderLib;
 import renderer.Texture;
@@ -35,6 +36,7 @@ public class GUIText extends GUI {
 	private String fontString;
 
 	private boolean centerText = false;
+	
 
 	/**
 	 * Creates a new text, loads the text's quads into a VAO, and adds the text
@@ -74,27 +76,21 @@ public class GUIText extends GUI {
 		this.transform = transform;
 		this.color = color;
 		this.UVScale = new Vector2f(1.f,1.f);
-		add();
-
+		_Init();
 	}
 	
 	public void SetText(String text) {
 		this.textString = text;
 		varray.CleanUp();
 		vbuffer.CleanUp();
-		SetUp();
-	}
-
-	public void add() {
-		SetUp();
-		GUIRenderer.Add(this);
+		_Init();
 	}
 	
-	/**
-	 * Remove the text from the screen.
-	 */
-	public void remove() {
-		GUIRenderer.Remove(this);
+
+	@Override
+	public void Add() {
+		GUIRenderer.Add(this);
+		added = true;
 	}
 
 	/**
@@ -178,7 +174,7 @@ public class GUIText extends GUI {
 	/**
 	 * @return The maximum length of a line of this text.
 	 */
-	protected float getMaxLineSize() {
+	public float getMaxLineSize() {
 		return lineMaxSize;
 	}
 
@@ -207,20 +203,40 @@ public class GUIText extends GUI {
 		varray.UnBind();
 	}
 
+	public void SetMaxLineSize(float size) {
+		this.lineMaxSize = size;
+		UpdateMeshInfo();
+	}
+	
+	public void SetFontSize(float size) {
+		this.fontSize= size;
+		UpdateMeshInfo();
+	}
+	
+	protected void CreateMeshInfo() {
+		TextMeshData data = font.loadText(this);
+		setMeshInfo(data.getVertices());
+	}
+	
+	protected void UpdateMeshInfo() {
+		varray.CleanUp();
+		vbuffer.CleanUp();
+		FontType.Remove(font);
+		TextMeshData data = font.loadText(this);
+		setMeshInfo(data.getVertices());
+	}
 	
 	protected void SetUp() {
 		this.texture = Texture.Create(fontString+".png", true);
 		this.font = FontType.Create(fontString);
 		shader = Shader.Create(shader_strings);
-		TextMeshData data = font.loadText(this);
-		setMeshInfo(data.getVertices());
-		
+		CreateMeshInfo();
+		UpdateTransform();
 	}
 	
 	@Override
 	protected void _Init() {
-		
-		
+		SetUp();
 	}
 	
 
@@ -240,11 +256,6 @@ public class GUIText extends GUI {
 	}
 
 	@Override
-	public int GetRenderType() {
-		return 0;
-	}
-
-	@Override
 	public int VertexCount() {
 		return getVerticesSize();
 	}
@@ -254,11 +265,16 @@ public class GUIText extends GUI {
 		this.zOrder = transform.GetPosition().z;
 		this.transform.SetPosition(transform.GetPosition().x, transform.GetPosition().y, 0f);
 		this._transform = new Transform(transform.GetPosition(), transform.GetRotation(), 
-				new Vector3f(1f));
-		this._transform.SetPosition(new Vector3f(
-				MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, _transform.GetPosition().x )+(1-this.lineMaxSize), 
-				MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -_transform.GetPosition().y),
-				_transform.GetPosition().z ));
+				transform.GetScale());
+		this._transform.SetPosition(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, MathLib.Clamp(_transform.GetPosition().x,-1,1)), 
+				-MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -MathLib.Clamp(_transform.GetPosition().y,-1,1)),_transform.GetPosition().z ));
+		this._transform.SetScale(new Vector3f(1f));
+		this.transform.SetPosition(transform.GetPosition().x, transform.GetPosition().y, transform.GetPosition().z);
+	}
+
+	@Override
+	public void Draw() {
+		Renderer.DrawArrays(getVerticesSize());
 	}
 
 }

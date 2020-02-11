@@ -98,6 +98,7 @@ public class Texture {
 		    setParameter(GL30.GL_TEXTURE_WRAP_T, GL30.GL_CLAMP_TO_EDGE);
 		    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
 		    setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
+		    setParameter(GL30.GL_TEXTURE_LOD_BIAS, -.4f);   
 		}
 		
 	}
@@ -116,6 +117,10 @@ public class Texture {
 	
 	public void setParameter(int name, int value) {
 		GL30.glTexParameteri(GL30.GL_TEXTURE_2D, name, value);
+	}
+	
+	public void setParameter(int name, float value) {
+		GL30.glTexParameterf(GL30.GL_TEXTURE_2D, name, value);
 	}
 	
 	private void uploadData(int internalFormat, int width, int height, int format, ByteBuffer data) {

@@ -122,8 +122,6 @@ public class Window {
 					break;
 				}
 			}
-			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
 		});
 		
 		// Setup Mouse button callback. It will be called every time a mouse button is pressed

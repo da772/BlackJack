@@ -51,8 +51,12 @@ public class GUIQuad extends GUI {
 		super(transform, texture);
 	}
 	
-	
-	
+	@Override
+	public void _Init() {
+		shader = Shader.Create(shader_strings);
+		texture = Texture.Create(this.texturePath);
+	}
+		
 	@Override
 	public void Bind() {
 		shader.Bind();
@@ -76,21 +80,18 @@ public class GUIQuad extends GUI {
 	}
 	@Override
 	public void CleanUp() {
-		varray.CleanUp();
-		ibuffer.CleanUp();
-		vbuffer.CleanUp();
 		Texture.Remove(texture);
 		Shader.Remove(shader);
 	}
 
 	@Override
-	public int GetRenderType() {
-		return 1;
+	public int VertexCount() {
+		return vertices.length;
 	}
 
 	@Override
-	public int VertexCount() {
-		return vertices.length;
+	public void Draw() {
+		Renderer.DrawElements(IndicesCount());
 	};
 	
 	

@@ -6,8 +6,6 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
-import renderer.text.FontType;
-
 
 public class Renderer {
 
@@ -15,6 +13,7 @@ public class Renderer {
 	private static List<Integer> VertexArrays = new ArrayList<Integer>();
 	private static List<Shader> Shaders = new ArrayList<Shader>();
 	private static List<Texture> Textures = new ArrayList<Texture>();
+	
 	public static void Init() {
 		GL30.glEnable(GL11.GL_CULL_FACE);
 		GL30.glEnable(GL11.GL_DEPTH_TEST);
@@ -22,6 +21,14 @@ public class Renderer {
 		GL30.glEnable(GL11.GL_BLEND);
 		GL30.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL30.glEnable(GL30.GL_MULTISAMPLE);  
+	}
+	
+	public static int GetBufferCount() {
+		return Buffers.size();
+	}
+	
+	public static int GetVertexArrayCount() {
+		return VertexArrays.size();
 	}
 
 	public static void DisableCulling() {
@@ -117,7 +124,7 @@ public class Renderer {
 		Shaders.remove(s);
 	}
 
-	public static void Cleanup() {
+	public static void ShutDown() {
 		for (int id : Buffers) {
 			GL30.glDeleteBuffers(id);
 		}

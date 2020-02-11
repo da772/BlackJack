@@ -12,8 +12,7 @@ import engine.Events.MouseScrolledEvent;
 import engine.Events.WindowClosedEvent;
 import engine.Events.WindowResizedEvent;
 import util.Timing;
-
-//TEMP
+import renderer.GUIRenderer;
 import renderer.Renderer;
 
 
@@ -39,6 +38,7 @@ public class Application {
 	protected long lastTime = 0;
 	protected int fps = 0, frames = 0;
 	protected int fpsCap = 255;
+	protected boolean vsync = false;
 	
 		
 	public Application() {
@@ -78,6 +78,7 @@ public class Application {
 			window.SetWindowEventCallback(new Window.EventFunction() { @Override public boolean run(Event e) { Event(e); return false; } });
 		}
 		Renderer.Init();
+		Debugger.Init();
 		OnInit();
 		
 	}
@@ -118,7 +119,7 @@ public class Application {
 		
 		dispatcher.Dispatch(WindowClosedEvent.GetGenericType(), new Events.EventFunction<Event>(event) {
 			@Override public boolean run(Event t) {return WindowClosedEvent((WindowClosedEvent)t ); } });
-	
+		Debugger.OnEvent(event);
 		OnEvent(event);
 	}
 	
@@ -207,7 +208,7 @@ public class Application {
 	 * 		
 	 */
 	protected boolean KeyEvent (KeyEvent e) {
-		//System.out.println(e);
+		//System.out.println(e);	
 		return false;
 	}
 	
@@ -230,11 +231,11 @@ public class Application {
 			float deltaTime = time - lastFrameTime;
 			lastFrameTime = time;
 			Renderer.Prepare();
+			Debugger.Update();
 			OnUpdate(deltaTime);
-			if (window != null && !window.IsClosed()) {
+			GUIRenderer.Render();
+			if (window != null && !window.IsClosed())
 				window.Update();
-			}
-			
 			Timing.sync(fpsCap, window.Vsync());
 		}
 	}
@@ -262,7 +263,9 @@ public class Application {
 	 */
 	public void Shutdown() {
 		OnShutdown();
-		Renderer.Cleanup();
+		Debugger.ShutDown();
+		Renderer.ShutDown();
+		GUIRenderer.CleanUp();
 		if (window != null) {
 			window.Shutdown();
 		}

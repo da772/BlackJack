@@ -18,6 +18,7 @@ public abstract class GUI {
 	protected int renderType = 1;
 	
 	protected String[] shader_strings = ShaderLib.Shader_HUD;
+	protected String texturePath;
 	
 	protected Vector3f position;
 	
@@ -25,31 +26,33 @@ public abstract class GUI {
 	
 	protected Shader shader;
 	
+	protected boolean added = false;
+	
 	public GUI() {};
 	
 	public GUI(Transform transform, Texture texture, Vector4f color, Vector2f UVScale) {
 		this.texture = texture;
+		this.texturePath = texture.fileName;
 		this.transform = transform;
 		this.color = color;
 		this.UVScale = UVScale;
-		GUIRenderer.Add(this);
 	}
 	
 	public GUI(Transform transform, Texture texture, Vector4f color, Vector2f UVScale, String[] shaders) {
 		this.texture = texture;
+		this.texturePath = texture.fileName;
 		this.transform = transform;
 		this.color = color;
 		this.UVScale = UVScale;
 		this.shader_strings = shaders;
-		GUIRenderer.Add(this);
 	}
 	
 	public GUI(Transform transform, String texture, Vector4f color, Vector2f UVScale) {
 		this.texture = Texture.Create(texture);
+		this.texturePath = texture;
 		this.transform = transform;
 		this.color = color;
 		this.UVScale = UVScale;
-		GUIRenderer.Add(this);
 	}
 	
 	public GUI(Transform transform, Vector4f color) {
@@ -57,29 +60,27 @@ public abstract class GUI {
 		this.transform = transform;
 		this.color = color;
 		this.UVScale = new Vector2f(1.f,1.f);
-		GUIRenderer.Add(this);
 	}
 	
 	public GUI(Transform transform, String texture, Vector4f color) {
 		this.texture = Texture.Create(texture);
+		this.texturePath = texture;
 		this.transform = transform;
 		this.color = color;
 		this.UVScale = new Vector2f(1.f,1.f);
-		GUIRenderer.Add(this);
 	}
 	
 	public GUI(Transform transform, String texture) {
 		this.texture = Texture.Create(texture);
+		this.texturePath = texture;
 		this.transform = transform;
 		this.color = new Vector4f(1.f,1.f,1.f,1.f);
 		this.UVScale = new Vector2f(1.f,1.f);
-		GUIRenderer.Add(this);
 	}
 	
 	
 	public void Init() {
 		UpdateTransform();
-		shader = Shader.Create(shader_strings);
 		_Init();
 	}
 	
@@ -89,17 +90,23 @@ public abstract class GUI {
 	
 	public void Add() {
 		GUIRenderer.Add(this);
+		added = true;
 	}
 	
 	public void Remove() {
 		GUIRenderer.Remove(this);
+		added = false;
 	}
+	
+	public abstract void Draw();
 	
 	public abstract void Bind();
 	
 	public abstract void UnBind();
 	
-	public abstract int IndicesCount();
+	public  int IndicesCount() {
+		return 0;
+	};
 	
 	public Transform GetTransform() {
 		return transform;
@@ -140,14 +147,14 @@ public abstract class GUI {
 		this._transform = new Transform(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
 		this._transform.SetPosition(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, MathLib.Clamp(_transform.GetPosition().x,-1,1)), 
 				-MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -MathLib.Clamp(_transform.GetPosition().y,-1,1)),_transform.GetPosition().z ));
-		this._transform = Transform.ScaleBasedPosition(_transform);
 	}
 	
-	public abstract int GetRenderType();
 	
 	public abstract void CleanUp ();
 	
-	public abstract int VertexCount();
+	public int VertexCount() {
+		return 0;
+	};
 	
 	
 	

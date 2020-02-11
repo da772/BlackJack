@@ -10,24 +10,7 @@ import renderer.Buffer.VertexBuffer;
 
 public class Mesh {
 
-	
-	public static class Hud extends Mesh {
-		
-		public Hud(float[] vertices, VertexArray.BufferElement[] layout ,int[] indices, Shader shader, Texture texture, Matrix4f transform, Camera cam) {
-			super(vertices, layout, indices, shader, texture, transform, cam);
-		}
-		
-		@Override
-		public void Bind() {
-			GetShader().Bind();
-			GetShader().UploadUniformMat4("u_transform", transform);
-			if (GetTexture() != null)
-				GetTexture().Bind();
-			GetVertexArray().Bind();
-		}
-		
-	}
-	
+
 	protected float[] vertices;
 	protected int[] indices;
 	protected VertexArray.BufferLayout layout ;
