@@ -17,71 +17,54 @@ public class Deck {
 	//we can keep track of cards either by keeping them in an array, or jsut keeping track of the count of each
 	//card
 	
+	// need two stack which act as Decks and will store Card objects
+	private Stack<Card> deck;
+	private Stack<Card> usedCards;
 	
-	private Stack<Integer> deck;
-	private Stack<Integer> usedCards;
 	
+	
+	/*
+	 *
+	 * Use a nested for loop where the outer loop just loops over 4 times
+	 * where each time you go through the loop is a different suit that you
+	 * are going to give a card.  Then the inner loop will just go over 13 times
+	 * so really inside the outer loop but before the nested loop just store a local
+	 * variable that has a suit like (0 == "heart", 1 == "spade", etc) and then for
+	 * the inner loop just give the card a different value.
+	 *
+	 * 
+	 */
+	
+	
+	// constructor
 	public Deck(int decksCount) {
-		//Initialize the cards based on the number of decks used.
-		int CARDS_IN_A_DECK = 52;
 		this.deck = new Stack<Integer>();
 		this.usedCards = new Stack<Integer>();
+		
+		// Loop over to create the number of decks we want into one big ass deck
 		for(int i = 0; i < decksCount; i++) {
-			for(int j = 0; j < CARDS_IN_A_DECK; j++) {
-				this.deck.add(j);
+		    // now this loop will set the count from 0-3 which will just represent suits
+			for(int j = 0; j < 4; j++) {
+			    // set suit for each set of 13 cards
+				String suit;
+				if (j == 0) suit = "Heart";
+				else if (j == 1) suit = "Spade";
+				else if (j == 2) suit = "Diamond";
+				else if (j == 3) suit = "Club";
+				// loop over 13 cards and create and add to the Deck
+				for (int k = 1; k <= 13; k++) {
+				    // make a new card and check if ace or not for initialization
+				    // then just push onto the stack (Deck)
+				    Card newCard;
+				    if (k == 1) newCard = new Ace(k, suit);
+		            else newCard = new Card(k, suit);
+		            deck.push(newCard);
+				}
 			}
-		}
-	}
-
-	public int convertCardToValue(int codedCard) {
-		//Convert the card from a coded integer to its real value. Useful for calculation of 21. The coded integer
-		//still retains itself for conversion to the real value with the suit, for GUI purpsoes.
-		int value = (codedCard / 4) + 2;
-		if(value == 11 || value == 12 || value == 13) { //Jack, Queen, King
-			return 10;
-		}
-		else if (value == 14) { //Ace
-			return 11; //Note for later: When calculating for 21, if the value is 11, also calculate it as a 1.
-		}
-		else {
-			return value;
 		}
 	}
 	
-	public String convertCardToString(int codedCard) {
-		//Return coded integer to real value and suit in string.
-		int value = (codedCard / 4) + 2; 
-		int suitCode = codedCard % 4;
-		String suit;
-		if(suitCode == 0) {
-			suit = "Diamonds";
-		}
-		else if(suitCode == 1) {
-			suit = "Clubs";
-		}
-		else if(suitCode == 2) {
-			suit = "Hearts";
-		}
-		else {
-			suit = "Aces";
-		}
-		
-		if(value > 10) {
-			if(value == 11) { 
-				return new String("[J " + suit + ']');
-			}
-			else if(value == 12) {
-				return new String("[Q " + suit + ']');
-			}
-			else if(value== 13) {
-				return new String("[K " + suit + ']');
-			}
-			else {
-				return new String("[A " + suit + ']');
-			}
-		}
-		return new String('['+ Integer.toString(value) + ' ' + suit + ']');
-	}
+	
 	
 	
 	
@@ -125,6 +108,8 @@ public class Deck {
 		}
 	}
 	
+	
+	
 	public void printUsedCards() {
 		int usedDeckCount = this.usedCards.size();
 		for(int i = 0; i < usedDeckCount; i++) {
@@ -145,11 +130,10 @@ public class Deck {
 		}
 	}
 	
-	public int drawCard() {
-		//Draw the top card. Commit value to used pile. Return top card value.
-		int cardVal = this.deck.pop();
-		this.usedCards.add(cardVal);
-		return cardVal;
+	
+	//Draw the top card. Return top Card from Deck.
+	public Card drawCard() {
+		return this.deck.pop();
 	}
 	
 	public int getCardCount() {

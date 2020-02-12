@@ -7,25 +7,42 @@ import java.util.Random;
 public class Table {
 	//players is an array of player class (have balance, and player tier) in order
 	
+	
+	// have our array of players at the table that can be added or removed
 	private ArrayList<Player> players;
-	private int playerID;
+	// gonna need a deck of cards for the table
+	private Deck deck;
+	// gonna need a dealer at the table
+	private Dealer dealer;
 
+
+    // constructor
 	public Table() {
 		int TOTAL_PLAYERS = 8; //change this later to get a user input
-		int STARTING_BALANCE = 100; //this too
+		int STARTING_BALANCE = 100; // this too
+		int NUM_DECKS = 8; // this too
+		
+		// initialize all private fields
 		this.players = new ArrayList<Player>();
+		this.deck = new Deck(8);
+		this.dealer = new Dealer();
 		
-		//generate real player ID (others IDs are NPC)
-		Random rand = new Random();
-		playerID = rand.nextInt(TOTAL_PLAYERS-1) + 1;
-		
-		//init a table of players with the dealer, and the real player's ID
-		Player dealer = new Player(0, STARTING_BALANCE);
-		this.players.add(dealer);
-		for(int i = 0; i < TOTAL_PLAYERS - 1; i++) {
-			this.players.add(new Player(1, STARTING_BALANCE));
+		// loop and add in 8 players to the table
+		for(int i = 0; i < TOTAL_PLAYERS; i++) {
+			this.players.add(new Player(STARTING_BALANCE));
 		}
 	}
+	
+	
+	public void playRound() {
+	    // this is where we will create a Round object and then use its methods
+	    // to play the game
+	    
+	    // ORRRR we can just track the number of rounds in this class and then
+	    // just perform all the ufnctionality in this class since all of our
+	    // data is here anyways
+	}
+	
 	
 	public void deletePlayer(int id) {
 		if(id == 0) {
@@ -36,6 +53,8 @@ public class Table {
 		}
 	}
 	
+	
+	
 	public Player getPlayerFromID(int id) {
 		return this.players.get(id);
 	}
@@ -43,6 +62,8 @@ public class Table {
 	public Player getRealPlayer() {
 		return this.players.get(this.playerID);
 	}
+	
+	
 	
 	public int getRealPlayerID() {
 		return this.playerID;

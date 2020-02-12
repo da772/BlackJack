@@ -2,24 +2,20 @@ package application;
 
 public class Player {
 	
-	private int type;
-	private int balance; 
+	// make a static variable for the # of players made so far
+	private int CURRENT_ID = 1;
 	
-	public Player(int type, int startingBalance) {
-		//type = 0 is dealer, type = 1 is player
-		int DEALER_STARTING_BALANCE = 100000; 
-		if(type == 0) {
-			this.balance = DEALER_STARTING_BALANCE;
-		}
-		else if(type == 1) {
-			this.balance = startingBalance;
-		}
-		else {
-			System.out.println("Invalid player type.");
-			return;
-		}
-		this.type = type;
-		return;
+	// now each player needs id and balance
+	private int id;
+	private int balance; 
+	private Hand hand;
+	
+
+    // new simple constructor
+	public Player(int startingBalance) {
+	    this.id = CURRENT_ID++;
+	    this.balance = startingBalance;
+	    this.hand = new Hand();
 	}
 	
 	public int getBalance() {
@@ -38,21 +34,6 @@ public class Player {
 		this.balance = 0;
 	}
 	
-	public void setPlayerType(int type) {
-		this.type = type;
-	}
-	
-	public String getPlayerType() {
-		if(this.type == 0) {
-			return "Dealer";
-		}
-		else if(this.type == 1){
-			return "Player";
-		}
-		else {
-			return "Out";
-		}
-	}
 	
 	
 	public static void main(String[] args) {
