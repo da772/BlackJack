@@ -4,6 +4,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import engine.Events.Event;
 import renderer.Buffer.VertexBuffer;
 import util.MathLib;
 import renderer.GUI;
@@ -275,6 +276,10 @@ public class GUIText extends GUI {
 	@Override
 	public void Draw() {
 		Renderer.DrawArrays(getVerticesSize());
+	}
+
+	@Override
+	public void SelectedOnEvent(Event e) {	
 	}
 
 }

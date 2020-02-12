@@ -1,9 +1,9 @@
 package application;
 
 import org.joml.Matrix4f;
-
+import org.joml.Vector2f;
 import org.joml.Vector3f;
-
+import org.joml.Vector4f;
 
 import engine.Application;
 import engine.CameraController;
@@ -17,8 +17,9 @@ import renderer.Renderer;
 import renderer.Shader;
 import renderer.ShaderLib;
 import renderer.Texture;
+import renderer.Transform;
 import renderer.VertexArray;
-
+import renderer.GUIPrimitives.GUITextQuad;
 import util.MathLib;
 
 public class TestingApp extends Application {
@@ -30,6 +31,8 @@ public class TestingApp extends Application {
 	Matrix4f transform;
 	
 	CameraController.OrthographicCameraController cam;
+	
+	GUITextQuad tQuad;
 		
 	
 	public TestingApp() {
@@ -115,6 +118,36 @@ public class TestingApp extends Application {
 		scale = new Vector3f(2f,3f,1.f);
 		transform = new Matrix4f();
 		transform = MathLib.createTransformMatrix(pos, new Vector3f(0, 0, 0f), scale);
+		
+		
+		tQuad = new GUITextQuad(new Transform(
+				new Vector3f(0f, 0f, 0f),
+				new Vector3f(0f),
+				new Vector3f(.225f, .225f, 1f)
+				),
+				"Images/blankTexture.png",
+				new Vector4f(1f),
+				new Vector2f(.5f, -.475f),
+				"Fonts/verdana",
+				"Hover Over Me!",
+				new Vector4f(1f, 0,0,1f),
+				.25f, 1f, true, true
+				) {
+			
+			@Override
+			protected void OnMouseEnter() {
+				tQuad.SetQuadColor(0f,1f,0f,1f );
+			}
+			
+			@Override
+			protected void OnMouseExit() {
+				tQuad.SetQuadColor(1.f,1.f,1.f,1.f);
+			}
+			
+			
+		};
+		
+		tQuad.Add();
 
 	}
 	
@@ -155,6 +188,24 @@ public class TestingApp extends Application {
 			cam.rotation -= 10 * deltaTime;
 		}
 		
+		float moveSpeed = .1f;
+		
+		if (Input.IsKeyPressed(KeyCodes.KEY_LEFT)) {
+			tQuad.SetPosition(tQuad.GetPosition().x - moveSpeed*deltaTime, tQuad.GetPosition().y
+					, tQuad.GetPosition().z );
+		}
+		if (Input.IsKeyPressed(KeyCodes.KEY_RIGHT)) {
+			tQuad.SetPosition(tQuad.GetPosition().x + moveSpeed*deltaTime, tQuad.GetPosition().y
+					, tQuad.GetPosition().z );
+		}
+		if (Input.IsKeyPressed(KeyCodes.KEY_UP)) {
+			tQuad.SetPosition(tQuad.GetPosition().x, tQuad.GetPosition().y + moveSpeed*deltaTime
+					, tQuad.GetPosition().z );
+		}
+		if (Input.IsKeyPressed(KeyCodes.KEY_DOWN)) {
+			tQuad.SetPosition(tQuad.GetPosition().x, tQuad.GetPosition().y - moveSpeed*deltaTime
+					, tQuad.GetPosition().z );
+		}
 		
 		
 		if (Input.IsKeyPressed(KeyCodes.KEY_BACKSPACE)) {
@@ -162,7 +213,7 @@ public class TestingApp extends Application {
 		}
 		
 		if (Input.IsKeyPressed(KeyCodes.KEY_ENTER)) {
-			//TextRenderer.loadText(text);
+			
 		}
 		
 		cam.OnUpdate(deltaTime);

@@ -26,16 +26,11 @@ public class Debugger {
 	private static int keyPressed = -1;
 	private static int mousePressed = -1;
 	
+	private static Vector4f quadHoverColor = new Vector4f(.25f,.25f,.25f, .8f);
+	private static Vector4f quadColor = new Vector4f(0.1f,0.1f,0.1f,.8f);
+	
 	public static void Init() {
-		debugMenu = new GUITextQuad(new Transform( 
-				new Vector3f(xPos,yPos,10000.f), 
-				new Vector3f(0f, 0f,0f), 
-				new Vector3f(.225f,.4f,1f)),
-				"Images/blankTexture.png", new Vector4f(.1f,0.1f,0.1f,.8f) ,
-				new Vector2f(.5f, -.39f), "Fonts/verdana",
-				"",
-				new Vector4f(.95f,.95f,.95f,1f),.2f, .6f, false, false
-		);
+		CreateMenu();
 	}
 	
 	public static void ShowMenu(boolean b) {
@@ -49,23 +44,24 @@ public class Debugger {
 	
 	public static void Update() {
 		if (DisplayMenu) {
-		debugMenu.SetText( "Debug Menu:\n \n" +
-				"App Info       " + "Title: "+ Application.app.title +
-				 " | " + Application.app.fps + " FPS \n                   VSync: " + Application.app.vsync +
-				" | Width: " + Application.app.window.GetWidth() + "\n                   Height: " +
-				 Application.app.window.GetHeight() +
-				"\n\nRender Info  " +
-				" Texture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() +
-				"\n                    Font Pool: " + FontType.GetPoolSize() +
-				" | Buffers: " + Renderer.GetBufferCount() + "\n                    Vertex Arrays: " + Renderer.GetVertexArrayCount()+
-				"\n\nMemory Info  Usage: " + Math.round( (Runtime.getRuntime().totalMemory()
-				- Runtime.getRuntime().freeMemory())/1e6 ) +"mb"  +
-				"\n                    Alloc: "+
-				Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/"
-				+(Math.round(Runtime.getRuntime().totalMemory()/1e6) + "mb " + 
-				"\n\nI/O Info        MouseX: " + (int)Input.GetMouseX() +
-				" | MouseY: " + (int)Input.GetMouseY() +
-				"\n                    Key Input: " + keyPressed + " | Mouse Input: " + mousePressed
+		debugMenu.SetText(
+			    "Debug Menu:\n \n" +
+				"App Info       " + "Title: "+ Application.app.title +" | " + Application.app.fps + " FPS"+
+				"\n                   VSync: " + Application.app.vsync +" | Width: " + Application.app.window.GetWidth() +
+				"\n                   Height: " +Application.app.window.GetHeight() +
+				
+				"\n\nRender Info  " +" Texture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() +
+				"\n                    Font Pool: " + FontType.GetPoolSize() +" | Buffers: " + Renderer.GetBufferCount() + 
+				"\n                    Vertex Arrays: " + Renderer.GetVertexArrayCount()+
+				
+				
+				"\n\nMemory Info  Usage: " + Math.round( (Runtime.getRuntime().totalMemory()- Runtime.getRuntime().freeMemory())/1e6 ) +"mb"  +
+				"\n                    Alloc: "+Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/"+(Math.round(Runtime.getRuntime().totalMemory()/1e6) + "mb " + 
+				
+						
+				"\n\nI/O Info        MouseX: " + (int)Input.GetMouseX() +" | MouseY: " + (int)Input.GetMouseY() +
+				"\n                    Key Input: " + keyPressed + " | Mouse Input: " + mousePressed 
+				
 					));
 		}
 		
@@ -111,6 +107,67 @@ public class Debugger {
 	
 	public static void ShutDown() {
 		debugMenu.Remove();
+	}
+	
+	private static void CreateMenu() {
+		debugMenu = new GUITextQuad(new Transform( 
+				new Vector3f(xPos,yPos,10000.f), // Position x,y, Z-Order higher is on top
+				new Vector3f(0f, 0f,0f),  // Rotation
+				new Vector3f(.225f,.4f,1f)), // Scale x,y,z
+				"Images/blankTexture.png",  // Quad Texture path
+				quadColor, // Quad Color r,g,b,a
+				new Vector2f(.5f, -.39f), // Font Offset (used to center text if needed) 
+				"Fonts/verdana",  // Font path
+				"", // Font String
+				new Vector4f(.95f,.95f,.95f,1f), // Font color r,g,b,a
+				.2f, // Text Line Width ( how wide each line will be can use \n in string for new line)
+				.6f, // Font Size
+				false, // Center Text
+				false // Auto expand width to match quad
+		) {
+			@Override
+			protected void OnMouseEnter() {
+				
+			}
+			
+			@Override
+			protected void OnMouseClicked(int button) {
+				if (button == KeyCodes.MOUSE_LEFT) {
+					if (!IsSelected()) {
+						SelectGUI();
+					} else {
+						DeSelectGUI();
+					}
+				}
+			}
+			
+			@Override
+			protected void OnSelect() {
+				debugMenu.SetQuadColor(quadHoverColor);
+			}
+			
+			@Override
+			protected void OnMouseExit() {
+				if (!debugMenu.IsSelected()) {
+					OnDeSelect();
+				}
+			}
+			
+			@Override
+			protected void OnDeSelect() {
+				debugMenu.SetQuadColor(quadColor);
+			}
+			
+			@Override
+			public void SelectedOnEvent(Event e) {
+				if (e instanceof Events.MouseButtonPressedEvent) {
+					if (((Events.MouseButtonEvent)e).m_Keycode == KeyCodes.MOUSE_LEFT
+							&& !debugMenu.IsMouseOver()) {
+						DeSelectGUI();
+					}
+				}
+			}
+		};
 	}
 	
 }

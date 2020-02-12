@@ -4,6 +4,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import engine.Events.Event;
 import renderer.GUI;
 import renderer.GUIQuad;
 import renderer.GUIRenderer;
@@ -18,8 +19,9 @@ public class GUITextQuad extends GUI {
 	
 	Vector2f TextOffset;
 	
-	public GUITextQuad (Transform transform, String QuadTexture, Vector4f QuadColor, Vector2f TextOffset, String font, String textString,
-			Vector4f TextColor, float TextWidth, float FontHeight, boolean textCentered, boolean autoSizeText) {
+	public GUITextQuad (Transform transform, String QuadTexture, Vector4f QuadColor, 
+			Vector2f TextOffset, String font, String textString, Vector4f TextColor, 
+			float TextWidth, float FontHeight, boolean textCentered, boolean autoSizeText) {
 		this.transform = transform;
 		this.TextOffset = TextOffset;
 		this.autoSize = autoSizeText;
@@ -90,7 +92,19 @@ public class GUITextQuad extends GUI {
 	}
 	
 	public void SetTextColor(float r, float g, float b, float a) {
-		this.text.SetColor(new Vector4f(r,g,b,a));
+		SetTextColor(new Vector4f(r,g,b,a));
+	}
+	
+	public void SetQuadColor(float r,float g,float b,float a ) {
+		SetQuadColor(new Vector4f(r,g,b,a));
+	}
+	
+	public void SetQuadColor(Vector4f rgba) {
+		this.quad.SetColor(rgba);
+	}
+	
+	public void SetQuadTexture(String texturePath) {
+		quad.SetTexture(texturePath);
 	}
 	
 	@Override
@@ -113,6 +127,12 @@ public class GUITextQuad extends GUI {
 	public void CleanUp() {
 		text.CleanUp();
 		quad.CleanUp();
+	}
+
+	@Override
+	public void SelectedOnEvent(Event e) {
+		
+		
 	}
 
 

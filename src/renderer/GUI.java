@@ -5,6 +5,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import engine.Events.Event;
 import util.MathLib;
 
 public abstract class GUI {
@@ -25,8 +26,10 @@ public abstract class GUI {
 	public float zOrder = 0f;
 	
 	protected Shader shader;
-	
 	protected boolean added = false;
+	
+	protected boolean MouseOver = false;
+	protected boolean EnableCollision = true;
 	
 	public GUI() {};
 	
@@ -120,8 +123,46 @@ public abstract class GUI {
 		return UVScale;
 	}
 	
+	public Vector3f GetPosition() {
+		return transform.GetPosition();
+	}
+	
+	public Vector3f GetRealPosition() {
+		UpdateTransform();
+		return _transform.GetPosition();
+	}
+	
+	public Vector3f GetScale() {
+		return this.transform.GetScale();
+	}
+	
+	public Vector4f GetRect() {
+		return new Vector4f(
+			(GUIRenderer.GetWidth()*this.transform.GetScale().x/2)+
+			(GUIRenderer.GetWidth()* (this.transform.GetPosition().x+.5f))-
+			(GUIRenderer.GetWidth()*this.transform.GetScale().x),
+			
+			(GUIRenderer.GetWidth()*this.transform.GetScale().x/2)+
+			(GUIRenderer.GetWidth()* (this.transform.GetPosition().x+.5f)),
+			
+			-((GUIRenderer.GetHeight()*this.transform.GetScale().y/2)+
+			(GUIRenderer.GetHeight()* (this.transform.GetPosition().y-.5f))),
+			
+			-((GUIRenderer.GetHeight()*this.transform.GetScale().y/2)+
+			(GUIRenderer.GetHeight()* (this.transform.GetPosition().y-.5f))-
+			(GUIRenderer.GetHeight()*this.transform.GetScale().y))
+		
+			);
+	}
+	
 	public void SetPosition(Vector3f position) {
 		SetTransform(new Transform(position, transform.GetRotation(), transform.GetScale()));
+	}
+	
+	
+	public void SetPosition(float x, float y, float z) {
+		Vector3f p = new Vector3f(x,y,z);
+		SetPosition(p);
 	}
 	
 	public void SetScale(Vector3f scale) {
@@ -147,14 +188,80 @@ public abstract class GUI {
 		this._transform = new Transform(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
 		this._transform.SetPosition(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, MathLib.Clamp(_transform.GetPosition().x,-1,1)), 
 				-MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -MathLib.Clamp(_transform.GetPosition().y,-1,1)),_transform.GetPosition().z ));
+		//this._transform = Transform.ScaleBasedPosition(_transform);
 	}
 	
+	public void SetMouseEnter() {
+		MouseOver = true;
+		OnMouseEnter();
+	}
+	
+	protected void OnMouseEnter() {
+		
+	}
+	
+	protected void OnMouseExit() {
+		
+	}
+	
+	public void SetMouseExit() {
+		MouseOver = false;
+		OnMouseExit();
+	}
+	
+	public boolean IsMouseOver() {
+		return MouseOver;
+	}
+	
+	public void SetMouseClicked(int button) {
+		OnMouseClicked(button);
+	}
+	
+	public void SetMouseButtonReleased(int button) {
+		OnMouseButtonReleased(button);
+	}
+	
+	protected void OnMouseButtonReleased(int button) {
+		
+	}
+	
+	protected void OnMouseClicked(int button) {
+		
+	}
+	
+	public boolean HasCollision() {
+		return this.EnableCollision;
+	}
 	
 	public abstract void CleanUp ();
 	
 	public int VertexCount() {
 		return 0;
 	};
+	
+	public boolean IsSelected() {
+		return this.equals(GUIRenderer.GetSelectedGUI());
+	}
+	
+	public void SelectGUI() {
+		GUIRenderer.SetSelectedGUI(this);
+		OnSelect();
+	}
+	
+	public void DeSelectGUI() {
+		GUIRenderer.SetSelectedGUI(null);
+		OnDeSelect();
+	}
+	
+	protected void OnDeSelect() {
+	}
+
+	public abstract void SelectedOnEvent(Event e);
+
+	protected void OnSelect() {
+		
+		
+	}
 	
 	
 	

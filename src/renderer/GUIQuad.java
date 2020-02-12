@@ -3,6 +3,7 @@ package renderer;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
+import engine.Events.Event;
 import renderer.Buffer.IndexBuffer;
 import renderer.Buffer.VertexBuffer;
 
@@ -93,6 +94,20 @@ public class GUIQuad extends GUI {
 	public void Draw() {
 		Renderer.DrawElements(IndicesCount());
 	};
+	
+	public void SetTexture(String texturePath) {
+		this.texturePath = texturePath;
+		Texture.Remove(this.texture);
+		this.texture = Texture.Create(texturePath);
+	}
+
+	@Override
+	public void SelectedOnEvent(Event e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
 	
 	
 	

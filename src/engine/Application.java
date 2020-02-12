@@ -80,7 +80,6 @@ public class Application {
 		Renderer.Init();
 		Debugger.Init();
 		OnInit();
-		
 	}
 	
 	protected void OnInit() {};
@@ -119,6 +118,7 @@ public class Application {
 		
 		dispatcher.Dispatch(WindowClosedEvent.GetGenericType(), new Events.EventFunction<Event>(event) {
 			@Override public boolean run(Event t) {return WindowClosedEvent((WindowClosedEvent)t ); } });
+		GUIRenderer.OnEvent(event);
 		Debugger.OnEvent(event);
 		OnEvent(event);
 	}
@@ -233,6 +233,7 @@ public class Application {
 			Renderer.Prepare();
 			Debugger.Update();
 			OnUpdate(deltaTime);
+			GUIRenderer.OnUpdate();
 			GUIRenderer.Render();
 			if (window != null && !window.IsClosed())
 				window.Update();
