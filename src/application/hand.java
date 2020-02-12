@@ -59,15 +59,6 @@
     
     
     
-    // just thinking of things right now we're going to need a method either
-    // for this class or the Deck class where we will need to empty the list
-    // of cards in the hand so that way the cards can return back to the deck
-    // and be shuffled up again! your choice (:
-    
-    // so this is what I was commenting about here, but we'll just make a
-    // method that will give the cards back to some method in Round whic will
-    // then return the cards back to the Deck object for later use
-    
     // this method will be called when a player busts and the dealer takes
     // their cards away
     public ArrayList<Card> returnCards() {

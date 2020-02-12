@@ -15,10 +15,4 @@ public class Ace extends Card {
         return changed;
     }
     
-    // IMPORTANT
-    // 1) Make sure you declare any aces as Card but use Ace constructor!
-    // 2) Make sure to reset beenChanged to false when a user busts and
-    //    the card goes back to the deck so that way someone else can change
-    //    it again!
-
 }
