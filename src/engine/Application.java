@@ -231,12 +231,11 @@ public class Application {
 			float deltaTime = time - lastFrameTime;
 			lastFrameTime = time;
 			Renderer.Prepare();
-			Debugger.Update();
-			OnUpdate(deltaTime);
 			GUIRenderer.OnUpdate();
+			OnUpdate(deltaTime);
+			Debugger.Update();
 			GUIRenderer.Render();
-			if (window != null && !window.IsClosed())
-				window.Update();
+			window.Update();
 			Timing.sync(fpsCap, window.Vsync());
 		}
 	}

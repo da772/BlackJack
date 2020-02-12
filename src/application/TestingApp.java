@@ -11,7 +11,7 @@ import engine.Events;
 import engine.Input;
 import engine.KeyCodes;
 import engine.Events.Event;
-
+import renderer.GUIRenderer;
 import renderer.Mesh;
 import renderer.Renderer;
 import renderer.Shader;
@@ -33,7 +33,8 @@ public class TestingApp extends Application {
 	CameraController.OrthographicCameraController cam;
 	
 	GUITextQuad tQuad;
-		
+	
+	float lastX =0, lastY = 0;
 	
 	public TestingApp() {
 		// Call super - Set window Title to "Blackjack" set width to 1280 set height to 720
@@ -126,24 +127,83 @@ public class TestingApp extends Application {
 				new Vector3f(.225f, .225f, 1f)
 				),
 				"Images/blankTexture.png",
-				new Vector4f(1f),
+				new Vector4f(.125f, .125f,.25f,.9f),
 				new Vector2f(.5f, -.475f),
 				"Fonts/verdana",
-				"Hover Over Me!",
-				new Vector4f(1f, 0,0,1f),
-				.25f, 1f, true, true
-				) {
-			
+				"Click to Drag Me!",
+				new Vector4f(1.f),
+				.25f, 1.25f, true, true
+				){
 			@Override
 			protected void OnMouseEnter() {
-				tQuad.SetQuadColor(0f,1f,0f,1f );
+				
+			}
+			
+			@Override
+			protected void OnMouseClicked(int button) {
+				if (button == KeyCodes.MOUSE_LEFT) {
+					if (!IsSelected()) {
+						SelectGUI();
+					} else {
+						DeselectGUI();
+					}
+				}
+				
+				if (button == KeyCodes.MOUSE_RIGHT) {
+					System.out.println("Pos: " + GetPosition());
+				}
+			}
+			
+			@Override
+			protected void OnSelect() {
+				SetQuadColor(new Vector4f(.125f, .125f,.45f,.9f));
+				BeginDrag(Input.GetMouseX(), Input.GetMouseY());
 			}
 			
 			@Override
 			protected void OnMouseExit() {
-				tQuad.SetQuadColor(1.f,1.f,1.f,1.f);
+				if (IsSelected()) {
+					DeselectGUI();
+				}
 			}
 			
+			@Override
+			protected void OnDeselect() {
+				SetQuadColor(new Vector4f(.125f, .125f,.25f,.9f));
+			}
+			
+			@Override
+			public void SelectedOnEvent(Event e) {
+				if (e instanceof Events.MouseButtonPressedEvent) {
+					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT
+							&& !IsMouseOver()) {
+						DeselectGUI();
+					}
+				}
+				
+				if (e instanceof Events.MouseButtonEvent) {
+					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT) {
+						DeselectGUI();	
+					}
+				
+				}
+				
+				if (e instanceof Events.MouseMovedEvent) {
+					if ( !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseX(), 0f, (float)GUIRenderer.GetWidth())
+						|| !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseY(), 0f, (float)GUIRenderer.GetWidth()))
+					{
+						DeselectGUI();
+						return;
+					}
+					
+					Drag( ((Events.MouseMovedEvent)e).GetMouseX(),
+					((Events.MouseMovedEvent)e).GetMouseY());
+					}
+				
+				}
+			
+				
+				
 			
 		};
 		
@@ -161,7 +221,7 @@ public class TestingApp extends Application {
 		Renderer.DrawIndexed(mesh2);
 
 		Renderer.DrawIndexed(mesh);
-		
+
 		
 		if (Input.IsMouseButtonPressed(KeyCodes.MOUSE_RIGHT)) {
 			//System.out.println("We are right clicking");
@@ -215,6 +275,7 @@ public class TestingApp extends Application {
 		if (Input.IsKeyPressed(KeyCodes.KEY_ENTER)) {
 			
 		}
+		
 		
 		cam.OnUpdate(deltaTime);
 		

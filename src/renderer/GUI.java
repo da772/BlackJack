@@ -24,6 +24,7 @@ public abstract class GUI {
 	protected Vector3f position;
 	
 	public float zOrder = 0f;
+	private Vector2f dragPos = new Vector2f(0f);
 	
 	protected Shader shader;
 	protected boolean added = false;
@@ -155,6 +156,23 @@ public abstract class GUI {
 			);
 	}
 	
+	
+	public void BeginDrag(float x, float y) {
+		dragPos.x = x;
+		dragPos.y = y;
+	}
+	
+	
+	public void Drag(float x, float y) {
+		SetPosition( this.transform.GetPosition().x + ( ((x-dragPos.x)/GUIRenderer.GetWidth()) ),
+				this.transform.GetPosition().y - ( ((y-dragPos.y)/GUIRenderer.GetHeight())),
+				this.transform.GetPosition().z
+				);
+		dragPos.x = x;
+		dragPos.y = y;
+	}
+	
+	
 	public void SetPosition(Vector3f position) {
 		SetTransform(new Transform(position, transform.GetRotation(), transform.GetScale()));
 	}
@@ -248,12 +266,14 @@ public abstract class GUI {
 		OnSelect();
 	}
 	
-	public void DeSelectGUI() {
-		GUIRenderer.SetSelectedGUI(null);
-		OnDeSelect();
+	public void DeselectGUI() {
+		if (IsSelected()) {
+			GUIRenderer.SetSelectedGUI(null);
+			OnDeselect();
+		}
 	}
 	
-	protected void OnDeSelect() {
+	protected void OnDeselect() {
 	}
 
 	public abstract void SelectedOnEvent(Event e);

@@ -7,21 +7,23 @@ import org.joml.Vector4f;
 import engine.Events.Event;
 import engine.Events.KeyEvent;
 import engine.Events.MouseButtonEvent;
+import renderer.GUIRenderer;
 import renderer.Renderer;
 import renderer.Shader;
 import renderer.Texture;
 import renderer.Transform;
 import renderer.GUIPrimitives.GUITextQuad;
 import renderer.text.FontType;
+import util.MathLib;
 
 public class Debugger {
 
 	private static GUITextQuad debugMenu;
 	
-	private static boolean DisplayMenu = false;
+	private static boolean DisplayMenu = true;
 	public static final int MenuKeyCode = KeyCodes.KEY_GRAVE_ACCENT; // ~
 	
-	private static final float xPos = .4f, yPos = .375f;
+	private static final float xPos = .4f, yPos = .35f;
 	
 	private static int keyPressed = -1;
 	private static int mousePressed = -1;
@@ -29,8 +31,10 @@ public class Debugger {
 	private static Vector4f quadHoverColor = new Vector4f(.25f,.25f,.25f, .8f);
 	private static Vector4f quadColor = new Vector4f(0.1f,0.1f,0.1f,.8f);
 	
+	
 	public static void Init() {
 		CreateMenu();
+		ShowMenu(DisplayMenu);
 	}
 	
 	public static void ShowMenu(boolean b) {
@@ -43,6 +47,8 @@ public class Debugger {
 	}
 	
 	public static void Update() {
+		
+		
 		if (DisplayMenu) {
 		debugMenu.SetText(
 			    "Debug Menu:\n \n" +
@@ -60,7 +66,8 @@ public class Debugger {
 				
 						
 				"\n\nI/O Info        MouseX: " + (int)Input.GetMouseX() +" | MouseY: " + (int)Input.GetMouseY() +
-				"\n                    Key Input: " + keyPressed + " | Mouse Input: " + mousePressed 
+				"\n                    Key Input: " + keyPressed + " | Mouse Input: " + mousePressed
+				
 				
 					));
 		}
@@ -72,6 +79,7 @@ public class Debugger {
 		if (mousePressed != -1 && !Input.IsMouseButtonPressed(mousePressed)) {
 			mousePressed = -1;
 		}
+		
 		
 	}
 	
@@ -99,6 +107,7 @@ public class Debugger {
 			keyPressed = e.GetKeyCode();
 			if (e.GetKeyCode() == MenuKeyCode) {
 				ShowMenu(!DisplayMenu);
+				debugMenu.DeselectGUI();
 			}
 		}
 		
@@ -113,10 +122,10 @@ public class Debugger {
 		debugMenu = new GUITextQuad(new Transform( 
 				new Vector3f(xPos,yPos,10000.f), // Position x,y, Z-Order higher is on top
 				new Vector3f(0f, 0f,0f),  // Rotation
-				new Vector3f(.225f,.4f,1f)), // Scale x,y,z
+				new Vector3f(.225f,.3f,1f)), // Scale x,y,z
 				"Images/blankTexture.png",  // Quad Texture path
 				quadColor, // Quad Color r,g,b,a
-				new Vector2f(.5f, -.39f), // Font Offset (used to center text if needed) 
+				new Vector2f(.5f, -.365f), // Font Offset (used to center text if needed) 
 				"Fonts/verdana",  // Font path
 				"", // Font String
 				new Vector4f(.95f,.95f,.95f,1f), // Font color r,g,b,a
@@ -136,38 +145,69 @@ public class Debugger {
 					if (!IsSelected()) {
 						SelectGUI();
 					} else {
-						DeSelectGUI();
+						DeselectGUI();
 					}
 				}
 			}
 			
 			@Override
 			protected void OnSelect() {
-				debugMenu.SetQuadColor(quadHoverColor);
+				SetQuadColor(quadHoverColor);
+				BeginDrag(Input.GetMouseX(), Input.GetMouseY());
 			}
 			
 			@Override
 			protected void OnMouseExit() {
-				if (!debugMenu.IsSelected()) {
-					OnDeSelect();
+				if (IsSelected()) {
+					OnDeselect();
 				}
 			}
 			
 			@Override
-			protected void OnDeSelect() {
-				debugMenu.SetQuadColor(quadColor);
+			protected void OnDeselect() {
+				SetQuadColor(quadColor);
 			}
 			
 			@Override
 			public void SelectedOnEvent(Event e) {
 				if (e instanceof Events.MouseButtonPressedEvent) {
-					if (((Events.MouseButtonEvent)e).m_Keycode == KeyCodes.MOUSE_LEFT
-							&& !debugMenu.IsMouseOver()) {
-						DeSelectGUI();
+					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT
+							&& !IsMouseOver()) {
+						DeselectGUI();
 					}
 				}
-			}
+				
+				
+				
+
+				if (e instanceof Events.MouseButtonEvent) {
+					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT) {
+						DeselectGUI();	
+					}
+				
+				}
+				
+
+				if (e instanceof Events.MouseMovedEvent) {
+					
+					if ( !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseX(), 0f, (float)GUIRenderer.GetWidth())
+						|| !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseY(), 0f, (float)GUIRenderer.GetWidth()))
+					{
+						DeselectGUI();
+						return;
+					}
+					
+					Drag( ((Events.MouseMovedEvent)e).GetMouseX(),
+					((Events.MouseMovedEvent)e).GetMouseY());
+					}
+				
+				}
+			
+				
+				
+			
 		};
+	
 	}
 	
 }

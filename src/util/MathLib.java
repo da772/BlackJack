@@ -55,4 +55,8 @@ public class MathLib {
 		return  a > max ? max : a < min ? min : a;
 	}
 	
+	public static boolean InBounds(float x, float min, float max) {
+		return x < max && x > min;
+	}
+	
 }
