@@ -40,13 +40,13 @@
 				- [ ] Text Batching
 				- [X] Multiple fonts
 				- [X] Lines of text
-				- [ ] Add to GUI renderer
+				- [X] Add to GUI renderer
 			- [X] Gui Rendering
 				- [X] Draw quads with transforms, textures, colors, uv scales
 				- [X] Use Z position as render order
-			- [ ] Buttons
+			- [X] Buttons
 			- [X] Static position
-			- [ ] Mouse Detection
+			- [X] Mouse Detection
 		- Renderer
 			- [ ]  Z-Ordering
 			- [X]  Anti-Aliasing

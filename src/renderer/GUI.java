@@ -5,10 +5,12 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import engine.Collider2D;
+import engine.Collision2D;
 import engine.Events.Event;
 import util.MathLib;
 
-public abstract class GUI {
+public abstract class GUI extends Collider2D {
 
 	protected Transform transform;
 	protected Transform _transform;
@@ -23,7 +25,7 @@ public abstract class GUI {
 	
 	protected Vector3f position;
 	
-	public float zOrder = 0f;
+	
 	private Vector2f dragPos = new Vector2f(0f);
 	
 	protected Shader shader;
@@ -140,17 +142,17 @@ public abstract class GUI {
 	public Vector4f GetRect() {
 		return new Vector4f(
 			(GUIRenderer.GetWidth()*this.transform.GetScale().x/2)+
-			(GUIRenderer.GetWidth()* (this.transform.GetPosition().x+.5f))-
+			(GUIRenderer.GetWidth()* (this.transform.GetPosition().x/2f+.5f))-
 			(GUIRenderer.GetWidth()*this.transform.GetScale().x),
 			
 			(GUIRenderer.GetWidth()*this.transform.GetScale().x/2)+
-			(GUIRenderer.GetWidth()* (this.transform.GetPosition().x+.5f)),
+			(GUIRenderer.GetWidth()* (this.transform.GetPosition().x/2f+.5f)),
 			
 			-((GUIRenderer.GetHeight()*this.transform.GetScale().y/2)+
-			(GUIRenderer.GetHeight()* (this.transform.GetPosition().y-.5f))),
+			(GUIRenderer.GetHeight()* (this.transform.GetPosition().y/2f-.5f))),
 			
 			-((GUIRenderer.GetHeight()*this.transform.GetScale().y/2)+
-			(GUIRenderer.GetHeight()* (this.transform.GetPosition().y-.5f))-
+			(GUIRenderer.GetHeight()* (this.transform.GetPosition().y/2f-.5f))-
 			(GUIRenderer.GetHeight()*this.transform.GetScale().y))
 		
 			);
@@ -164,8 +166,8 @@ public abstract class GUI {
 	
 	
 	public void Drag(float x, float y) {
-		SetPosition( this.transform.GetPosition().x + ( ((x-dragPos.x)/GUIRenderer.GetWidth()) ),
-				this.transform.GetPosition().y - ( ((y-dragPos.y)/GUIRenderer.GetHeight())),
+		SetPosition( this.transform.GetPosition().x + ( ((x-dragPos.x)/GUIRenderer.GetWidth())*2f ),
+				this.transform.GetPosition().y - ( ((y-dragPos.y)/GUIRenderer.GetHeight()*2f)),
 				this.transform.GetPosition().z
 				);
 		dragPos.x = x;
@@ -204,8 +206,8 @@ public abstract class GUI {
 		this.zOrder = transform.GetPosition().z;
 		this.transform.SetPosition(transform.GetPosition().x, transform.GetPosition().y, 0f);
 		this._transform = new Transform(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
-		this._transform.SetPosition(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, MathLib.Clamp(_transform.GetPosition().x,-1,1)), 
-				-MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -MathLib.Clamp(_transform.GetPosition().y,-1,1)),_transform.GetPosition().z ));
+		this._transform.SetPosition(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2,_transform.GetPosition().x)/2f, 
+				-MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -_transform.GetPosition().y)/2f,_transform.GetPosition().z ));
 		//this._transform = Transform.ScaleBasedPosition(_transform);
 	}
 	
@@ -231,22 +233,6 @@ public abstract class GUI {
 		return MouseOver;
 	}
 	
-	public void SetMouseClicked(int button) {
-		OnMouseClicked(button);
-	}
-	
-	public void SetMouseButtonReleased(int button) {
-		OnMouseButtonReleased(button);
-	}
-	
-	protected void OnMouseButtonReleased(int button) {
-		
-	}
-	
-	protected void OnMouseClicked(int button) {
-		
-	}
-	
 	public boolean HasCollision() {
 		return this.EnableCollision;
 	}
@@ -258,22 +244,26 @@ public abstract class GUI {
 	};
 	
 	public boolean IsSelected() {
-		return this.equals(GUIRenderer.GetSelectedGUI());
+		return this.equals(Collision2D.GetSelected());
 	}
 	
 	public void SelectGUI() {
-		GUIRenderer.SetSelectedGUI(this);
+		Collision2D.SetSelected(this);
 		OnSelect();
 	}
 	
 	public void DeselectGUI() {
 		if (IsSelected()) {
-			GUIRenderer.SetSelectedGUI(null);
+			Collision2D.SetSelected(null);
 			OnDeselect();
 		}
 	}
 	
-	protected void OnDeselect() {
+	public void RemoveSelection() {
+		OnDeselect();
+	}
+	
+	public void OnDeselect() {
 	}
 
 	public abstract void SelectedOnEvent(Event e);
@@ -282,6 +272,17 @@ public abstract class GUI {
 		
 		
 	}
+	
+	@Override
+	public CollisionObjectType GetCollisionObjectType() {
+		return CollisionObjectType.GUI;
+	}
+
+	@Override
+	public float GetZOrder() {
+		return zOrder;
+	}
+
 	
 	
 	

@@ -35,11 +35,11 @@ public abstract class CameraController {
 	
 	public abstract boolean OnWindowResized(WindowResizedEvent e);
 	
-	public static class OrthographicCameraController extends CameraController {
+	public static class Orthographic extends CameraController {
 		
 		float zoomLevel = 1f;
 		
-		public OrthographicCameraController(float aspectRatio) {
+		public Orthographic(float aspectRatio) {
 			super();
 			this.aspectRatio = aspectRatio;
 			camera = new Camera.OrthographicCamera(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);

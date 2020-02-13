@@ -265,10 +265,9 @@ public class GUIText extends GUI {
 	protected void UpdateTransform() {
 		this.zOrder = transform.GetPosition().z;
 		this.transform.SetPosition(transform.GetPosition().x, transform.GetPosition().y, 0f);
-		this._transform = new Transform(transform.GetPosition(), transform.GetRotation(), 
-				transform.GetScale());
-		this._transform.SetPosition(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, MathLib.Clamp(_transform.GetPosition().x,-1,1)), 
-				-MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -MathLib.Clamp(_transform.GetPosition().y,-1,1)),_transform.GetPosition().z ));
+		this._transform = new Transform(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
+		this._transform.SetPosition(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2,_transform.GetPosition().x)/2f, 
+				-MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -_transform.GetPosition().y)/2f,_transform.GetPosition().z ));
 		this._transform.SetScale(new Vector3f(1f));
 		this.transform.SetPosition(transform.GetPosition().x, transform.GetPosition().y, transform.GetPosition().z);
 	}

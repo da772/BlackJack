@@ -12,25 +12,22 @@ import engine.Input;
 import engine.KeyCodes;
 import engine.Events.Event;
 import renderer.GUIRenderer;
-import renderer.Mesh;
-import renderer.Renderer;
-import renderer.Shader;
 import renderer.ShaderLib;
-import renderer.Texture;
 import renderer.Transform;
 import renderer.VertexArray;
 import renderer.GUIPrimitives.GUITextQuad;
+import renderer.mesh.Mesh2D;
 import util.MathLib;
 
 public class TestingApp extends Application {
 
-	Mesh mesh;
-	Mesh mesh2;
-	Mesh background;
+	Mesh2D mesh;
+	Mesh2D mesh2;
+	Mesh2D background;
 
 	Matrix4f transform;
 	
-	CameraController.OrthographicCameraController cam;
+	CameraController.Orthographic cam;
 	
 	GUITextQuad tQuad;
 	
@@ -46,7 +43,7 @@ public class TestingApp extends Application {
 	protected void OnInit() {
 		System.out.println(title+" Init!");
 		
-		cam = new CameraController.OrthographicCameraController(16.f/9.f);
+		cam = new CameraController.Orthographic(16.f/9.f);
 		window.SetVSync(vsync);
 		
 		float[] vertices = {
@@ -83,37 +80,40 @@ public class TestingApp extends Application {
 		
 		Vector3f pos = new Vector3f(0.f,0.f,0.0f);
 		Vector3f scale = new Vector3f(1000f,1000.f,1.f);
-		transform = new Matrix4f();
-		transform = MathLib.createTransformMatrix(pos, new Vector3f(0, 0, 0f), scale);
 		
-		background = new Mesh(vertices1, new VertexArray.BufferElement[]{
+		background = new Mesh2D(vertices1, new VertexArray.BufferElement[]{
 				new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position"),
 				new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
-				}, indices1, Shader.Create(ShaderLib.Shader_U_Texture_ViewProj_UV_Transform_L_V3Pos_V2Coord),
-				Texture.Create("Images/mosaico_multicolor_tile.jpg"),
-				transform, cam.GetCamera());
+				}, indices1, ShaderLib.Shader_U_Texture_ViewProj_UV_Transform_L_V3Pos_V2Coord,
+				"Images/mosaico_multicolor_tile.jpg",
+				new Transform(pos, new Vector3f(0f), scale), cam.GetCamera());
+		
+		background.Add();
+		
+		pos = new Vector3f(0.f,0.f,.4f);
+		scale = new Vector3f(.75f,1.f,1.f);
+		mesh = new Mesh2D(vertices, new VertexArray.BufferElement[]{
+				new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position"),
+				new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
+				},
+		indices, ShaderLib.Shader_U_Texture_ViewProj_Transform_L_V3Pos_V2Coord, 
+		"Images/Anchor.png",
+		new Transform(pos, new Vector3f(0f), scale), cam.GetCamera());
+		
+		mesh.Add();
+		
 		
 		pos = new Vector3f(0.f,0.f,.2f);
 		scale = new Vector3f(.75f,1.f,1.f);
-		transform = MathLib.createTransformMatrix(pos, new Vector3f(0, 0, 0f), scale);
-		mesh = new Mesh(vertices, new VertexArray.BufferElement[]{
+		mesh2 = new Mesh2D(vertices1, new VertexArray.BufferElement[]{
 				new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position"),
 				new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
 				},
-		indices, Shader.Create(ShaderLib.Shader_U_Texture_ViewProj_Transform_L_V3Pos_V2Coord), 
-		Texture.Create("Images/Anchor.png"),
-		transform, cam.GetCamera());
+		indices1, ShaderLib.Shader_U_Texture_ViewProj_Transform_L_V3Pos_V2Coord,
+		"Images/Cards/5D.png",
+		new Transform(pos, new Vector3f(0f), scale), cam.GetCamera());
 		
-		pos = new Vector3f(0.f,0.f,.1f);
-		scale = new Vector3f(.75f,1.f,1.f);
-		transform = MathLib.createTransformMatrix(pos, new Vector3f(0, 0, 0f), scale);
-		mesh2 = new Mesh(vertices1, new VertexArray.BufferElement[]{
-				new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position"),
-				new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
-				},
-		indices1, Shader.Create(ShaderLib.Shader_U_Texture_ViewProj_Transform_L_V3Pos_V2Coord),
-		Texture.Create("Images/Cards/5D.png"),
-		transform, cam.GetCamera());
+		mesh2.Add();
 		
 		pos = new Vector3f(0f,-.5f,0f);
 		scale = new Vector3f(2f,3f,1.f);
@@ -122,70 +122,60 @@ public class TestingApp extends Application {
 		
 		
 		tQuad = new GUITextQuad(new Transform(
-				new Vector3f(0f, 0f, 0f),
+				new Vector3f(-.775f, .775f, 0f),
 				new Vector3f(0f),
 				new Vector3f(.225f, .225f, 1f)
 				),
 				"Images/blankTexture.png",
 				new Vector4f(.125f, .125f,.25f,.9f),
-				new Vector2f(.5f, -.475f),
+				new Vector2f(.87f, -.95f),
 				"Fonts/verdana",
-				"Click to Drag Me!",
-				new Vector4f(1.f),
-				.25f, 1.25f, true, true
+				"Click and hold to drag!",
+				new Vector4f(0.f,0f,0f,1f),
+				.25f, 1.25f, true, false
 				){
-			@Override
-			protected void OnMouseEnter() {
-				
-			}
+			
+			boolean isDragging = false;
 			
 			@Override
-			protected void OnMouseClicked(int button) {
-				if (button == KeyCodes.MOUSE_LEFT) {
-					if (!IsSelected()) {
-						SelectGUI();
-					} else {
-						DeselectGUI();
-					}
-				}
-				
-				if (button == KeyCodes.MOUSE_RIGHT) {
-					System.out.println("Pos: " + GetPosition());
-				}
+			protected void OnMouseEnter() {
+				SelectGUI();
 			}
 			
 			@Override
 			protected void OnSelect() {
 				SetQuadColor(new Vector4f(.125f, .125f,.45f,.9f));
+			}
+			
+			protected void StartDragging() {
+				isDragging = true;
 				BeginDrag(Input.GetMouseX(), Input.GetMouseY());
 			}
 			
+			
 			@Override
 			protected void OnMouseExit() {
-				if (IsSelected()) {
-					DeselectGUI();
-				}
+				DeselectGUI();
 			}
 			
 			@Override
-			protected void OnDeselect() {
+			public void OnDeselect() {
 				SetQuadColor(new Vector4f(.125f, .125f,.25f,.9f));
+				isDragging = false;
 			}
 			
 			@Override
 			public void SelectedOnEvent(Event e) {
 				if (e instanceof Events.MouseButtonPressedEvent) {
-					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT
-							&& !IsMouseOver()) {
-						DeselectGUI();
+					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT) {
+						if (!isDragging) StartDragging();	
 					}
 				}
 				
-				if (e instanceof Events.MouseButtonEvent) {
+				if (e instanceof Events.MouseButtonReleasedEvent) {
 					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT) {
-						DeselectGUI();	
+						if (isDragging) isDragging = false;
 					}
-				
 				}
 				
 				if (e instanceof Events.MouseMovedEvent) {
@@ -195,16 +185,14 @@ public class TestingApp extends Application {
 						DeselectGUI();
 						return;
 					}
-					
-					Drag( ((Events.MouseMovedEvent)e).GetMouseX(),
-					((Events.MouseMovedEvent)e).GetMouseY());
-					}
-				
+					if (isDragging) {
+						Drag( ((Events.MouseMovedEvent)e).GetMouseX(),
+						((Events.MouseMovedEvent)e).GetMouseY());
+						}
 				}
-			
+					
 				
-				
-			
+			}
 		};
 		
 		tQuad.Add();
@@ -217,10 +205,10 @@ public class TestingApp extends Application {
 	protected void OnUpdate(float deltaTime) {
 		
 		// Render by Z-Order (Not including HUD)
-		Renderer.DrawIndexed(background);
-		Renderer.DrawIndexed(mesh2);
+	//	Renderer.DrawIndexed(background);
+	//	Renderer.DrawIndexed(mesh2);
 
-		Renderer.DrawIndexed(mesh);
+	//	Renderer.DrawIndexed(mesh);
 
 		
 		if (Input.IsMouseButtonPressed(KeyCodes.MOUSE_RIGHT)) {

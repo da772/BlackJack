@@ -14,6 +14,7 @@ import engine.Events.WindowResizedEvent;
 import util.Timing;
 import renderer.GUIRenderer;
 import renderer.Renderer;
+import renderer.Renderer2D;
 
 
 
@@ -79,6 +80,7 @@ public class Application {
 		}
 		Renderer.Init();
 		Debugger.Init();
+		Collision2D.Begin();
 		OnInit();
 	}
 	
@@ -118,7 +120,7 @@ public class Application {
 		
 		dispatcher.Dispatch(WindowClosedEvent.GetGenericType(), new Events.EventFunction<Event>(event) {
 			@Override public boolean run(Event t) {return WindowClosedEvent((WindowClosedEvent)t ); } });
-		GUIRenderer.OnEvent(event);
+		Collision2D.OnEvent(event);
 		Debugger.OnEvent(event);
 		OnEvent(event);
 	}
@@ -231,9 +233,9 @@ public class Application {
 			float deltaTime = time - lastFrameTime;
 			lastFrameTime = time;
 			Renderer.Prepare();
-			GUIRenderer.OnUpdate();
 			OnUpdate(deltaTime);
 			Debugger.Update();
+			Renderer2D.Render();
 			GUIRenderer.Render();
 			window.Update();
 			Timing.sync(fpsCap, window.Vsync());
@@ -264,8 +266,10 @@ public class Application {
 	public void Shutdown() {
 		OnShutdown();
 		Debugger.ShutDown();
-		Renderer.ShutDown();
+		Collision2D.CleanUp();
+		Renderer2D.CleanUp();
 		GUIRenderer.CleanUp();
+		Renderer.ShutDown();
 		if (window != null) {
 			window.Shutdown();
 		}

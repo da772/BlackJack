@@ -6,6 +6,8 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
+import renderer.mesh.Mesh2D;
+
 
 public class Renderer {
 
@@ -61,7 +63,7 @@ public class Renderer {
 		GL30.glDrawArrays(GL11.GL_TRIANGLES, 0, size);
 	}
 	
-	public static void DrawIndexed(Mesh mesh) {
+	public static void DrawIndexed(Mesh2D mesh) {
 		if (mesh == null)
 			return;
 		mesh.Bind();
@@ -83,7 +85,7 @@ public class Renderer {
 	}
 	
 	
-	public static void Draw(Mesh mesh) {
+	public static void Draw(Mesh2D mesh) {
 		if (mesh == null)
 			return;
 		mesh.Bind();

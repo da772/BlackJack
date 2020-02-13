@@ -2,6 +2,8 @@ package util;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import renderer.Transform;
+
 public class MathLib {
 	
 	public static Matrix4f createTransformMatrix(Vector3f pos, Vector3f rot, Vector3f scale) {
@@ -12,6 +14,10 @@ public class MathLib {
 		matrix = matrix.rotate( (float)Math.toRadians(rot.z), new Vector3f(0,0,1)  );
 		matrix = matrix.scale(scale);
 		return matrix;
+	}
+	
+	public static Matrix4f createTransformMatrix(Transform transform) {
+		return createTransformMatrix(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
 	}
 	
 	public static Matrix4f createViewMatrix(Vector3f pos, Vector3f rot) {
@@ -27,6 +33,8 @@ public class MathLib {
 		
 		return viewMatrix;
 	}
+	
+	
 	
 	
 	public static float GetRangePct(float minValue, float maxValue, float value) {

@@ -23,7 +23,7 @@ public class Debugger {
 	private static boolean DisplayMenu = true;
 	public static final int MenuKeyCode = KeyCodes.KEY_GRAVE_ACCENT; // ~
 	
-	private static final float xPos = .4f, yPos = .35f;
+	private static final float xPos = .775f, yPos = .7f;
 	
 	private static int keyPressed = -1;
 	private static int mousePressed = -1;
@@ -98,7 +98,6 @@ public class Debugger {
 			mousePressed = e.GetKeyCode();
 		}
 		
-		
 		return false;
 	}
 	
@@ -106,8 +105,9 @@ public class Debugger {
 		if (e instanceof Events.KeyPressedEvent) {
 			keyPressed = e.GetKeyCode();
 			if (e.GetKeyCode() == MenuKeyCode) {
-				ShowMenu(!DisplayMenu);
 				debugMenu.DeselectGUI();
+				debugMenu.SetMouseExit();
+				ShowMenu(!DisplayMenu);
 			}
 		}
 		
@@ -125,7 +125,7 @@ public class Debugger {
 				new Vector3f(.225f,.3f,1f)), // Scale x,y,z
 				"Images/blankTexture.png",  // Quad Texture path
 				quadColor, // Quad Color r,g,b,a
-				new Vector2f(.5f, -.365f), // Font Offset (used to center text if needed) 
+				new Vector2f(.9f, -.72f), // Font Offset (used to center text if needed) 
 				"Fonts/verdana",  // Font path
 				"", // Font String
 				new Vector4f(.95f,.95f,.95f,1f), // Font color r,g,b,a
@@ -134,78 +134,67 @@ public class Debugger {
 				false, // Center Text
 				false // Auto expand width to match quad
 		) {
-			@Override
-			protected void OnMouseEnter() {
-				
-			}
+			
+			boolean isDragging = false;
 			
 			@Override
-			protected void OnMouseClicked(int button) {
-				if (button == KeyCodes.MOUSE_LEFT) {
-					if (!IsSelected()) {
-						SelectGUI();
-					} else {
-						DeselectGUI();
-					}
-				}
+			protected void OnMouseEnter() {
+				SelectGUI();
 			}
 			
 			@Override
 			protected void OnSelect() {
+				
+			}
+			
+			protected void StartDragging() {
+				isDragging = true;
 				SetQuadColor(quadHoverColor);
 				BeginDrag(Input.GetMouseX(), Input.GetMouseY());
 			}
 			
-			@Override
-			protected void OnMouseExit() {
-				if (IsSelected()) {
-					OnDeselect();
-				}
+			public void StopDragging() {
+				isDragging = false;
+				SetQuadColor(quadColor);
 			}
 			
 			@Override
-			protected void OnDeselect() {
-				SetQuadColor(quadColor);
+			protected void OnMouseExit() {
+				DeselectGUI();
+			}
+			
+			@Override
+			public void OnDeselect() {
+				StopDragging();
 			}
 			
 			@Override
 			public void SelectedOnEvent(Event e) {
 				if (e instanceof Events.MouseButtonPressedEvent) {
-					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT
-							&& !IsMouseOver()) {
-						DeselectGUI();
-					}
-				}
-				
-				
-				
-
-				if (e instanceof Events.MouseButtonEvent) {
 					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT) {
-						DeselectGUI();	
+						if (!isDragging) StartDragging();	
 					}
-				
 				}
 				
-
+				if (e instanceof Events.MouseButtonReleasedEvent) {
+					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT) {
+						if (isDragging) StopDragging();
+					}
+				}
+				
 				if (e instanceof Events.MouseMovedEvent) {
-					
 					if ( !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseX(), 0f, (float)GUIRenderer.GetWidth())
 						|| !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseY(), 0f, (float)GUIRenderer.GetWidth()))
 					{
 						DeselectGUI();
 						return;
 					}
-					
-					Drag( ((Events.MouseMovedEvent)e).GetMouseX(),
-					((Events.MouseMovedEvent)e).GetMouseY());
+					if (isDragging) {
+						Drag( ((Events.MouseMovedEvent)e).GetMouseX(),
+						((Events.MouseMovedEvent)e).GetMouseY());
 					}
-				
 				}
-			
-				
-				
-			
+			}
 		};
 	
 	}
