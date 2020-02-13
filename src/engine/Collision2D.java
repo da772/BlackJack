@@ -35,7 +35,7 @@ public class Collision2D extends Thread {
 	public void run() {
 		while (Application.app.running && running) {
 			OnUpdate();
-			Timing.sync(Application.app.fps, false);
+			Timing.sync(Application.app.fpsCap, false);
 		}	
 	}
 	
@@ -43,7 +43,6 @@ public class Collision2D extends Thread {
 		boolean hit = false;
 		try {
 			for (int i = GUIcolliders.size()-1; i >= 0 ; i--) {
-				if (i >= GUIcolliders.size()) break;
 				Collider2D h = GUIcolliders.get(i);
 				if (!hit) {
 					if (mouseX >= h.GetRect().x && mouseX <= h.GetRect().y
