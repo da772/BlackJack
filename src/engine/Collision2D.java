@@ -5,6 +5,8 @@ import java.util.List;
 
 import engine.Collider2D.CollisionObjectType;
 import engine.Events.Event;
+import renderer.GUIRenderer;
+import util.MathLib;
 import util.Timing;
 
 public class Collision2D extends Thread {
@@ -30,7 +32,6 @@ public class Collision2D extends Thread {
 	
 	private Collision2D() {};
 	
-	
 	@Override
 	public void run() {
 		while (Application.app.running && running) {
@@ -44,6 +45,11 @@ public class Collision2D extends Thread {
 		try {
 			for (int i = GUIcolliders.size()-1; i >= 0 ; i--) {
 				Collider2D h = GUIcolliders.get(i);
+				if (!MathLib.InBounds(mouseX, 0f, (float)GUIRenderer.GetWidth())
+						|| !MathLib.InBounds( mouseY, 0f, (float)GUIRenderer.GetWidth())) {
+					hit = true;
+				}
+					
 				if (!hit) {
 					if (mouseX >= h.GetRect().x && mouseX <= h.GetRect().y
 						&& mouseY >= h.GetRect().z && mouseY <= h.GetRect().w) 
@@ -156,6 +162,9 @@ public class Collision2D extends Thread {
 	
 	public static void RemoveGUICollider(Collider2D hud) {
 		if (GUIcolliders.contains(hud)) {
+			if (hud.IsMouseOver()) {
+				hud.SetMouseExit();
+			}
 			GUIcolliders.remove(hud);
 		}
 	}

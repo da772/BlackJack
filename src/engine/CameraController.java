@@ -4,7 +4,6 @@ import org.joml.Vector3f;
 
 import engine.Events.Event;
 import engine.Events.WindowResizedEvent;
-import renderer.Camera;
 import util.MathLib;
 
 public abstract class CameraController {
@@ -33,6 +32,14 @@ public abstract class CameraController {
 		camera.SetRotation(rotation);
 	}
 	
+	public void SetPosition(Vector3f pos) {
+		this.Position = pos;
+	}
+	
+	public boolean OnZoom(float x, float y, float amt) {
+		return false;
+	}
+	
 	public abstract boolean OnWindowResized(WindowResizedEvent e);
 	
 	public static class Orthographic extends CameraController {
@@ -49,6 +56,7 @@ public abstract class CameraController {
 			return this.zoomLevel;
 		}
 		
+		@Override
 		public boolean OnZoom(float x, float y, float amt) {
 			zoomLevel = MathLib.Clamp(zoomLevel - (y*amt), 0.01f, 100f);
 			camera.SetProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
@@ -61,9 +69,35 @@ public abstract class CameraController {
 			camera.SetProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
 			return false;
 		}
+	}
+	
+public static class Perspective extends CameraController {
 		
+		float zoomLevel = 1f;
 		
+		public Perspective(float aspectRatio) {
+			super();
+			this.aspectRatio = aspectRatio;
+			camera = new Camera.OrthographicCamera(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
+		}
+
+		public float GetZoomLevel() {
+			return this.zoomLevel;
+		}
 		
+		@Override
+		public boolean OnZoom(float x, float y, float amt) {
+			zoomLevel = MathLib.Clamp(zoomLevel - (y*amt), 0.01f, 100f);
+			camera.SetProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
+			return false;
+		}
+		
+		@Override
+		public boolean OnWindowResized(WindowResizedEvent e) {
+			aspectRatio = (float)e.GetWidth()/(float)e.GetHeight();
+			camera.SetProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
+			return false;
+		}
 	}
 	
 	

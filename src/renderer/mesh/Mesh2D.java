@@ -4,10 +4,9 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import engine.Camera;
 import engine.Collider2D;
 import engine.Events.Event;
-import renderer.Camera;
-import renderer.Renderer;
 import renderer.Renderer2D;
 import renderer.Shader;
 import renderer.Texture;
@@ -18,61 +17,25 @@ import renderer.Buffer.IndexBuffer;
 import renderer.Buffer.VertexBuffer;
 
 
-public class Mesh2D extends Collider2D {
+public abstract class  Mesh2D extends Collider2D {
 
-	protected float[] vertices;
-	protected int[] indices;
-	protected VertexArray.BufferLayout layout ;
-	protected VertexBuffer vb;
-	protected IndexBuffer ib;
-	protected VertexArray va;
-	protected Shader shader;
 	protected Texture texture;
+	protected Shader shader;
 	protected Camera cam;
 	protected Transform transform;
 	protected String[] shaderString;
 	protected String textureString;
+	protected float zOrder = 0;
+	protected Transform _transform;
 
 	
-	public Mesh2D(float[] vertices, VertexArray.BufferElement[] layout ,int[] indices, String[] shader){
-		this.vertices = vertices;
-		this.indices = indices;
-		this.shaderString = shader;
-		this.layout = new VertexArray.BufferLayout(layout);
-
-	}
-	
-	public Mesh2D(float[] vertices, VertexArray.BufferElement[] layout ,int[] indices, String[] shader, String texture,
-			Transform transform, Camera cam){
-		this.vertices = vertices;
-		this.indices = indices;
-		this.shaderString = shader;
-		this.textureString = texture;
-		this.transform = transform;
+	public Mesh2D(Transform transform, String[] shader, String texture, Camera cam) {
+		SetTransform(transform);
 		this.cam = cam;
-		this.layout = new VertexArray.BufferLayout(layout);
-		
-	}
-	
-	public Mesh2D(float[] vertices ,int[] indices, String[] shader){
-		this.vertices = vertices;
-		this.indices = indices;
-		this.shaderString = shader;
-		this.layout = new VertexArray.BufferLayout( new VertexArray.BufferElement[]
-				{ new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position")
-				});
-	}
-	
-	public Mesh2D(float[] vertices ,int[] indices, String[] shader, String texture){
-		this.vertices = vertices;
-		this.indices = indices;
 		this.shaderString = shader;
 		this.textureString = texture;
-		this.layout = new VertexArray.BufferLayout( new VertexArray.BufferElement[]
-				{ new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position")
-				});
-			
 	}
+	
 	
 	public void Bind() {
 		GetShader().Bind();
@@ -80,32 +43,30 @@ public class Mesh2D extends Collider2D {
 		GetShader().UploadUniformMat4("u_viewProjection", cam.GetViewProjectionMatrix());
 		if (GetTexture() != null)
 			GetTexture().Bind();
-		GetVertexArray().Bind();
+		OnBind();
 	}
 	
-	public void Draw() {
-		Renderer.DrawIndexed(this);
-	}
+	public abstract void OnBind();
+	
+	public abstract void Draw();
 	
 	public void UnBind() {
 		GetShader().UnBind();
 		if (GetTexture() != null)
 			GetTexture().UnBind();
-		GetVertexArray().UnBind();
+		OnUnBind();
 	}
 	
+	protected abstract void OnUnBind();
+	
 	public void Init() {
-		vb = new VertexBuffer(vertices, vertices.length);
-		ib = new IndexBuffer(indices, indices.length);
-		
-		va = new VertexArray();
-		va.AddVertexBuffer(vb, this.layout);
-		va.AddIndexBuffer(ib);
 		shader = Shader.Create(shaderString);
 		texture = Texture.Create(textureString);
-		
+		OnInit();
 		
 	}
+	
+	protected abstract void OnInit();
 	
 	public void Add() {
 		Renderer2D.Add(this);
@@ -117,12 +78,12 @@ public class Mesh2D extends Collider2D {
 	
 	
 	public void CleanUp() {
-		vb.CleanUp();
-		ib.CleanUp();
-		va.CleanUp();
 		Shader.Remove(shader);
 		Texture.Remove(texture);
+		OnCleanUp();
 	}
+	
+	protected abstract void OnCleanUp();
 	
 	public void SetPosition(Vector3f position) {
 		SetTransform(new Transform(position, transform.GetRotation(), transform.GetScale()));
@@ -138,13 +99,31 @@ public class Mesh2D extends Collider2D {
 		SetTransform(new Transform(transform.GetPosition(), transform.GetRotation(), scale));
 	}
 	
+	public void SetRotation(float x, float y, float z) {
+		SetRotation(new Vector3f(x,y,z));
+	}
+	
+	public void SetRotation(Vector3f rot) {
+		SetTransform(new Transform(transform.GetPosition(), rot, transform.GetScale()));
+	}
+	
 	
 	public void SetTransform(Transform transform) {
+		zOrder = transform.GetPosition().z;
 		this.transform = transform;
+		this._transform = new Transform(
+				new Vector3f(transform.GetPosition().x, 
+						this.transform.GetPosition().y,
+						transform.GetPosition().z),
+				transform.GetRotation(),
+				new Vector3f(transform.GetScale().x, 
+						this.transform.GetScale().y,
+						1f)
+				);
 	}
 	
 	protected Matrix4f GetTransformMatrix() {
-		return MathLib.createTransformMatrix(transform);
+		return MathLib.createTransformMatrix(_transform);
 	}
 	
 	
@@ -152,25 +131,19 @@ public class Mesh2D extends Collider2D {
 		return shader;
 	}
 	
-	public VertexArray GetVertexArray() {
-		return va;
-	}
+	public abstract VertexArray GetVertexArray();
 	
-	public VertexBuffer GetVertexBuffer() {
-		return vb;
-	}
+	public abstract IndexBuffer GetIndexBuffer();
+	
+	public abstract VertexBuffer GetVertexBuffer();
 	
 	public Texture GetTexture() {
 		return texture;
 	}
 	
-	public int GetIndexCount() {
-		return indices.length;
-	}
+	public abstract int GetIndexCount();
 	
-	public int GetVertexCount() {
-		return vertices.length;
-	}
+	public abstract int GetVertexCount();
 	
 	public Vector3f GetScale() {
 		return this.transform.GetScale();
@@ -192,8 +165,7 @@ public class Mesh2D extends Collider2D {
 
 	@Override
 	public float GetZOrder() {
-		// TODO Auto-generated method stub
-		return GetPosition().z;
+		return zOrder;
 	}
 
 	@Override
@@ -228,7 +200,6 @@ public class Mesh2D extends Collider2D {
 
 	public void DeselectGUI() {
 		OnDeselect();
-		
 	}
 
 	@Override

@@ -7,18 +7,16 @@ import org.joml.Vector4f;
 import engine.Events.Event;
 import engine.Events.KeyEvent;
 import engine.Events.MouseButtonEvent;
-import renderer.GUIRenderer;
 import renderer.Renderer;
 import renderer.Shader;
 import renderer.Texture;
 import renderer.Transform;
-import renderer.GUIPrimitives.GUITextQuad;
+import renderer.GUI.GUITextQuad_Draggable;
 import renderer.text.FontType;
-import util.MathLib;
 
 public class Debugger {
 
-	private static GUITextQuad debugMenu;
+	private static GUITextQuad_Draggable debugMenu;
 	
 	private static boolean DisplayMenu = true;
 	public static final int MenuKeyCode = KeyCodes.KEY_GRAVE_ACCENT; // ~
@@ -106,7 +104,6 @@ public class Debugger {
 			keyPressed = e.GetKeyCode();
 			if (e.GetKeyCode() == MenuKeyCode) {
 				debugMenu.DeselectGUI();
-				debugMenu.SetMouseExit();
 				ShowMenu(!DisplayMenu);
 			}
 		}
@@ -119,7 +116,7 @@ public class Debugger {
 	}
 	
 	private static void CreateMenu() {
-		debugMenu = new GUITextQuad(new Transform( 
+		debugMenu = new GUITextQuad_Draggable(new Transform( 
 				new Vector3f(xPos,yPos,10000.f), // Position x,y, Z-Order higher is on top
 				new Vector3f(0f, 0f,0f),  // Rotation
 				new Vector3f(.225f,.3f,1f)), // Scale x,y,z
@@ -134,9 +131,6 @@ public class Debugger {
 				false, // Center Text
 				false // Auto expand width to match quad
 		) {
-			
-			boolean isDragging = false;
-			
 			@Override
 			protected void OnMouseEnter() {
 				SelectGUI();
@@ -147,12 +141,14 @@ public class Debugger {
 				
 			}
 			
+			@Override
 			protected void StartDragging() {
 				isDragging = true;
 				SetQuadColor(quadHoverColor);
 				BeginDrag(Input.GetMouseX(), Input.GetMouseY());
 			}
 			
+			@Override
 			public void StopDragging() {
 				isDragging = false;
 				SetQuadColor(quadColor);
@@ -168,33 +164,6 @@ public class Debugger {
 				StopDragging();
 			}
 			
-			@Override
-			public void SelectedOnEvent(Event e) {
-				if (e instanceof Events.MouseButtonPressedEvent) {
-					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT) {
-						if (!isDragging) StartDragging();	
-					}
-				}
-				
-				if (e instanceof Events.MouseButtonReleasedEvent) {
-					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT) {
-						if (isDragging) StopDragging();
-					}
-				}
-				
-				if (e instanceof Events.MouseMovedEvent) {
-					if ( !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseX(), 0f, (float)GUIRenderer.GetWidth())
-						|| !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseY(), 0f, (float)GUIRenderer.GetWidth()))
-					{
-						DeselectGUI();
-						return;
-					}
-					if (isDragging) {
-						Drag( ((Events.MouseMovedEvent)e).GetMouseX(),
-						((Events.MouseMovedEvent)e).GetMouseY());
-					}
-				}
-			}
 		};
 	
 	}

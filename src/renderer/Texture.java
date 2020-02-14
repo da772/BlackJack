@@ -182,5 +182,9 @@ public class Texture {
 		GL30.glDeleteTextures(rendererId);
 	}
 	
+	public String GetFileName() {
+		return this.fileName;
+	}
+	
 
 }

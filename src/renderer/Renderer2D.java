@@ -30,14 +30,14 @@ public class Renderer2D {
 	}
 	
 	public static void Render() {
-		Renderer.SetDepth(false);
+		Renderer.SetDepth(true);
 		for (int i =0; i < meshes.size(); i++) {
 			Mesh2D m = meshes.get(i);
 			m.Bind();
 			m.Draw();
 			m.UnBind();
 		}
-		Renderer.SetDepth(true);
+		Renderer.SetDepth(false);
 	}
 	
 	public static void CleanUp () {

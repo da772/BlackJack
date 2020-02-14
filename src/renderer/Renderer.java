@@ -6,6 +6,7 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
+import engine.TextureAtlas;
 import renderer.mesh.Mesh2D;
 
 
@@ -15,11 +16,11 @@ public class Renderer {
 	private static List<Integer> VertexArrays = new ArrayList<Integer>();
 	private static List<Shader> Shaders = new ArrayList<Shader>();
 	private static List<Texture> Textures = new ArrayList<Texture>();
+	private static List<TextureAtlas> TextureAtlas = new ArrayList<TextureAtlas>();
 	
 	public static void Init() {
-		GL30.glEnable(GL11.GL_CULL_FACE);
 		GL30.glEnable(GL11.GL_DEPTH_TEST);
-		GL30.glCullFace(GL11.GL_BACK);
+		EnableCulling();
 		GL30.glEnable(GL11.GL_BLEND);
 		GL30.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL30.glEnable(GL30.GL_MULTISAMPLE);  
@@ -63,12 +64,8 @@ public class Renderer {
 		GL30.glDrawArrays(GL11.GL_TRIANGLES, 0, size);
 	}
 	
-	public static void DrawIndexed(Mesh2D mesh) {
-		if (mesh == null)
-			return;
-		mesh.Bind();
-		GL30.glDrawElements(GL11.GL_TRIANGLES, mesh.GetIndexCount(), GL11.GL_UNSIGNED_INT, 0);
-		mesh.UnBind();
+	public static void DrawIndexed(int indexCount) {
+		GL30.glDrawElements(GL11.GL_TRIANGLES, indexCount, GL11.GL_UNSIGNED_INT, 0);
 	}
 		
 	public static void DrawElements(int count) {
@@ -126,6 +123,14 @@ public class Renderer {
 		Shaders.remove(s);
 	}
 
+	public static void AddTextureAtlas(TextureAtlas textureAtlas) {
+		TextureAtlas.add(textureAtlas);
+	}
+
+	public static void RemoveAtlas(TextureAtlas textureAtlas) {
+		TextureAtlas.remove(textureAtlas);
+	}
+	
 	public static void ShutDown() {
 		for (int id : Buffers) {
 			GL30.glDeleteBuffers(id);
@@ -145,5 +150,7 @@ public class Renderer {
 		}
 		Shaders.clear();
 	}
+	
+	
 
 }

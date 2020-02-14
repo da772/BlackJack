@@ -5,6 +5,7 @@ import java.util.List;
 
 import engine.Application;
 import engine.Collision2D;
+import renderer.GUI.GUI;
 
 
 public class GUIRenderer {

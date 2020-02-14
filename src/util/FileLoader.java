@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
+
+import org.apache.commons.io.IOUtils;
 
 public class FileLoader {
 
@@ -32,6 +36,25 @@ public class FileLoader {
 	        e.printStackTrace();
 	        return null;
 	    }
+	}
+	
+	public static String getResourceAsString(String resourcePath) {
+		   try {
+		        InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(resourcePath);
+		        if (in == null) {
+		            return null;
+		        }
+		        StringWriter writer = new StringWriter();
+		        IOUtils.copy(in, writer, Charset.defaultCharset());
+		        String str = writer.toString();
+		        in.close();
+		        writer.close();
+		        return str;
+		   } catch (Exception e) {
+			   e.printStackTrace();
+			   return null;
+		   }
+		   
 	}
 	
 }

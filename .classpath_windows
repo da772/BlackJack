@@ -29,5 +29,6 @@
 	<classpathentry kind="lib" path="vendor/lwjgl3/lwjgl-stb-sources.jar"/>
 	<classpathentry kind="lib" path="vendor/joml/joml-1.9.20.jar"/>
 	<classpathentry kind="lib" path="vendor/commons-io-2.6/commons-io-2.6.jar"/>
+	<classpathentry kind="lib" path="vendor/json-simple/json-simple-1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

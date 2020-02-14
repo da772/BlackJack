@@ -3,6 +3,7 @@ package renderer.text;
 import java.util.HashMap;
 import java.util.Map;
 
+import renderer.GUI.GUIText;
 import util.FileLoader;
 
 

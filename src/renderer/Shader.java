@@ -31,10 +31,6 @@ public class Shader {
 		return Shader.Create(source[0], source[1]);
 	}
 	
-	public static Shader Create() {
-		return Shader.Create(ShaderLib.Shader_L_V3Pos);
-	}
-	
 	public static Shader Create(String vertexSource, String fragmentSource) {
 		String src = vertexSource+fragmentSource;
 		if (shaders.containsKey(src)) {

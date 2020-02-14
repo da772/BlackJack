@@ -1,6 +1,5 @@
 package application;
 
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -11,27 +10,30 @@ import engine.Events;
 import engine.Input;
 import engine.KeyCodes;
 import engine.Events.Event;
-import renderer.GUIRenderer;
-import renderer.ShaderLib;
 import renderer.Transform;
-import renderer.VertexArray;
-import renderer.GUIPrimitives.GUITextQuad;
+import renderer.GUI.GUITextQuad;
+import renderer.GUI.GUITextQuad_Draggable;
 import renderer.mesh.Mesh2D;
-import util.MathLib;
+import renderer.mesh.Mesh2DBackground;
 
 public class TestingApp extends Application {
 
-	Mesh2D mesh;
-	Mesh2D mesh2;
+	
+	// Mesh Variables
+	Mesh2D card1;
+	Mesh2D card2;
+	Mesh2D card3;
+	Mesh2D card4;
+	Mesh2D card5;
+	Mesh2D card6;
+	
 	Mesh2D background;
-
-	Matrix4f transform;
-	
-	CameraController.Orthographic cam;
-	
+	// GUI Variables
 	GUITextQuad tQuad;
-	
-	float lastX =0, lastY = 0;
+	// Mesh manipulation Variables
+	float rotate = 0;
+	// Camera variable
+	CameraController cam;
 	
 	public TestingApp() {
 		// Call super - Set window Title to "Blackjack" set width to 1280 set height to 720
@@ -43,178 +45,113 @@ public class TestingApp extends Application {
 	protected void OnInit() {
 		System.out.println(title+" Init!");
 		
-		cam = new CameraController.Orthographic(16.f/9.f);
+		// Enable/Disable vsync
 		window.SetVSync(vsync);
 		
-		float[] vertices = {
-				-1.5f,  -.5f, 0f,  0.f,0.f, 
-				 -.5f, -.5f,  0f,  1.f, 0.f,
-				 -.5f,  .5f,  0f,  1.f, 1.f,
-				 -1.5f, .5f,  0f,  0.f, 1.f,
-				 
-				 -1.5f + .75f,  -.5f, 0f,  0.f,0.f, 
-				 -.5f +.75f, -.5f,  0f,  1.f, 0.f,
-				 -.5f+.75f,  .5f,  0f,  1.f, 1.f,
-				 -1.5f+.75f, .5f,  0f,  0.f, 1.f
-		};
-		int[] indices = {
-			0,1,2,
-			2,3,0,
-			
-			4,5,6,
-			6,7,4
-			
-		};
-		
-		float[] vertices1 = {
-				 -.5f,  -.5f, 0f,  0.f,0.f, 
-				  .5f, -.5f,  0f,  1.f, 0.f,
-				 .5f,  .5f,  0f,  1.f, 1.f,
-				 -.5f, .5f,  0f,  0.f, 1.f,
-		};
-		int[] indices1 = {
-				0,1,2,
-				2,3,0,
-		};
-		
-		
-		Vector3f pos = new Vector3f(0.f,0.f,0.0f);
-		Vector3f scale = new Vector3f(1000f,1000.f,1.f);
-		
-		background = new Mesh2D(vertices1, new VertexArray.BufferElement[]{
-				new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position"),
-				new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
-				}, indices1, ShaderLib.Shader_U_Texture_ViewProj_UV_Transform_L_V3Pos_V2Coord,
-				"Images/mosaico_multicolor_tile.jpg",
-				new Transform(pos, new Vector3f(0f), scale), cam.GetCamera());
-		
+		// Create Camera 
+		cam = new CameraController.Orthographic(16.f/9.f);
+		// Move camera backwards 5 units
+		cam.SetPosition(new Vector3f(0,0,5f));
+
+		// Create background
+		background = new Mesh2DBackground(
+				new Transform(
+						new Vector3f(0f,0,-100f),  // Position
+						new Vector3f(0f), // Rotation
+						new Vector3f(1000, 1000f, 0f)), // Scale
+				"Images/mosaico_multicolor_tile.jpg", // Texture
+				new Vector4f(1f,1f,1f,1f) , // Color
+				new Vector2f(1000f), // UV Scale
+				cam.GetCamera() // Camera
+				);
+		// Add background
 		background.Add();
 		
-		pos = new Vector3f(0.f,0.f,.4f);
-		scale = new Vector3f(.75f,1.f,1.f);
-		mesh = new Mesh2D(vertices, new VertexArray.BufferElement[]{
-				new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position"),
-				new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
-				},
-		indices, ShaderLib.Shader_U_Texture_ViewProj_Transform_L_V3Pos_V2Coord, 
-		"Images/Anchor.png",
-		new Transform(pos, new Vector3f(0f), scale), cam.GetCamera());
+		// Create Mesh
+		card1 = new CardMesh(
+				new Transform( // Card Transform
+						new Vector3f(0f, 0, 0f), // Position
+						new Vector3f(0f, 180f, 0f), // Rotation
+						new Vector3f(.75f, 1f, 1f) ), // Scale
+				"QC", // Card front Suit
+				"card_back_black", // Card back Suit
+				cam.GetCamera() // Camera
+				);
+		// Add Mesh
+		card1.Add();
 		
-		mesh.Add();
+		// Create Mesh
+		card2 = new CardMesh(
+				new Transform( // Card Transform
+						new Vector3f(-1f, 0, 0f), // Position
+						new Vector3f(0f, 0f, 0f), // Rotation
+						new Vector3f(.75f, 1f, 1f) ), // Scale
+				"AC", // Card front Suit
+				"card_back_black", // Card back Suit
+				cam.GetCamera() // Camera
+				);
+		// Add Mesh
+		card2.Add();
 		
+		// Create Mesh
+		card3 = new CardMesh(
+				new Transform( // Card Transform
+						new Vector3f(1f, 0, 0f), // Position
+						new Vector3f(0f, 0f, 0f), // Rotation
+						new Vector3f(.75f, 1f, 1f) ), // Scale
+				"2H", // Card front Suit
+				"card_back_black", // Card back Suit
+				cam.GetCamera() // Camera
+				);
+		// Add Mesh
+		card3.Add();
 		
-		pos = new Vector3f(0.f,0.f,.2f);
-		scale = new Vector3f(.75f,1.f,1.f);
-		mesh2 = new Mesh2D(vertices1, new VertexArray.BufferElement[]{
-				new VertexArray.BufferElement(VertexArray.ElementType.Float3, "u_Position"),
-				new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
-				},
-		indices1, ShaderLib.Shader_U_Texture_ViewProj_Transform_L_V3Pos_V2Coord,
-		"Images/Cards/5D.png",
-		new Transform(pos, new Vector3f(0f), scale), cam.GetCamera());
-		
-		mesh2.Add();
-		
-		pos = new Vector3f(0f,-.5f,0f);
-		scale = new Vector3f(2f,3f,1.f);
-		transform = new Matrix4f();
-		transform = MathLib.createTransformMatrix(pos, new Vector3f(0, 0, 0f), scale);
-		
-		
-		tQuad = new GUITextQuad(new Transform(
-				new Vector3f(-.775f, .775f, 0f),
-				new Vector3f(0f),
-				new Vector3f(.225f, .225f, 1f)
+		//Create Draggable GUI
+		tQuad = new GUITextQuad_Draggable(new Transform(
+				new Vector3f(-.775f, .775f, 0f), // Position
+				new Vector3f(0f), // Rotation (buggy keep at 0)
+				new Vector3f(.225f, .225f, 1f) // Quad Scale
 				),
-				"Images/blankTexture.png",
-				new Vector4f(.125f, .125f,.25f,.9f),
-				new Vector2f(.87f, -.95f),
-				"Fonts/verdana",
-				"Click and hold to drag!",
-				new Vector4f(0.f,0f,0f,1f),
-				.25f, 1.25f, true, false
-				){
-			
-			boolean isDragging = false;
-			
-			@Override
-			protected void OnMouseEnter() {
-				SelectGUI();
-			}
-			
-			@Override
-			protected void OnSelect() {
-				SetQuadColor(new Vector4f(.125f, .125f,.45f,.9f));
-			}
-			
-			protected void StartDragging() {
-				isDragging = true;
-				BeginDrag(Input.GetMouseX(), Input.GetMouseY());
-			}
-			
-			
-			@Override
-			protected void OnMouseExit() {
-				DeselectGUI();
-			}
-			
-			@Override
-			public void OnDeselect() {
-				SetQuadColor(new Vector4f(.125f, .125f,.25f,.9f));
-				isDragging = false;
-			}
-			
-			@Override
-			public void SelectedOnEvent(Event e) {
-				if (e instanceof Events.MouseButtonPressedEvent) {
-					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT) {
-						if (!isDragging) StartDragging();	
-					}
-				}
-				
-				if (e instanceof Events.MouseButtonReleasedEvent) {
-					if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT) {
-						if (isDragging) isDragging = false;
-					}
-				}
-				
-				if (e instanceof Events.MouseMovedEvent) {
-					if ( !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseX(), 0f, (float)GUIRenderer.GetWidth())
-						|| !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseY(), 0f, (float)GUIRenderer.GetWidth()))
-					{
-						DeselectGUI();
-						return;
-					}
-					if (isDragging) {
-						Drag( ((Events.MouseMovedEvent)e).GetMouseX(),
-						((Events.MouseMovedEvent)e).GetMouseY());
-						}
-				}
-					
-				
-			}
-		};
-		
+				"Images/blankTexture.png", // Texture
+				new Vector4f(.125f, .125f,.25f,.9f), // Quad Color
+				new Vector2f(.87f, -.95f), // Text Position offset
+				"Fonts/verdana", // Text Font
+				"Click and hold to drag!", // Text
+				new Vector4f(0.f,0f,0f,1f), // Text Color
+				.25f, // Textbox Width
+				1.25f,// Font size
+				true, // Center?
+				false // Auto width based on quad?
+				);
+		// Add GUI
 		tQuad.Add();
-
+		
+		
+		for (int i = 0; i < 100; i++) {
+			CardMesh m = new CardMesh(
+					new Transform( // Card Transform
+							new Vector3f(-5 + (.1f*i), 0, -.1f), // Position
+							new Vector3f(0f, 180f, 0f), // Rotation
+							new Vector3f(.75f, 1f, 1f) ), // Scale
+					"2C", // Card front Suit
+					"card_back_black", // Card back Suit
+					cam.GetCamera() // Camera
+					);
+			m.Add();
+		}
+		
+		
 	}
-	
 	
 	// Called every frame
 	@Override
 	protected void OnUpdate(float deltaTime) {
 		
-		// Render by Z-Order (Not including HUD)
-	//	Renderer.DrawIndexed(background);
-	//	Renderer.DrawIndexed(mesh2);
-
-	//	Renderer.DrawIndexed(mesh);
-
+		// Mesh3 Rotation
+		rotate += 180.f * deltaTime;
+		card3.SetRotation(0f,rotate, 0f);
 		
-		if (Input.IsMouseButtonPressed(KeyCodes.MOUSE_RIGHT)) {
-			//System.out.println("We are right clicking");
-		}
-		
+		// Camera Control
 		if (Input.IsKeyPressed(KeyCodes.KEY_D)) {
 			cam.Position.x += 1 * deltaTime;
 		}
@@ -235,66 +172,40 @@ public class TestingApp extends Application {
 		if (Input.IsKeyPressed(KeyCodes.KEY_E)) {
 			cam.rotation -= 10 * deltaTime;
 		}
-		
-		float moveSpeed = .1f;
-		
-		if (Input.IsKeyPressed(KeyCodes.KEY_LEFT)) {
-			tQuad.SetPosition(tQuad.GetPosition().x - moveSpeed*deltaTime, tQuad.GetPosition().y
-					, tQuad.GetPosition().z );
-		}
-		if (Input.IsKeyPressed(KeyCodes.KEY_RIGHT)) {
-			tQuad.SetPosition(tQuad.GetPosition().x + moveSpeed*deltaTime, tQuad.GetPosition().y
-					, tQuad.GetPosition().z );
-		}
-		if (Input.IsKeyPressed(KeyCodes.KEY_UP)) {
-			tQuad.SetPosition(tQuad.GetPosition().x, tQuad.GetPosition().y + moveSpeed*deltaTime
-					, tQuad.GetPosition().z );
-		}
-		if (Input.IsKeyPressed(KeyCodes.KEY_DOWN)) {
-			tQuad.SetPosition(tQuad.GetPosition().x, tQuad.GetPosition().y - moveSpeed*deltaTime
-					, tQuad.GetPosition().z );
-		}
-		
-		
-		if (Input.IsKeyPressed(KeyCodes.KEY_BACKSPACE)) {
-		
-		}
-		
-		if (Input.IsKeyPressed(KeyCodes.KEY_ENTER)) {
-			
-		}
-		
-		
+		// Camera Update
 		cam.OnUpdate(deltaTime);
-		
-		
+		// Title Update
 		window.SetTitle(title+" - " + fps + " FPS - OpenGL" + window.GetGLInfo() );
 		
 	}
 	
+	// Camera OnEvent
 	protected void OnEvent(Event event) {
 		cam.OnEvent(event);
 	};
 	
+	//Key Event
 	@Override
 	protected boolean KeyEvent(Events.KeyEvent e) {
-	
+		// Can cast key event to Pressed or Released
+		if (e instanceof Events.KeyPressedEvent) {
+			// We pressed a key!
+		}
 		
+		if (e instanceof Events.KeyReleasedEvent) {
+			// We released a key!
+		}
 		
 		return false;
 	}
 	
-	
-	
+	// Scroll Event
 	@Override
 	protected boolean MouseScrolledEvent(Events.MouseScrolledEvent e) {
+		// Zoom Camera
 		cam.OnZoom(e.GetScrollX(), e.GetScrollY(), .1f);
 		return false;
 	}
-	
-	
-	
-	// Called on application start
 	
 	
 	// Called on application end
