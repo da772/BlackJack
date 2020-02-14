@@ -24,7 +24,7 @@
 		- Object Rendering
 			- [X] Vertex/Index Buffers
 			- [X] VertexArrays
-			- [ ] Quad Renderer
+			- [X] Quad Renderer
 				- [ ] Batching
 			- [ ] Collision Detection
 		- Shader
@@ -44,11 +44,12 @@
 			- [X] Gui Rendering
 				- [X] Draw quads with transforms, textures, colors, uv scales
 				- [X] Use Z position as render order
-			- [X] Buttons
+				- [X] Interactable with mouse
+			- [ ] Buttons
 			- [X] Static position
 			- [X] Mouse Detection
 		- Renderer
-			- [ ]  Z-Ordering
+			- [X]  Z-Ordering
 			- [X]  Anti-Aliasing
 		- Window
 			- [X] Events
@@ -72,6 +73,9 @@
 			- [X] Mouse Button Pressed/Released
 			- [X] Mouse Scrolled
 			- [X] Window Closed
+		- Scene
+			- [ ] SceneManager
+			- [ ] Scene Update/Event Logic
 	- Audio
 - Gameplay
 	- Scenes
