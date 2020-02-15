@@ -14,8 +14,8 @@ public class GUIRenderer {
 	
 	public static void Add(GUI hud) {
 		if (!huds.contains(hud)) {
-			hud.Init();
 			huds.add(hud);
+			hud.Init();
 			Collision2D.Add(hud);
 			huds.sort((h1, h2) -> {
 				return h1.GetZOrder() > h2.GetZOrder() ? 1 : h1.GetZOrder() == h2.GetZOrder() ? 0 : -1;
@@ -29,6 +29,10 @@ public class GUIRenderer {
 			huds.remove(hud);
 			Collision2D.Remove(hud);
 			hud.CleanUp();
+		} else {
+			if (hud != null) {
+				hud.CleanUp();
+			}
 		}
 	}
 	

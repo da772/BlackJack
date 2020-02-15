@@ -27,9 +27,11 @@ public abstract class  Mesh2D extends Collider2D {
 	protected String textureString;
 	protected float zOrder = 0;
 	protected Transform _transform;
+	protected boolean generateMipMap = true;
 
 	
-	public Mesh2D(Transform transform, String[] shader, String texture, Camera cam) {
+	public Mesh2D(String name, Transform transform, String[] shader, String texture, Camera cam) {
+		super(name);
 		SetTransform(transform);
 		this.cam = cam;
 		this.shaderString = shader;
@@ -61,7 +63,7 @@ public abstract class  Mesh2D extends Collider2D {
 	
 	public void Init() {
 		shader = Shader.Create(shaderString);
-		texture = Texture.Create(textureString);
+		texture = Texture.Create(textureString, false, generateMipMap);
 		OnInit();
 		
 	}
@@ -102,9 +104,13 @@ public abstract class  Mesh2D extends Collider2D {
 	public void SetRotation(float x, float y, float z) {
 		SetRotation(new Vector3f(x,y,z));
 	}
-	
+
 	public void SetRotation(Vector3f rot) {
 		SetTransform(new Transform(transform.GetPosition(), rot, transform.GetScale()));
+	}
+	
+	public Vector3f GetRotation() {
+		return transform.GetRotation();
 	}
 	
 	
@@ -207,5 +213,16 @@ public abstract class  Mesh2D extends Collider2D {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void OnBegin() {
+		Add();
+	}
+
+	@Override
+	public void OnEnd() {
+		Remove();
+	}
+	
 	
 }

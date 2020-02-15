@@ -26,9 +26,11 @@ public class Renderer2D {
 		if (meshes.contains(mesh)) {
 			meshes.remove(mesh);
 			mesh.CleanUp();
+		} else if (mesh != null) {
+			mesh.CleanUp();
 		}
 	}
-	
+
 	public static void Render() {
 		Renderer.SetDepth(true);
 		for (int i =0; i < meshes.size(); i++) {

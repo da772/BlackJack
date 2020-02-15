@@ -13,16 +13,45 @@ public class GUITextQuad extends GUI {
 	private GUIText text;
 	private GUIQuad quad;
 	private boolean autoSize;
-	
+	private String name, textString, font, QuadTexture;
+	private Vector4f TextColor,  QuadColor;
+	private float TextWidth, FontHeight;
+	private boolean textCentered;
 	Vector2f TextOffset;
 	
-	public GUITextQuad (Transform transform, String QuadTexture, Vector4f QuadColor, 
+	public GUITextQuad (String name, Transform transform, String QuadTexture, Vector4f QuadColor, 
 			Vector2f TextOffset, String font, String textString, Vector4f TextColor, 
 			float TextWidth, float FontHeight, boolean textCentered, boolean autoSizeText) {
+		super(name);
 		this.transform = transform;
 		this.TextOffset = TextOffset;
 		this.autoSize = autoSizeText;
-		text = new GUIText(
+		this.name = name;
+		this.QuadTexture = QuadTexture;
+		this.QuadColor = QuadColor;
+		this.font = font;
+		this.textString = textString;
+		this.TextColor = TextColor;
+		this.TextWidth = TextWidth;
+		this.FontHeight = FontHeight;
+		this.textCentered = textCentered;
+		
+		
+		if (this.autoSize) {
+			SetTransform(transform);
+		}
+		
+	}
+
+	@Override
+	public void Add() {
+		GUIRenderer.Add(this);
+		added = true;
+	}
+	
+	@Override
+	public void _Init() {
+		text = new GUIText(name+"1",
 				textString, // Text to display
 				FontHeight, // Font height
 				font, // Font path without png or fnt
@@ -38,27 +67,11 @@ public class GUITextQuad extends GUI {
 				textCentered // Center Text   
 				);
 		
-		quad = new GUIQuad (
+		quad = new GUIQuad (name+"2",
 				transform,
 				QuadTexture, // Texture of the hud
 				QuadColor // Color of the hud
 				);
-		
-		if (this.autoSize) {
-			SetTransform(transform);
-		}
-		
-	}
-	
-	@Override
-	public void Add() {
-
-		GUIRenderer.Add(this);
-		added = true;
-	}
-	
-	@Override
-	public void _Init() {
 		quad.Init();
 		text.Init();
 	}
@@ -124,6 +137,8 @@ public class GUITextQuad extends GUI {
 	public void CleanUp() {
 		text.CleanUp();
 		quad.CleanUp();
+		text = null;
+		quad = null;
 	}
 
 	@Override

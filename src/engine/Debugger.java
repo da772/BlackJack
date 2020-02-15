@@ -21,7 +21,7 @@ public class Debugger {
 	private static boolean DisplayMenu = true;
 	public static final int MenuKeyCode = KeyCodes.KEY_GRAVE_ACCENT; // ~
 	
-	private static final float xPos = .775f, yPos = .7f;
+	private static final float xPos = .775f, yPos = .6f;
 	
 	private static int keyPressed = -1;
 	private static int mousePressed = -1;
@@ -49,7 +49,7 @@ public class Debugger {
 		
 		if (DisplayMenu) {
 		debugMenu.SetText(
-			    "Debug Menu:\n \n" +
+			    "Debug Menu: (Press ~ to toggle) \n \n" +
 				"App Info       " + "Title: "+ Application.app.title +" | " + Application.app.fps + " FPS"+
 				"\n                   VSync: " + Application.app.vsync +" | Width: " + Application.app.window.GetWidth() +
 				"\n                   Height: " +Application.app.window.GetHeight() +
@@ -60,14 +60,17 @@ public class Debugger {
 				
 				
 				"\n\nMemory Info  Usage: " + Math.round( (Runtime.getRuntime().totalMemory()- Runtime.getRuntime().freeMemory())/1e6 ) +"mb"  +
-				"\n                    Alloc: "+Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/"+(Math.round(Runtime.getRuntime().totalMemory()/1e6) + "mb " + 
+				"\n                    Alloc: "+Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/"+(Math.round(Runtime.getRuntime().totalMemory()/1e6)) + "mb " + 
 				
 						
 				"\n\nI/O Info        MouseX: " + (int)Input.GetMouseX() +" | MouseY: " + (int)Input.GetMouseY() +
-				"\n                    Key Input: " + keyPressed + " | Mouse Input: " + mousePressed
+				"\n                    Key Input: " + keyPressed + " | Mouse Input: " + mousePressed +
 				
+				"\n\nScene Info     Scene Count: " + SceneManager.GetSceneCount() +
+				"\n                    Scene: " + ( SceneManager.GetCurrentScene() != null ? SceneManager.GetCurrentScene().GetName() : "NULL") + 
+				"\n                    Actor Count: " + (SceneManager.GetCurrentScene() != null ? SceneManager.GetCurrentScene().GetActorCount() : "0")
 				
-					));
+					);
 		}
 		
 		if (keyPressed != -1 && !Input.IsKeyPressed(keyPressed)) {
@@ -116,13 +119,13 @@ public class Debugger {
 	}
 	
 	private static void CreateMenu() {
-		debugMenu = new GUITextQuad_Draggable(new Transform( 
+		debugMenu = new GUITextQuad_Draggable("DraggableQuad",new Transform( 
 				new Vector3f(xPos,yPos,10000.f), // Position x,y, Z-Order higher is on top
 				new Vector3f(0f, 0f,0f),  // Rotation
-				new Vector3f(.225f,.3f,1f)), // Scale x,y,z
+				new Vector3f(.225f,.4f,1f)), // Scale x,y,z
 				"Images/blankTexture.png",  // Quad Texture path
 				quadColor, // Quad Color r,g,b,a
-				new Vector2f(.9f, -.72f), // Font Offset (used to center text if needed) 
+				new Vector2f(.9f, -.65f), // Font Offset (used to center text if needed) 
 				"Fonts/verdana",  // Font path
 				"", // Font String
 				new Vector4f(.95f,.95f,.95f,1f), // Font color r,g,b,a

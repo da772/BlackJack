@@ -4,8 +4,12 @@ import org.joml.Vector4f;
 
 import engine.Events.Event;
 
-public abstract class Collider2D {
+public abstract class Collider2D extends Component {
 
+	public Collider2D(String s) {
+		super(s);
+	}
+	
 	public enum CollisionObjectType {
 		None, GUI, Mesh
 	}

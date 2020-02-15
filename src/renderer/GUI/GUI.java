@@ -39,9 +39,12 @@ public abstract class GUI extends Collider2D {
 	protected boolean MouseOver = false;
 	protected boolean EnableCollision = true;
 	
-	public GUI() {};
+	public GUI(String name) {
+		super(name);
+	}
 	
-	public GUI(Transform transform, Texture texture, Vector4f color, Vector2f UVScale) {
+	public GUI(String name, Transform transform, Texture texture, Vector4f color, Vector2f UVScale) {
+		super(name);
 		this.texture = texture;
 		this.texturePath = texture.GetFileName();
 		this.transform = transform;
@@ -49,7 +52,8 @@ public abstract class GUI extends Collider2D {
 		this.UVScale = UVScale;
 	}
 	
-	public GUI(Transform transform, Texture texture, Vector4f color, Vector2f UVScale, String[] shaders) {
+	public GUI(String name,Transform transform, Texture texture, Vector4f color, Vector2f UVScale, String[] shaders) {
+		super(name);
 		this.texture = texture;
 		this.texturePath = texture.GetFileName();
 		this.transform = transform;
@@ -58,7 +62,8 @@ public abstract class GUI extends Collider2D {
 		this.shader_strings = shaders;
 	}
 	
-	public GUI(Transform transform, String texture, Vector4f color, Vector2f UVScale) {
+	public GUI(String name,Transform transform, String texture, Vector4f color, Vector2f UVScale) {
+		super(name);
 		this.texture = Texture.Create(texture);
 		this.texturePath = texture;
 		this.transform = transform;
@@ -66,14 +71,16 @@ public abstract class GUI extends Collider2D {
 		this.UVScale = UVScale;
 	}
 	
-	public GUI(Transform transform, Vector4f color) {
+	public GUI(String name,Transform transform, Vector4f color) {
+		super(name);
 		this.texture = null;
 		this.transform = transform;
 		this.color = color;
 		this.UVScale = new Vector2f(1.f,1.f);
 	}
 	
-	public GUI(Transform transform, String texture, Vector4f color) {
+	public GUI(String name,Transform transform, String texture, Vector4f color) {
+		super(name);
 		this.texture = Texture.Create(texture);
 		this.texturePath = texture;
 		this.transform = transform;
@@ -81,7 +88,8 @@ public abstract class GUI extends Collider2D {
 		this.UVScale = new Vector2f(1.f,1.f);
 	}
 	
-	public GUI(Transform transform, String texture) {
+	public GUI(String name,Transform transform, String texture) {
+		super(name);
 		this.texture = Texture.Create(texture);
 		this.texturePath = texture;
 		this.transform = transform;
@@ -288,6 +296,17 @@ public abstract class GUI extends Collider2D {
 		return zOrder;
 	}
 
+	
+	@Override
+	public void OnBegin() {
+		Add();
+	}
+
+	@Override
+	public void OnEnd() {
+		Remove();
+	}
+	
 	
 	
 	

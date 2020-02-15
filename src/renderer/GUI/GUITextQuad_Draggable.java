@@ -16,12 +16,11 @@ public class GUITextQuad_Draggable extends GUITextQuad {
 	
 	protected boolean isDragging = false;
 	
-	public GUITextQuad_Draggable(Transform transform, String texture, Vector4f quadColor, Vector2f textOffset,
+	public GUITextQuad_Draggable(String name, Transform transform, String texture, Vector4f quadColor, Vector2f textOffset,
 			String font, String text, Vector4f textColor, float textWidth, float textHeight, boolean center,
 			boolean autoSize) {
-		super(transform, texture, quadColor, textOffset, font, text, textColor, textWidth, textHeight, center, autoSize);
+		super(name, transform, texture, quadColor, textOffset, font, text, textColor, textWidth, textHeight, center, autoSize);
 	}
-	
 	
 	
 	@Override
@@ -40,7 +39,7 @@ public class GUITextQuad_Draggable extends GUITextQuad {
 	}
 	
 	protected void StopDragging() {
-		
+		isDragging = false;
 	}
 	
 	
@@ -71,7 +70,7 @@ public class GUITextQuad_Draggable extends GUITextQuad {
 		
 		if (e instanceof Events.MouseMovedEvent) {
 			if ( !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseX(), 0f, (float)GUIRenderer.GetWidth())
-				|| !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseY(), 0f, (float)GUIRenderer.GetWidth()))
+				|| !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseY(), 0f, (float)GUIRenderer.GetHeight()))
 			{
 				DeselectGUI();
 				return;

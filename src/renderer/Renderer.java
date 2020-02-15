@@ -3,6 +3,7 @@ package renderer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
@@ -17,6 +18,7 @@ public class Renderer {
 	private static List<Shader> Shaders = new ArrayList<Shader>();
 	private static List<Texture> Textures = new ArrayList<Texture>();
 	private static List<TextureAtlas> TextureAtlas = new ArrayList<TextureAtlas>();
+	private static Vector4f clearColor = new Vector4f(1f,0f,1f,1f);
 	
 	public static void Init() {
 		GL30.glEnable(GL11.GL_DEPTH_TEST);
@@ -43,8 +45,13 @@ public class Renderer {
 		GL30.glCullFace(GL11.GL_BACK);
 	}
 	
+	
+	public static void SetClearColor(float r,float g,float b,float a) {
+		clearColor = new Vector4f(r,g,b,a);
+	}
+	
 	public static void Prepare() {
-		GL30.glClearColor(1, 0, 1, 1);
+		GL30.glClearColor(clearColor.x,clearColor.y,clearColor.z, clearColor.w);
 		GL30.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 	}
 	

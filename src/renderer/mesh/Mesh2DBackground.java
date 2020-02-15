@@ -38,18 +38,18 @@ public class Mesh2DBackground extends Mesh2D {
 	private Vector4f color;
 	
 	
-	public Mesh2DBackground(Transform transform, String[] shader, String texture, Vector2f UVScale, Camera camera) {
-		super(transform, shader, texture, camera);
+	public Mesh2DBackground(String name, Transform transform, String[] shader, String texture, Vector2f UVScale, Camera camera) {
+		super(name, transform, shader, texture, camera);
 		this.UVScale = UVScale;
 	}
 	
-	public Mesh2DBackground(Transform transform, String texture, Vector2f UVScale, Camera camera) {
-		super(transform, ShaderLib.Shader_2DBackground, texture, camera);
+	public Mesh2DBackground(String name, Transform transform, String texture, Vector2f UVScale, Camera camera) {
+		super(name, transform, ShaderLib.Shader_2DBackground, texture, camera);
 		this.UVScale = UVScale;
 	}
 	
-	public Mesh2DBackground(Transform transform, String texture, Vector4f color, Vector2f UVScale, Camera camera) {
-		super(transform, ShaderLib.Shader_2DBackground, texture, camera);
+	public Mesh2DBackground(String name,Transform transform, String texture, Vector4f color, Vector2f UVScale, Camera camera) {
+		super(name, transform, ShaderLib.Shader_2DBackground, texture, camera);
 		this.color = color;
 		this.UVScale = UVScale;
 	}
@@ -123,6 +123,7 @@ public class Mesh2DBackground extends Mesh2D {
 	public IndexBuffer GetIndexBuffer() {
 		return ibuffer;
 	}
-	
+
+
 
 }

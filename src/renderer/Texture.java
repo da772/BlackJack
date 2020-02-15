@@ -24,20 +24,21 @@ public class Texture {
 	private int rendererId;
 	int referenceCount = 0;
 	String fileName;
+	boolean generateMipMap = false;
 	
 	private static Map<String, Texture> textures = new HashMap<String, Texture>();
 	
 	public static Texture Create(String fileName) {
-		return Texture.Create(fileName, false);
+		return Texture.Create(fileName, false, true);
 	}
 	
-	public static Texture Create(String fileName, boolean flip) {
+	public static Texture Create(String fileName, boolean flip, boolean generateMipMap) {
 		if (textures.containsKey(fileName)) {
 			Texture t =  textures.get(fileName);
 			t.AddReferenceCount(1);
 			return t;
 		}
-		Texture t = new Texture(fileName, flip);
+		Texture t = new Texture(fileName, flip, generateMipMap);
 		t.fileName = fileName;
 		t.AddReferenceCount(1);
 		textures.put(fileName, t);
@@ -87,13 +88,14 @@ public class Texture {
 		LoadImage(fileName, true);
 	}
 	
-	protected Texture(String fileName, boolean fontTexture) {
+	protected Texture(String fileName, boolean fontTexture, boolean mipMap) {
 		rendererId = GL30.glGenTextures();
+		this.generateMipMap = mipMap;
 		
 		Renderer.AddTexture(this);
 		LoadImage(fileName, !fontTexture);
 		
-		if (fontTexture) {
+		if (fontTexture && generateMipMap) {
 			setParameter(GL30.GL_TEXTURE_WRAP_S, GL30.GL_CLAMP_TO_EDGE);
 		    setParameter(GL30.GL_TEXTURE_WRAP_T, GL30.GL_CLAMP_TO_EDGE);
 		    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
@@ -132,10 +134,16 @@ public class Texture {
 		uploadData(GL30.GL_RGBA, width, height, GL30.GL_RGBA, data);
 	    setParameter(GL30.GL_TEXTURE_WRAP_S, GL30.GL_REPEAT);
 	    setParameter(GL30.GL_TEXTURE_WRAP_T, GL30.GL_REPEAT);
-	    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
-	    setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
-	    GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
+	    if (generateMipMap) {
+		    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
+		    setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
+		    GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
+	    } else {
+	    	setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
+	  		setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR);
+	    }
 	    stbi_image_free(data);
+	    UnBind();
 	    
 	}
 	

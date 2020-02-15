@@ -18,9 +18,10 @@ public class CardMesh extends Mesh2DQuad {
 	
 	String cardFront, cardBack;
 	
-	public CardMesh(Transform transform, String cardFront, String cardBack, Camera cam) {
-		super(transform, ShaderLib.Shader_2DQuad, "Atlas/cardAtlas.png", new Vector4f(1f), cam);
+	public CardMesh(String name, Transform transform, String cardFront, String cardBack, Camera cam) {
+		super(name, transform, ShaderLib.Shader_2DQuad, "Atlas/cardAtlas.png", new Vector4f(1f), cam);
 		textureAtlas = TextureAtlas.Create("Atlas/cardAtlas");
+		this.generateMipMap = false;
 		this.cardFront = cardFront;
 		this.cardBack = cardBack;
 		SetupTextureCoords();

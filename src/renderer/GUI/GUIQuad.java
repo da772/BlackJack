@@ -4,7 +4,6 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import engine.Events.Event;
-import renderer.Buffer;
 import renderer.Renderer;
 import renderer.Shader;
 import renderer.Texture;
@@ -12,9 +11,6 @@ import renderer.Transform;
 import renderer.VertexArray;
 import renderer.Buffer.IndexBuffer;
 import renderer.Buffer.VertexBuffer;
-import renderer.VertexArray.BufferElement;
-import renderer.VertexArray.BufferLayout;
-import renderer.VertexArray.ElementType;
 
 public class GUIQuad extends GUI {
 	protected static final float[] vertices = {
@@ -37,28 +33,28 @@ public class GUIQuad extends GUI {
 			new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
 			})).AddIndexBuffer(ibuffer);
 	
-	public GUIQuad(Transform transform, Texture texture, Vector4f color, Vector2f UVScale) {
-		super(transform, texture,color,UVScale);
+	public GUIQuad(String name, Transform transform, Texture texture, Vector4f color, Vector2f UVScale) {
+		super(name, transform, texture,color,UVScale);
 	}
 	
-	public GUIQuad(Transform transform, Texture texture, Vector4f color, Vector2f UVScale, String[] shader) {
-		super(transform, texture,color,UVScale, shader);
+	public GUIQuad(String name, Transform transform, Texture texture, Vector4f color, Vector2f UVScale, String[] shader) {
+		super(name, transform, texture,color,UVScale, shader);
 	}
 	
-	public GUIQuad(Transform transform, String texture, Vector4f color, Vector2f UVScale) {
-		super(transform, texture, color, UVScale);
+	public GUIQuad(String name, Transform transform, String texture, Vector4f color, Vector2f UVScale) {
+		super(name, transform, texture, color, UVScale);
 	}
 	
-	public GUIQuad(Transform transform, Vector4f color) {
-		super(transform, color);
+	public GUIQuad(String name, Transform transform, Vector4f color) {
+		super(name, transform, color);
 	}
 	
-	public GUIQuad(Transform transform, String texture, Vector4f color) {
-		super(transform, texture, color);
+	public GUIQuad(String name, Transform transform, String texture, Vector4f color) {
+		super(name, transform, texture, color);
 	}
 	
-	public GUIQuad(Transform transform, String texture) {
-		super(transform, texture);
+	public GUIQuad(String name, Transform transform, String texture) {
+		super(name, transform, texture);
 	}
 	
 	@Override

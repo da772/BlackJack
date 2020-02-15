@@ -7,7 +7,6 @@ import engine.Camera;
 import renderer.Buffer.VertexBuffer;
 import renderer.Renderer;
 import renderer.ShaderLib;
-import renderer.Texture;
 import renderer.TextureCoords;
 import renderer.Buffer.IndexBuffer;
 import renderer.Transform;
@@ -63,10 +62,11 @@ public class Mesh2DQuad extends Mesh2D {
 	private Vector4f yCoordsBack;
 	private Vector2f UVScale;
 	private Vector4f color = new Vector4f(1f);
+
 	
-	public Mesh2DQuad(Transform transform, String[] shader, String texture,
+	public Mesh2DQuad(String name, Transform transform, String[] shader, String texture,
 			Vector4f color,TextureCoords TexCoords, Vector2f UVScale, Camera camera) {
-		super(transform, shader, texture, camera);
+		super(name, transform, shader, texture, camera);
 		this.xCoordsFront = TexCoords.GetXCoords1();
 		this.yCoordsFront = TexCoords.GetYCoords1();
 		this.xCoordsBack = TexCoords.GetXCoords2();
@@ -76,8 +76,8 @@ public class Mesh2DQuad extends Mesh2D {
 	}
 	
 	
-	public Mesh2DQuad(Transform transform, String texture, Vector4f color, TextureCoords TexCoords, Vector2f UVScale, Camera camera) {
-		super(transform, ShaderLib.Shader_2DQuad, texture, camera);
+	public Mesh2DQuad(String name, Transform transform, String texture, Vector4f color, TextureCoords TexCoords, Vector2f UVScale, Camera camera) {
+		super(name, transform, ShaderLib.Shader_2DQuad, texture, camera);
 		this.xCoordsFront = TexCoords.GetXCoords1();
 		this.yCoordsFront = TexCoords.GetYCoords1();
 		this.xCoordsBack = TexCoords.GetXCoords2();
@@ -86,8 +86,8 @@ public class Mesh2DQuad extends Mesh2D {
 		this.UVScale = UVScale;
 	}
 	
-	public Mesh2DQuad(Transform transform, String texture, Vector4f color, Camera camera) {
-		super(transform, ShaderLib.Shader_2DQuad, texture, camera);
+	public Mesh2DQuad(String name, Transform transform, String texture, Vector4f color, Camera camera) {
+		super(name, transform, ShaderLib.Shader_2DQuad, texture, camera);
 		this.xCoordsFront = new Vector4f(0,0,1f,1f);
 		this.yCoordsFront = new Vector4f(0,0f,1f,1f);
 		this.xCoordsBack = new Vector4f(0,0,1f,1f);
@@ -96,9 +96,9 @@ public class Mesh2DQuad extends Mesh2D {
 		UVScale = new Vector2f(1f);
 	}
 	
-	public Mesh2DQuad(Transform transform, String[] shader, 
+	public Mesh2DQuad(String name, Transform transform, String[] shader, 
 			String texture, Vector4f color, Camera camera) {
-		super(transform, shader, texture, camera);
+		super(name, transform, shader, texture, camera);
 		this.xCoordsFront = new Vector4f(0,0,1f,1f);
 		this.yCoordsFront = new Vector4f(0,0f,1f,1f);
 		this.xCoordsBack = new Vector4f(0,0,1f,1f);
@@ -132,7 +132,6 @@ public class Mesh2DQuad extends Mesh2D {
 	@Override
 	protected void OnInit() {
 		SetTextureCoords();
-		texture = Texture.Create(textureString, true);
 		ibuffer = new IndexBuffer(indices, indices.length);
 		vbuffer = new VertexBuffer(vertices, vertices.length);
 		varray = new VertexArray().AddVertexBuffer(vbuffer, bufferLayout).AddIndexBuffer(ibuffer);

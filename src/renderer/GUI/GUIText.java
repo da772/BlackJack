@@ -67,8 +67,9 @@ public class GUIText extends GUI {
 	 */
 	
 	
-	public GUIText(String text, float fontSize, String font,  Transform transform, Vector4f color, float maxLineLength,
+	public GUIText(String name, String text, float fontSize, String font,  Transform transform, Vector4f color, float maxLineLength,
 			boolean centered) {
+		super(name);
 		shader_strings = ShaderLib.Shader_Font;
 		this.textString = text;
 		this.fontSize = fontSize;
@@ -78,7 +79,6 @@ public class GUIText extends GUI {
 		this.transform = transform;
 		this.color = color;
 		this.UVScale = new Vector2f(1.f,1.f);
-		_Init();
 	}
 	
 	public void SetText(String text) {
@@ -229,7 +229,7 @@ public class GUIText extends GUI {
 	}
 	
 	protected void SetUp() {
-		this.texture = Texture.Create(fontString+".png", true);
+		this.texture = Texture.Create(fontString+".png", true, true);
 		this.font = FontType.Create(fontString);
 		shader = Shader.Create(shader_strings);
 		CreateMeshInfo();
@@ -246,7 +246,6 @@ public class GUIText extends GUI {
 	public int IndicesCount() {
 		return this.getVerticesSize();
 	}
-
 
 	@Override
 	public void CleanUp() {

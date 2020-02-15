@@ -123,6 +123,7 @@ public class Application {
 		Collision2D.OnEvent(event);
 		Debugger.OnEvent(event);
 		OnEvent(event);
+		SceneManager.OnEvent(event);
 	}
 	
 	protected void OnEvent(Event event) {};
@@ -234,6 +235,7 @@ public class Application {
 			lastFrameTime = time;
 			Renderer.Prepare();
 			OnUpdate(deltaTime);
+			SceneManager.OnUpdate(deltaTime);
 			Debugger.Update();
 			Renderer2D.Render();
 			GUIRenderer.Render();
@@ -265,6 +267,7 @@ public class Application {
 	 */
 	public void Shutdown() {
 		OnShutdown();
+		SceneManager.Shutdown();
 		Debugger.ShutDown();
 		Collision2D.CleanUp();
 		Renderer2D.CleanUp();
@@ -273,6 +276,11 @@ public class Application {
 		if (window != null) {
 			window.Shutdown();
 		}
+	}
+	
+	
+	public void CloseApplication() {
+		running = false;
 	}
 	
 	/* 
