@@ -1,8 +1,9 @@
-package application;
 /**
  * This class will handle the creation of cards which will be loaded into our deck
  * and hand
  */
+
+package application; 
 
 public class Card {
     // private members for the values of the card
@@ -14,19 +15,7 @@ public class Card {
         this.suit = suit;
     }
     
-    public int getValue() { 
-    	return this.value; 
-    }
-    public String getSuit() { 
-    	return this.suit; 
-    }
-    public String getCard() { 
-    	return new String(this.getValue() + " " + this.getSuit()); 
-    }
-    
-    public static void main(String args[]) {
-    	//test
-    }
-    
+    public int getValue() { return value; }
+    public int getSuit() { return suit; }
     
 }

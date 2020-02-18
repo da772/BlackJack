@@ -3,131 +3,20 @@
  * to keep track of the cards that they will have while they are playing the round
  */
  
-package application;
-
-import java.util.ArrayList;
-import java.util.List;
+ import java.util.ArrayList;
  
  public class Hand {
     
     // store a list of cards
-    private ArrayList<Card> hand;
-    private ArrayList<ArrayList<Integer>> handValues;
+    private ArrayList<Card> cards;
+    private total;
     
     // constructor just initializes everything!
     public Hand() {
-        this.hand = new ArrayList<Card>();
-        this.handValues = new ArrayList<ArrayList<Integer>>();
-
+        cards = new ArrayList<Card>();
+        total = 0;
     }
     
-    public void addCard(Card card) {
-    	this.hand.add(card);
-    	ArrayList<Integer> curValues = new ArrayList<Integer>();
-    	if(card.getValue() == 1) {
-    		curValues.add(1);
-    		curValues.add(11);
-		}
-		else if(card.getValue() == 11 || card.getValue() == 12 || card.getValue() == 13) {
-			curValues.add(10);
-		}
-		else {
-			curValues.add(card.getValue());
-		}
-    	this.handValues.add(curValues);
-    }
-    
-    public void clearHand() {
-        this.hand = new ArrayList<Card>();
-        this.handValues = new ArrayList<ArrayList<Integer>>();
-    }
-    
-    public void printHand() {
-    	System.out.print(this.handValues);
-    }
-    
-    
-    public int getTotal() {
-    	ArrayList<Integer> totals = new ArrayList<Integer>();
-    	totals.add(0);
-    	for(int i = 0; i < this.handValues.size(); i++) {
-    		ArrayList<Integer> curValue = this.handValues.get(i);
-    		if(curValue.size() == 1) {
-    			for(int j = 0; j < totals.size(); j++) {
-    				totals.set(j, totals.get(j) + curValue.get(0));
-    			}
-    		}
-    		else {
-    			ArrayList<Integer> newTotals = new ArrayList<Integer>();
-    			for(int j = 0; j < totals.size(); j++) {
-    				int curTotal = totals.get(j);
-    				newTotals.add(curTotal + 1);
-    				newTotals.add(curTotal + 11);
-    			}
-    			totals = newTotals;
-    		}
-    	}
-    	
-    	int minimum = Integer.MAX_VALUE;
-    	for(int i = 0; i < totals.size(); i++) {
-    		int curTotal = totals.get(i);
-    		if(curTotal == 21) {
-    			return 21;
-    		}
-    		else {
-    			if(curTotal < minimum) {
-    				minimum = curTotal;
-    			}
-    		}
-    	}
-    	return minimum;
-    	
-    }
-    
-    public static void main(String[] args) {
-    	//test
-    	Hand curHand = new Hand();
-    	curHand.addCard(new Card(1, "Ace"));
-    	curHand.addCard(new Card(10, "Ace"));
-    	
-    	System.out.println("Check current hand (Ace, 10): ");
-    	curHand.printHand();
-    	System.out.println("\nGet current total: " + curHand.getTotal());
-
-    	
-    	
-    	curHand.clearHand();
-    	System.out.println("Hand cleared, total is now: " + curHand.getTotal());
-    	
-    	
-    	
-    	curHand.addCard(new Card(2, "Ace"));
-    	curHand.addCard(new Card(4, "Ace"));
-    	curHand.addCard(new Card(1, "Ace"));
-    	curHand.addCard(new Card(12, "Ace"));
-    	System.out.println("\nCheck current hand (2,4,Ace,Q): ");
-    	curHand.printHand();
-    	System.out.println("\nGet current total: " + curHand.getTotal());
-    	
-    	curHand.clearHand();
-    	curHand.addCard(new Card(1, "Ace"));
-    	curHand.addCard(new Card(1, "Ace"));
-    	curHand.addCard(new Card(1, "Ace"));
-    	curHand.addCard(new Card(12, "Ace"));
-    	curHand.addCard(new Card(9, "Ace"));
-    	System.out.println("\nCheck current hand (Ace,Ace,Ace,Q,9): ");
-    	curHand.printHand();
-    	System.out.println("\nGet current total: " + curHand.getTotal());
-    	
-
-    }
-    
-    
-  
-    
-    
-    
-    /*
     // for adding a card we're going to determine the value based on
     // the total for ace
     // If the total is <= 21 then we'll make an ace be 11 and when total
@@ -183,7 +72,6 @@ import java.util.List;
         total = 0;
         return cardsToReturn;
     }
-    */
     
     
     
