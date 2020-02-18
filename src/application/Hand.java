@@ -4,7 +4,6 @@
  */
  
 package application;
-
 import java.util.ArrayList;
 import java.util.List;
  
@@ -48,27 +47,29 @@ import java.util.List;
     
     
     public int getTotal() {
-    	ArrayList<Integer> totals = new ArrayList<Integer>();
-    	totals.add(0);
-    	for(int i = 0; i < this.handValues.size(); i++) {
-    		ArrayList<Integer> curValue = this.handValues.get(i);
-    		if(curValue.size() == 1) {
-    			for(int j = 0; j < totals.size(); j++) {
-    				totals.set(j, totals.get(j) + curValue.get(0));
+    	ArrayList<Integer> totals = new ArrayList<Integer>(); //all possible totals
+    	totals.add(0); //start with 0
+    	for(int i = 0; i < this.handValues.size(); i++) { //for every card in a hand
+    		ArrayList<Integer> curValue = this.handValues.get(i); //get the value
+    		if(curValue.size() == 1) { //no ace
+    			for(int j = 0; j < totals.size(); j++) { 
+    				//add current card value to every total
+    				totals.set(j, totals.get(j) + curValue.get(0)); 
     			}
     		}
-    		else {
-    			ArrayList<Integer> newTotals = new ArrayList<Integer>();
-    			for(int j = 0; j < totals.size(); j++) {
-    				int curTotal = totals.get(j);
-    				newTotals.add(curTotal + 1);
-    				newTotals.add(curTotal + 11);
+    		else { //ace found
+    			ArrayList<Integer> newTotals = new ArrayList<Integer>(); //multiple totals (ace = 1 or 11)
+    			for(int j = 0; j < totals.size(); j++) { //for every total
+    				int curTotal = totals.get(j); //get the value
+    				newTotals.add(curTotal + 1); // add 1 to the current total
+    				newTotals.add(curTotal + 11); // add 11 to the current total
     			}
-    			totals = newTotals;
+    			totals = newTotals; //old totals are replaced by the new ones with an extra path
     		}
     	}
     	
     	int minimum = Integer.MAX_VALUE;
+    	int maximum = Integer.MIN_VALUE;
     	for(int i = 0; i < totals.size(); i++) {
     		int curTotal = totals.get(i);
     		if(curTotal == 21) {
@@ -78,7 +79,14 @@ import java.util.List;
     			if(curTotal < minimum) {
     				minimum = curTotal;
     			}
+    			if(curTotal > maximum) {
+    				maximum = curTotal;
+    			}
     		}
+    	}
+    	
+    	if(maximum < 21) {
+    		return maximum;
     	}
     	return minimum;
     	
@@ -94,12 +102,8 @@ import java.util.List;
     	curHand.printHand();
     	System.out.println("\nGet current total: " + curHand.getTotal());
 
-    	
-    	
     	curHand.clearHand();
     	System.out.println("Hand cleared, total is now: " + curHand.getTotal());
-    	
-    	
     	
     	curHand.addCard(new Card(2, "Ace"));
     	curHand.addCard(new Card(4, "Ace"));
@@ -119,7 +123,36 @@ import java.util.List;
     	curHand.printHand();
     	System.out.println("\nGet current total: " + curHand.getTotal());
     	
+    	curHand.clearHand();
+    	
+    	System.out.println("\nHand cleared, and now dealing 3. Total is: ");
+    	curHand.addCard(new Card(3, "Ace"));
+    	System.out.println(curHand.getTotal());
 
+    	System.out.println("Dealing 4. Total is: ");
+    	curHand.addCard(new Card(4, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	
+
+    	System.out.println("Dealing Ace. Total is: ");
+    	curHand.addCard(new Card(1, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	
+
+    	System.out.println("Dealing 4. Total is: ");
+    	curHand.addCard(new Card(4, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Check current hand (3,4,Ace,3,4): ");
+    	curHand.printHand();
+    	curHand.addCard(new Card(1, "Ace"));
+    	System.out.println("\nDealing Ace. Total is: " + curHand.getTotal());
+
+    	curHand.addCard(new Card(8, "Ace"));
+    	System.out.println("Dealing 8. Total is: " + curHand.getTotal());
+
+    	System.out.println("Final hand:");
+    	curHand.printHand();
+    	
     }
     
     
