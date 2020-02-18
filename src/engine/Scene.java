@@ -40,14 +40,11 @@ public abstract class Scene {
 	}
 	
 	public boolean AddActor(Actor actor) {
-		if (!actors.containsKey(actor.GetName()) && actor != null) {
-			actors.put(actor.GetName(), actor);
-			if (HasBegin()) {
-				actor.Begin();
-			}
+		if (!actors.containsKey(actor.GetName())) {
+			actors.put(actor.GetName(), actor);	
 			return true;
-		} else if (actor != null)
-			actor.End();
+		}
+		actor.End();
 		return false;
 	}
 	

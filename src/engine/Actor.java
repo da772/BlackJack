@@ -10,7 +10,6 @@ public class Actor {
 	
 	protected String _name;
 	protected Scene scene;
-	protected boolean begin;
 	
 	public static Actor Create(String name) {
 		Scene s = SceneManager.GetCurrentScene();
@@ -56,16 +55,13 @@ public class Actor {
 	
 	public Actor AddComponent(Component c) {
 		components.put(c.GetName(), c);
-		if (begin) {
-			c.OnBegin();
-		}
+		
 		return this;
 	}
 	
 	public Actor AddComponents(Component[] c) {
 		for (Component _c : c) {
-			components.put(_c.GetName(), _c);
-			if (begin) _c.OnBegin();
+			components.put(_c.GetName(), _c);	
 		}
 		return this;
 	}
@@ -95,7 +91,6 @@ public class Actor {
 		for (Object key : components.keySet()) {
 			components.get(key).OnBegin();
 		}
-		begin = true;
 	}
 	
 	protected void End() {
@@ -103,7 +98,6 @@ public class Actor {
 			components.get(key).OnEnd();
 		}
 		components.clear();
-		begin = false;
 	}
 
 	
