@@ -1,5 +1,6 @@
 package engine;
 
+// GLFW Key Codes
 public class KeyCodes {
 	public static final int KEY_SPACE= 32;
 	public static final int KEY_APOSTROPHE= 39; /*= '= */

@@ -33,6 +33,12 @@ public class VertexArray {
 		GL30.glDeleteVertexArrays(rendererId);
 	}
 	
+	/**
+	 * 
+	 * @param vb - vertex buffer
+	 * @param layout - layout of vertex buffer
+	 * @return
+	 */
 	public VertexArray AddVertexBuffer(VertexBuffer vb, BufferLayout layout) {
 		Bind();
 		vb.Bind();
@@ -45,6 +51,11 @@ public class VertexArray {
 		return this;
 	}
 	
+	/**
+	 * 
+	 * @param ib - index buffer
+	 * @return
+	 */
 	public VertexArray AddIndexBuffer(IndexBuffer ib) {
 		Bind();
 		ib.Bind();
@@ -100,8 +111,6 @@ public class VertexArray {
 				offset += e.size;
 				stride += e.size;
 			}
-			
-			
 		}
 		
 		
@@ -133,6 +142,10 @@ public class VertexArray {
 			
 		}
 		
+		/**
+		 * Size of data types
+		 * @return int
+		 */
 		private int GetComponentSize() {
 			switch (type) {
 			case Float:
@@ -162,6 +175,10 @@ public class VertexArray {
 			}
 		}
 		
+		/**
+		 * Amount of components based on type
+		 * @return int
+		 */
 		public int GetComponentCount() {
 			switch (type) {
 			case Float:

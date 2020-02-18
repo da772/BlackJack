@@ -15,7 +15,21 @@ public class GUITextQuad_Draggable extends GUITextQuad {
 
 	
 	protected boolean isDragging = false;
-	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform - quad transfom
+	 * @param texture - quad texture
+	 * @param quadColor - quad color
+	 * @param textOffset - text position offset
+	 * @param font - font file path
+	 * @param text - text to write
+	 * @param textColor - text color
+	 * @param textWidth - text width
+	 * @param textHeight - text height
+	 * @param center - center text?
+	 * @param autoSize - auto size width?
+	 */
 	public GUITextQuad_Draggable(String name, Transform transform, String texture, Vector4f quadColor, Vector2f textOffset,
 			String font, String text, Vector4f textColor, float textWidth, float textHeight, boolean center,
 			boolean autoSize) {

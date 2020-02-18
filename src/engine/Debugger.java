@@ -29,12 +29,13 @@ public class Debugger {
 	private static Vector4f quadHoverColor = new Vector4f(.25f,.25f,.25f, .8f);
 	private static Vector4f quadColor = new Vector4f(0.1f,0.1f,0.1f,.8f);
 	
-	
+	// Initialize by creating Menus
 	public static void Init() {
 		CreateMenu();
 		ShowMenu(DisplayMenu);
 	}
 	
+	// Add / Remove Menu based on show/don't show
 	public static void ShowMenu(boolean b) {
 		DisplayMenu = b;
 		if (b) {
@@ -44,9 +45,9 @@ public class Debugger {
 		}
 	}
 	
+	// Update the text
 	public static void Update() {
-		
-		
+		// If we are shown
 		if (DisplayMenu) {
 		debugMenu.SetText(
 			    "Debug Menu: (Press ~ to toggle) \n \n" +
@@ -74,10 +75,11 @@ public class Debugger {
 		
 		}
 		
+		// Reset key inputs
 		if (keyPressed != -1 && !Input.IsKeyPressed(keyPressed)) {
 			keyPressed = -1;
 		}
-		
+		// Reset mouse inputs
 		if (mousePressed != -1 && !Input.IsMouseButtonPressed(mousePressed)) {
 			mousePressed = -1;
 		}
@@ -85,6 +87,7 @@ public class Debugger {
 		
 	}
 	
+	// Capture events
 	public static void OnEvent(Event event) {
 		Events.EventDispatcher<Event> dispatcher = new Events.EventDispatcher<Event>(event);
 		dispatcher.Dispatch(KeyEvent.GetGenericType(), new Events.EventFunction<Event>(event) {
@@ -119,7 +122,9 @@ public class Debugger {
 		debugMenu.Remove();
 	}
 	
+	// Create menu
 	private static void CreateMenu() {
+		// Create draggable GUI Text Quad
 		debugMenu = new GUITextQuad_Draggable("DraggableQuad",new Transform( 
 				new Vector3f(xPos,yPos,10000.f), // Position x,y, Z-Order higher is on top
 				new Vector3f(0f, 0f,0f),  // Rotation

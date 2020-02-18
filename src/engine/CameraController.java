@@ -21,31 +21,59 @@ public abstract class CameraController {
 		return camera;
 	}
 	
+	/**
+	 * 
+	 * @param event - event passed
+	 */
 	public void OnEvent(Event event) {	
 		Events.EventDispatcher<Event> dispatcher = new Events.EventDispatcher<Event>(event);
 		dispatcher.Dispatch(WindowResizedEvent.GetGenericType(), new Events.EventFunction<Event>(event) {
 			@Override public boolean run(Event t) { return OnWindowResized((WindowResizedEvent) t);} });
 	}
 	
+	/**
+	 * 
+	 * @param deltaTime - percentage of second
+	 */
 	public void OnUpdate(float deltaTime) {
 		camera.SetPosition(Position);
 		camera.SetRotation(rotation);
 	}
 	
+	/**
+	 * 
+	 * @param pos - position
+	 */
 	public void SetPosition(Vector3f pos) {
 		this.Position = pos;
 	}
 	
+	/**
+	 * 
+	 * @param x - x zoom
+	 * @param y - y zoom
+	 * @param amt - amount to zoom
+	 * @return
+	 */
 	public boolean OnZoom(float x, float y, float amt) {
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @param e - window resized event
+	 * @return
+	 */
 	public abstract boolean OnWindowResized(WindowResizedEvent e);
 	
 	public static class Orthographic extends CameraController {
 		
 		float zoomLevel = 1f;
 		
+		/**
+		 * 
+		 * @param aspectRatio
+		 */
 		public Orthographic(float aspectRatio) {
 			super();
 			this.aspectRatio = aspectRatio;
@@ -75,6 +103,10 @@ public static class Perspective extends CameraController {
 		
 		float zoomLevel = 1f;
 		
+		/**
+		 * 
+		 * @param aspectRatio
+		 */
 		public Perspective(float aspectRatio) {
 			super();
 			this.aspectRatio = aspectRatio;

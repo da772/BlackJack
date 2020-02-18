@@ -2,6 +2,11 @@ package renderer;
 
 import org.joml.Vector4f;
 
+/**
+ * Container for texture quad texture coords
+ * 
+ *
+ */
 public class TextureCoords {
 	
 	private Vector4f xCoords1, yCoords1, xCoords2,yCoords2 ;

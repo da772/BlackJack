@@ -28,10 +28,22 @@ public class Texture {
 	
 	private static Map<String, Texture> textures = new HashMap<String, Texture>();
 	
+	/**
+	 * Creates texture and adds it to a pool for future use
+	 * @param fileName - path to image file 
+	 * @return - Texture
+	 */
 	public static Texture Create(String fileName) {
 		return Texture.Create(fileName, false, true);
 	}
 	
+	/**
+	 * Creates texture and adds it to a pool for future use
+	 * @param fileName - path to image file
+	 * @param flip - flip y?
+	 * @param generateMipMap - generateMipMap?
+	 * @return - Texture
+	 */
 	public static Texture Create(String fileName, boolean flip, boolean generateMipMap) {
 		if (textures.containsKey(fileName)) {
 			Texture t =  textures.get(fileName);
@@ -50,6 +62,10 @@ public class Texture {
 		return textures.size();
 	}
 	
+	/**
+	 * Removes texture from pool
+	 * @param fileName - path to image file
+	 */
 	public static void Remove(String fileName) {
 		if (textures.containsKey(fileName)) {
 			Texture t = textures.get(fileName);
@@ -57,14 +73,10 @@ public class Texture {
 		}
 	}
 	
-	public static void Remove(String fileName, boolean remove) {
-		if (textures.containsKey(fileName)) {
-			Texture t = textures.get(fileName);
-			if (remove)
-				t.AddReferenceCount(-1);
-		}
-	}
-	
+	/**
+	 * Removes texture from pool
+	 * @param texture - texture to remove
+	 */
 	public static void Remove(Texture texture) {
 		if (textures.containsKey(texture.fileName)) {
 			Texture t = textures.get(texture.fileName);
@@ -117,10 +129,20 @@ public class Texture {
 		return rendererId;
 	}
 	
+	/**
+	 * Set currently bound texture's parameter
+	 * @param name - name of parameter
+	 * @param value - value of parameter
+	 */
 	public void setParameter(int name, int value) {
 		GL30.glTexParameteri(GL30.GL_TEXTURE_2D, name, value);
 	}
 	
+	/**
+	 * Set currently bound texture's parameter
+	 * @param name - name of parameter
+	 * @param value - value of parameter
+	 */
 	public void setParameter(int name, float value) {
 		GL30.glTexParameterf(GL30.GL_TEXTURE_2D, name, value);
 	}

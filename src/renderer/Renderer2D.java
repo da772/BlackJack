@@ -9,7 +9,10 @@ public class Renderer2D {
 	
 	public static List<Mesh2D> meshes = new ArrayList<Mesh2D>();
 	
-	
+	/**
+	 * 
+	 * @param mesh - mesh to add to pipeline
+	 */
 	public static void Add(Mesh2D mesh) {
 		if (!meshes.contains(mesh)) {
 			mesh.Init();
@@ -22,6 +25,10 @@ public class Renderer2D {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param mesh - mesh to remove from pipeline
+	 */
 	public static void Remove(Mesh2D mesh) {
 		if (meshes.contains(mesh)) {
 			meshes.remove(mesh);
@@ -31,6 +38,9 @@ public class Renderer2D {
 		}
 	}
 
+	/**
+	 * Render Pipeline
+	 */
 	public static void Render() {
 		Renderer.SetDepth(true);
 		for (int i =0; i < meshes.size(); i++) {
@@ -42,6 +52,9 @@ public class Renderer2D {
 		Renderer.SetDepth(false);
 	}
 	
+	/**
+	 * Cleanup uncleaned meshes
+	 */
 	public static void CleanUp () {
 		for (Mesh2D m : meshes) {
 			m.CleanUp();

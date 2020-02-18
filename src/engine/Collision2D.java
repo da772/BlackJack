@@ -33,6 +33,9 @@ public class Collision2D extends Thread {
 	private Collision2D() {};
 	
 	@Override
+	/**
+	 * Creates new thread which runs looop
+	 */
 	public void run() {
 		while (Application.app.running && running) {
 			OnUpdate();
@@ -41,50 +44,65 @@ public class Collision2D extends Thread {
 	}
 	
 	public static void OnUpdate() {
+		// Keep track if we hit anything
 		boolean hit = false;
+		// Try, possible for queues to change since we are on separate thread
 		try {
+			// loop through GUI
 			for (int i = GUIcolliders.size()-1; i >= 0 ; i--) {
 				Collider2D h = GUIcolliders.get(i);
+				// Check if we are in bounds of window
 				if (!MathLib.InBounds(mouseX, 0f, (float)GUIRenderer.GetWidth())
 						|| !MathLib.InBounds( mouseY, 0f, (float)GUIRenderer.GetWidth())) {
 					hit = true;
 				}
-					
+				// Make sure we haven't hit anything yet
 				if (!hit) {
+					// Check if we are inside GUI's rect
 					if (mouseX >= h.GetRect().x && mouseX <= h.GetRect().y
 						&& mouseY >= h.GetRect().z && mouseY <= h.GetRect().w) 
 					{
+						// If we arent already inside the GUI run MouseEnter()
 						if (!h.IsMouseOver()) {
 							h.SetMouseEnter();
 						}
+						// Tell the loop we hit something
 						hit = true;
 					} else {
+						// We aren't inside the GUI's rect, make sure we call exit if we were in it last frame
 						if (h.IsMouseOver()) {
 							h.SetMouseExit();
 						}
 					}
 				} else {
+					// If we hit something else make sure we call exit if we were in it last frame
 					if (h.IsMouseOver()) {
 						h.SetMouseExit();
 					}
 				}
 			}
+			// Loop through mesh colliders
 			for (int i = Meshcolliders.size()-1; i >= 0; i--) {
 				Collider2D h = Meshcolliders.get(i);
+				// Make sure we haven't hit anything yet
 				if (!hit) {
+					// Check if the mouse is in the bounds
 					if (mouseX >= h.GetRect().x && mouseX <= h.GetRect().y
 						&& mouseY >= h.GetRect().z && mouseY <= h.GetRect().w) 
 					{
+						// if we hit something and we arent already inside it call mouse enter
 						if (!h.IsMouseOver()) {
 							h.SetMouseEnter();
 						}
 						hit = true;
 					} else {
+						// if we didnt hit it, but we are not longer inside it call mouse exit
 						if (h.IsMouseOver()) {
 							h.SetMouseExit();
 						}
 					}
 				} else {
+					// If we hit something else make sure we call exit if we were in it last frame
 					if (h.IsMouseOver()) {
 						h.SetMouseExit();
 					}
@@ -96,6 +114,10 @@ public class Collision2D extends Thread {
 		
 	}
 
+	/**
+	 * 
+	 * @param g - collider to set as selected
+	 */
 	public static void SetSelected(Collider2D g) {
 		if (selectedCollider != null)
 			selectedCollider.RemoveSelection();
@@ -106,6 +128,10 @@ public class Collision2D extends Thread {
 		return selectedCollider;
 	}
 		
+	/**
+	 * 
+	 * @param event - event passed
+	 */
 	public static void OnEvent(Event event) {
 		
 		if (event instanceof Events.MouseMovedEvent) {
@@ -120,6 +146,10 @@ public class Collision2D extends Thread {
 		
 	}
 		
+	/**
+	 * 
+	 * @param collider - collider to add
+	 */
 	public static void Add(Collider2D collider) {
 		if (collider.GetCollisionObjectType() == CollisionObjectType.GUI) {
 			AddGUICollider(collider);
@@ -134,6 +164,10 @@ public class Collision2D extends Thread {
 		selectedCollider = null;
 	}
 	
+	/**
+	 * 
+	 * @param collider - gui collider to add
+	 */
 	private static void AddGUICollider(Collider2D collider ) {
 		if (!GUIcolliders.contains(collider)) {
 			GUIcolliders.add(collider);
@@ -143,6 +177,10 @@ public class Collision2D extends Thread {
 		}
 	}
 
+	/**
+	 * 
+	 * @param collider - mesh collider to add
+	 */
 	private static void AddMeshCollider(Collider2D collider ) {
 		if (!Meshcolliders.contains(collider)) {
 			Meshcolliders.add(collider);
@@ -152,6 +190,10 @@ public class Collision2D extends Thread {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param collider - collider to remove
+	 */
 	public static void Remove(Collider2D collider) {
 		if (collider.GetCollisionObjectType() == CollisionObjectType.GUI) {
 			RemoveGUICollider(collider);
@@ -160,6 +202,10 @@ public class Collision2D extends Thread {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param hud - gui to remove
+	 */
 	public static void RemoveGUICollider(Collider2D hud) {
 		if (GUIcolliders.contains(hud)) {
 			if (hud.IsMouseOver()) {
@@ -169,6 +215,10 @@ public class Collision2D extends Thread {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param hud - mesh to remove
+	 */
 	public static void RemoveMeshCollider(Collider2D hud) {
 		if (Meshcolliders.contains(hud)) {
 			Meshcolliders.remove(hud);

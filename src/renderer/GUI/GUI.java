@@ -39,10 +39,22 @@ public abstract class GUI extends Collider2D {
 	protected boolean MouseOver = false;
 	protected boolean EnableCollision = true;
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 */
 	public GUI(String name) {
 		super(name);
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform - gui location
+	 * @param texture - gui texture
+	 * @param color - gui color
+	 * @param UVScale - gui uv scale
+	 */
 	public GUI(String name, Transform transform, Texture texture, Vector4f color, Vector2f UVScale) {
 		super(name);
 		this.texture = texture;
@@ -52,6 +64,15 @@ public abstract class GUI extends Collider2D {
 		this.UVScale = UVScale;
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param texture
+	 * @param color
+	 * @param UVScale
+	 * @param shaders
+	 */
 	public GUI(String name,Transform transform, Texture texture, Vector4f color, Vector2f UVScale, String[] shaders) {
 		super(name);
 		this.texture = texture;
@@ -62,6 +83,14 @@ public abstract class GUI extends Collider2D {
 		this.shader_strings = shaders;
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param texture
+	 * @param color
+	 * @param UVScale
+	 */
 	public GUI(String name,Transform transform, String texture, Vector4f color, Vector2f UVScale) {
 		super(name);
 		this.texture = Texture.Create(texture);
@@ -71,6 +100,12 @@ public abstract class GUI extends Collider2D {
 		this.UVScale = UVScale;
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param color
+	 */
 	public GUI(String name,Transform transform, Vector4f color) {
 		super(name);
 		this.texture = null;
@@ -79,6 +114,13 @@ public abstract class GUI extends Collider2D {
 		this.UVScale = new Vector2f(1.f,1.f);
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param texture
+	 * @param color
+	 */
 	public GUI(String name,Transform transform, String texture, Vector4f color) {
 		super(name);
 		this.texture = Texture.Create(texture);
@@ -88,6 +130,12 @@ public abstract class GUI extends Collider2D {
 		this.UVScale = new Vector2f(1.f,1.f);
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param texture
+	 */
 	public GUI(String name,Transform transform, String texture) {
 		super(name);
 		this.texture = Texture.Create(texture);
@@ -107,11 +155,17 @@ public abstract class GUI extends Collider2D {
 		
 	}
 	
+	/**
+	 * Add Gui to GUI render pipeline
+	 */
 	public void Add() {
 		GUIRenderer.Add(this);
 		added = true;
 	}
 	
+	/**
+	 * Remove Gui from GUI render pipeline
+	 */
 	public void Remove() {
 		GUIRenderer.Remove(this);
 		added = false;
@@ -152,6 +206,9 @@ public abstract class GUI extends Collider2D {
 		return this.transform.GetScale();
 	}
 	
+	/**
+	 * Get bounds of gui
+	 */
 	public Vector4f GetRect() {
 		return new Vector4f(
 			(GUIRenderer.GetWidth()*this.transform.GetScale().x/2)+
@@ -167,17 +224,24 @@ public abstract class GUI extends Collider2D {
 			-((GUIRenderer.GetHeight()*this.transform.GetScale().y/2)+
 			(GUIRenderer.GetHeight()* (this.transform.GetPosition().y/2f-.5f))-
 			(GUIRenderer.GetHeight()*this.transform.GetScale().y))
-		
 			);
 	}
 	
-	
+	/**
+	 * 
+	 * @param x - drag begin mouse x location
+	 * @param y - drag begin mouse y location
+	 */
 	public void BeginDrag(float x, float y) {
 		dragPos.x = x;
 		dragPos.y = y;
 	}
 	
-	
+	/**
+	 * 
+	 * @param x - current mouse x position
+	 * @param y - current mouse y position
+	 */
 	public void Drag(float x, float y) {
 		SetPosition( this.transform.GetPosition().x + ( ((x-dragPos.x)/GUIRenderer.GetWidth())*2f ),
 				this.transform.GetPosition().y - ( ((y-dragPos.y)/GUIRenderer.GetHeight()*2f)),
@@ -306,9 +370,6 @@ public abstract class GUI extends Collider2D {
 	public void OnEnd() {
 		Remove();
 	}
-	
-	
-	
 	
 	
 }

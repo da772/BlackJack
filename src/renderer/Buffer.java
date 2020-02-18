@@ -14,11 +14,21 @@ public class Buffer {
 	
 		private int rendererId;
 		
+		/**
+		 * 
+		 * @param vertices - array of vertices 
+		 * @param size - size of array
+		 */
 		public VertexBuffer(float[] vertices, int size) {
 			rendererId = GL15.glGenBuffers();
 			SetBufferData(vertices, size);
 		}
 		
+		/**
+		 * 
+		 * @param vertices - array of vertices
+		 * @param size = size of array
+		 */
 		public void SetBufferData(float[] vertices, int size) {
 			Bind();
 			FloatBuffer ptr = BufferUtils.createFloatBuffer(size);
@@ -48,11 +58,21 @@ public class Buffer {
 		
 		private int rendererId;
 		
+		/**
+		 * 
+		 * @param indices - array of indices
+		 * @param size - size of array
+		 */
 		public IndexBuffer(int[] indices, int size) {
 			rendererId = GL15.glGenBuffers();
 			SetIndexData(indices, size);
 		}
 		
+		/**
+		 * 
+		 * @param indices - array of indices
+		 * @param size - size of array
+		 */
 		public void SetIndexData(int[] indices, int size) {
 			Bind();
 			IntBuffer ptr = BufferUtils.createIntBuffer(size);

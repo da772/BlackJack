@@ -6,6 +6,11 @@ import org.lwjgl.BufferUtils;
 
 public class Input {
 	
+	/**
+	 * 
+	 * @param keycode - keycode to check (use KeyCodes class)
+	 * @return boolean - true if pressed false if not
+	 */
 	public static boolean IsKeyPressed(int keycode) {
 		if (Application.app != null && Application.app.GetWindow() != null) {
 			int state = glfwGetKey(Application.app.GetWindow().GetWindowContext(), keycode);
@@ -14,6 +19,11 @@ public class Input {
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @param button - button to check (use KeyCodes class)
+	 * @return boolean - true if pressed false if not
+	 */
 	public static boolean IsMouseButtonPressed(int button) {
 		if (Application.app != null && Application.app.GetWindow() != null) {
 			int state = glfwGetMouseButton(Application.app.GetWindow().GetWindowContext(), button);
@@ -22,6 +32,10 @@ public class Input {
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @return float - MouseX position relative to window
+	 */
 	public static float GetMouseX() {
 		if (Application.app != null && Application.app.GetWindow() != null) {
 			DoubleBuffer posX = BufferUtils.createDoubleBuffer(1);
@@ -33,6 +47,10 @@ public class Input {
 		return 0;
 	}
 	
+	/**
+	 * 
+	 * @return float - MouseY position relative to window
+	 */
 	public static float GetMouseY() {
 		if (Application.app != null && Application.app.GetWindow() != null) {
 			DoubleBuffer posY = BufferUtils.createDoubleBuffer(1);

@@ -1,5 +1,10 @@
 package renderer;
 
+/**
+ * 
+ * Library of staic shader sources
+ *
+ */
 public class ShaderLib {
 
 	public final static String[] Shader_Font = new String[] {

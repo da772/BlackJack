@@ -18,7 +18,7 @@ import renderer.Renderer2D;
 
 
 
-/* 
+/**
  * Application Class
  * 		Applications are created by making children of this object
  * 		Blackjack.java is a child of this class
@@ -26,7 +26,7 @@ import renderer.Renderer2D;
  * 		EntryPoint.java creates an Application Object and runs it.
  * 		
  * 		
- */
+ **/
 
 public class Application {
 	
@@ -46,7 +46,7 @@ public class Application {
 		
 	}
 	
-	/*
+	/**
 	 * Application( final String title, final int width, final int height)
 	 * 		title - title of window the application will create
 	 * 		width - width of the window the application will create
@@ -54,7 +54,7 @@ public class Application {
 	 * 	
 	 * 		1. Set variables
 	 * 
-	 */			
+	 **/			
 	
 	public Application(final String title, final int width, final int height) {
 		this.width = width;
@@ -64,13 +64,13 @@ public class Application {
 	}
 	
 	
-	/* 
+	/* *
 	 * Init()
 	 * 		1. Create window
 	 * 		2. Initialize the window
 	 * 		3. Set the window event callbacks
 	 * 		4. Call init of our inherited class
-	 */
+	**/
 	
 	public void Init() {
 		window = new Window(title, width, height);
@@ -87,7 +87,7 @@ public class Application {
 	protected void OnInit() {};
 	
 	
-	/*
+	/**
 	 * Event(Event event)
 	 * 		event - event the window is telling us about
 	 * 
@@ -99,8 +99,7 @@ public class Application {
 	 * 		6. Dispatch WindowResizedEvent
 	 * 		7. Dispatch WindowClosedEvent
 	 * 
-	 */
-	
+	 **/
 	public void Event(Event event) {
 		Events.EventDispatcher<Event> dispatcher = new Events.EventDispatcher<Event>(event);
 		dispatcher.Dispatch(KeyEvent.GetGenericType(), new Events.EventFunction<Event>(event) {
@@ -128,15 +127,10 @@ public class Application {
 	
 	protected void OnEvent(Event event) {};
 	
-	/*
-	 * To be overridden by child class
-	 * 		WindowResizedEvent(WindowResizedEvent e)
-	 * 				
-	 * 		WindowResizedEvent e
-	 * 			(float) e.GetWidth() - returns new width
-	 * 			(float) e.GetHeight() - returns new height
-	 * 		
-	 */
+	/**
+	 * @param e (WindowResizedEvent)
+	 *            - event
+	**/
 	protected boolean WindowResizedEvent(WindowResizedEvent e) {
 		
 		IntBuffer w = BufferUtils.createIntBuffer(1);
@@ -148,75 +142,73 @@ public class Application {
 		return false;
 	}
 	
-	/*
-	 * To be overridden by child class
-	 * 		WindowClosedEvent(WindowResizedEvent e)
-	 * 				
-	 * 		WindowClosedEvent e
-	 * 			
+	/**
+	 * @param e (WindowClosedEvent)
+	 *  - To be overridden by child class
+	 * 		WindowClosedEvent(WindowResizedEvent e)	
 	 * 
-	 */
+	 **/
 	protected boolean WindowClosedEvent(WindowClosedEvent e) {
 	
 		//System.out.println(e);
 		running = false;
 		return true;
 	}
-	/*
+	/**
 	 * To be overridden by child class
 	 * 		MouseScrolledEvent(MouseScrolledEvent e)
 	 * 				
-	 * 		MouseScrolledEvent e
+	 * 		@param e (MouseScrolledEvent)
 	 * 			(float) e.GetScrollX() - returns scroll amount on X axis (horizontal scrolling)
 	 * 			(float) e.GetScrollY() - returns scroll amount on Y axis (vertical scrolling)
 	 * 		
-	 */
+	 **/
 	protected boolean MouseScrolledEvent(MouseScrolledEvent e) {
 		//System.out.println(e);
 		return false;
 	}
-	/*
+	/**
 	 * To be overridden by child class
 	 * 		MouseMoveEvent(MouseScrolledEvent e)
 	 * 				
-	 * 		MouseMoveEvent e
+	 * 		@param e (MouseMoveEvent)
 	 * 			(float) e.GetMouseX() - returns new x location of cursor
 	 * 			(float) e.GetMouseX() - returns new y location of cursor
 	 * 		
-	 */
+	 **/
 	protected boolean MouseMoveEvent(MouseMovedEvent e) {
 		//System.out.println(e);
 		return false;
 	}
-	/*
+	/**
 	 * To be overridden by child class
 	 * 		MouseButtonEvent(MouseScrolledEvent e)
 	 * 				
-	 * 		MouseButtonEvent e - can either be MouseButtonReleasedEvent or MouseButtonPressedEvent
+	 * 		@param e (MouseButtonEvent) - can either be MouseButtonReleasedEvent or MouseButtonPressedEvent
 	 * 			(int) e.GetKeyCode() - returns keycode of key pressed
 	 * 			(EventType) e.GetEventType() - returns the event type either EventType.MouseButtonReleased or EventType.MouseButtonPressed
 	 * 		
-	 */
+	 **/
 	protected boolean MouseButtonEvent(MouseButtonEvent e) {
 		//System.out.println(e);
 		return false;
 	}
-	/*
+	/**
 	 * To be overridden by child class
 	 * 		KeyEvent(MouseScrolledEvent e)
 	 * 				
-	 * 		KeyEvent e - can either be KeyReleasedEvent or KeyPressedEvent
+	 * 		@param e (KeyEvent)  - can either be KeyReleasedEvent or KeyPressedEvent
 	 * 			(int) e.GetKeyCode() - returns keycode of key pressed
 	 * 			(EventType) e.GetEventType() - returns the event type either EventType.KeyReleased or EventType.KeyPressed
 	 * 		
-	 */
+	 **/
 	protected boolean KeyEvent (KeyEvent e) {
 		//System.out.println(e);	
 		return false;
 	}
 	
 	
-	/*
+	/**
 	 * Main application loop
 	 * 		Run()
 	 * 				
@@ -226,7 +218,7 @@ public class Application {
 	 * 		4. Update window
 	 * 
 	 * 		
-	 */
+	 **/
 	public void Run() {
 		while (running) {
 			CalcFPS();
@@ -255,7 +247,7 @@ public class Application {
 		}	
 	}
 	
-	/*
+	/**
 	 * Application Shutdown
 	 * 		Shutdown()
 	 * 				
@@ -264,7 +256,7 @@ public class Application {
 	 * 		3. Shutdown Window
 	 * 
 	 * 		
-	 */
+	 **/
 	public void Shutdown() {
 		OnShutdown();
 		SceneManager.Shutdown();
@@ -283,22 +275,22 @@ public class Application {
 		running = false;
 	}
 	
-	/* 
+	/**
 	 * 	GetWindow() - returns window object
 	 * 		
-	 */
+	 **/
 	public Window GetWindow() {
 		return window;
 	}
-	/*
+	/**
 	 * To be overridden by child class
 	 * 	
-	 */
+	 **/
 	protected void OnUpdate(float deltaTime) {};
-	/*
+	/**
 	 * To be overridden by child class
 	 * 	
-	 */
+	 **/
 	protected void OnShutdown() {};
 	
 	

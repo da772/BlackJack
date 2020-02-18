@@ -30,6 +30,14 @@ public abstract class  Mesh2D extends Collider2D {
 	protected boolean generateMipMap = true;
 
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param shader
+	 * @param texture
+	 * @param cam - current camera
+	 */
 	public Mesh2D(String name, Transform transform, String[] shader, String texture, Camera cam) {
 		super(name);
 		SetTransform(transform);

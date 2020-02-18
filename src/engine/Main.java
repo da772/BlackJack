@@ -3,6 +3,12 @@ package engine;
 import application.BlackJack;
 import application.TestingApp;
 
+/**
+ * 
+ * Entry point
+ * 		- Change TestingApp to the final app
+ *
+ */
 public class Main {
 
 	public static void main(String[] args) {

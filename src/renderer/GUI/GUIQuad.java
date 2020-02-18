@@ -33,26 +33,70 @@ public class GUIQuad extends GUI {
 			new VertexArray.BufferElement(VertexArray.ElementType.Float2, "u_TexCoord") 
 			})).AddIndexBuffer(ibuffer);
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param texture
+	 * @param color
+	 * @param UVScale
+	 */
 	public GUIQuad(String name, Transform transform, Texture texture, Vector4f color, Vector2f UVScale) {
 		super(name, transform, texture,color,UVScale);
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param texture
+	 * @param color
+	 * @param UVScale
+	 * @param shader
+	 */
 	public GUIQuad(String name, Transform transform, Texture texture, Vector4f color, Vector2f UVScale, String[] shader) {
 		super(name, transform, texture,color,UVScale, shader);
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param texture
+	 * @param color
+	 * @param UVScale
+	 */
 	public GUIQuad(String name, Transform transform, String texture, Vector4f color, Vector2f UVScale) {
 		super(name, transform, texture, color, UVScale);
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param color
+	 */
 	public GUIQuad(String name, Transform transform, Vector4f color) {
 		super(name, transform, color);
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param texture
+	 * @param color
+	 */
 	public GUIQuad(String name, Transform transform, String texture, Vector4f color) {
 		super(name, transform, texture, color);
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param texture
+	 */
 	public GUIQuad(String name, Transform transform, String texture) {
 		super(name, transform, texture);
 	}

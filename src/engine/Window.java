@@ -44,17 +44,29 @@ public class Window {
 		public abstract boolean run(Event e);
 	}
 	
-	Window(final String title, final int i, final int j) {
+ 	/**
+ 	 * 
+ 	 * @param title - starting title of window
+ 	 * @param w - starting width of window
+ 	 * @param h - starting height of window
+ 	 */
+	Window(final String title, final int w, final int h) {
 		this.title = title;
-		this.width = i;
-		this.height = j;
+		this.width = w;
+		this.height = h;
 	}
 	
-	
-	Window(final String title, final int i, final int j, final boolean vsync) {
+	/**
+	 * 
+	 * @param title - starting title of window
+	 * @param w - starting width of window
+	 * @param h - starting height of window
+	 * @param vsync - vsync enable ?
+	 */
+	Window(final String title, final int w, final int h, final boolean vsync) {
 		this.title = title;
-		this.width = i;
-		this.height = j;
+		this.width = w;
+		this.height = h;
 		this.vsync = vsync ? 1 : 0;
 	}
 	
@@ -85,7 +97,7 @@ public class Window {
 		// Print success
 		System.out.println("GLFW Initialized: " + this.title + " ( " + width + ", " + height + " )");
 		
-		
+		// Get window DPI
 		try (MemoryStack s = MemoryStack.stackPush()) {
             FloatBuffer px = s.mallocFloat(1);
             FloatBuffer py = s.mallocFloat(1);
@@ -98,25 +110,20 @@ public class Window {
             py.clear();
 		}
 		
-		
-
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
 			switch (action ) {
-			case GLFW_PRESS:
-				{
+			case GLFW_PRESS: {
 					Events.KeyPressedEvent e = new Events.KeyPressedEvent(key, 0);
 					OnEvent( (Events.Event)((Events.KeyEvent) e) );
 					break;
 				}
-			case GLFW_RELEASE:
-				{
+			case GLFW_RELEASE: {
 					Events.KeyReleasedEvent e = new Events.KeyReleasedEvent(key);
 					OnEvent( (Events.Event)((Events.KeyEvent) e) );
 					break;
 				}
-			case GLFW_REPEAT:
-				{
+			case GLFW_REPEAT: {
 					Events.KeyPressedEvent e = new Events.KeyPressedEvent(key, 1);
 					OnEvent( (Events.Event)((Events.KeyEvent) e) );
 					break;
@@ -128,20 +135,17 @@ public class Window {
 		glfwSetMouseButtonCallback(window, (window, button, action, mods) ->  {
 			
 			switch (action) {
-			case GLFW_PRESS:
-				{
+			case GLFW_PRESS: {
 					Events.MouseButtonPressedEvent e = new Events.MouseButtonPressedEvent(button, 0);
 					OnEvent( (Events.Event) e );
 					break;
 				}
-			case GLFW_RELEASE:
-				{
+			case GLFW_RELEASE: {
 					Events.MouseButtonReleasedEvent e = new Events.MouseButtonReleasedEvent(button);
 					OnEvent( (Events.Event)(e));
 					break;
 				}
-			case GLFW_REPEAT:
-				{
+			case GLFW_REPEAT: {
 					Events.MouseButtonPressedEvent e = new Events.MouseButtonPressedEvent(button, 1);
 					OnEvent( (Events.Event)(e) );
 					break;
@@ -212,12 +216,21 @@ public class Window {
 		
 	}
 	
+	/**
+	 * 
+	 * @param b - true on / false off
+	 */
 	public void SetVSync(boolean b) {
 		vsync = b ? 1 : 0;
 		glfwSwapInterval(vsync);
 	}
 	
+	/**
+	 * 
+	 * @param title - set window's title
+	 */
 	public void SetTitle(String title) {
+		this.title = title;
 		glfwSetWindowTitle(window, title);
 	}
 	
@@ -228,6 +241,11 @@ public class Window {
 		glfwPollEvents();
 	}
 	
+	/**
+	 * 
+	 * @param width - buffer to return framebuffer width to
+	 * @param height - buffer to return framebuffer height to
+	 */
 	public void GetFrameBuffers(IntBuffer width, IntBuffer height) {
 		try (MemoryStack stack = MemoryStack.stackPush())
 		{
@@ -245,7 +263,7 @@ public class Window {
 	}
 	
 	public String GetGLInfo() {
-		return glGetString(GL_VENDOR) +  glGetString(GL_VERSION) + ", " + glGetString(GL_RENDERER);
+		return glGetString(GL_VENDOR) + " " + glGetString(GL_VERSION) + ", " + glGetString(GL_RENDERER);
 	}
 	
 	public boolean Vsync() {
@@ -299,6 +317,11 @@ public class Window {
 		glfwSetWindowSize(window, width, height);
 	}
 	
+	/**
+	 * 
+	 * @param xPos - xposition of window
+	 * @param yPos - yposition of window
+	 */
 	public void SetWindowLocation(final int xPos, final int yPos) {
 		// Set Window Location
 		glfwSetWindowPos(
@@ -308,6 +331,11 @@ public class Window {
 		);
 	}
 	
+	
+	/**
+	 * 
+	 * @param title - string to set title to
+	 */
 	public void SetWindowTitle(final String title) {
 		// Set our title var
 		this.title = title;

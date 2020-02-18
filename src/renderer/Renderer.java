@@ -45,7 +45,13 @@ public class Renderer {
 		GL30.glCullFace(GL11.GL_BACK);
 	}
 	
-	
+	/**
+	 * 
+	 * @param r - red
+	 * @param g - green
+	 * @param b - blue
+	 * @param a - alpha
+	 */
 	public static void SetClearColor(float r,float g,float b,float a) {
 		clearColor = new Vector4f(r,g,b,a);
 	}
@@ -55,6 +61,10 @@ public class Renderer {
 		GL30.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 	}
 	
+	/**
+	 * 
+	 * @param t - enable / disable depth
+	 */
 	public static void SetDepth(boolean t) {
 		if (t) {
 			GL30.glEnable(GL11.GL_DEPTH_TEST);
@@ -63,81 +73,121 @@ public class Renderer {
 		}
 	}
 
+	/**
+	 * Should be used with framebuffers not width or height
+	 * @param x - left most position
+	 * @param y - bottom most position
+	 * @param width - width of viewport
+	 * @param height - height of viewport
+	 */
 	public static void SetViewport(int x, int y, int width, int height) {
 		GL30.glViewport(x, y, width, height);
 	}
 
+	/**
+	 * Draw currently bound vertex array
+	 * @param size - size of array
+	 */
 	public static void DrawArrays(int size) {
 		GL30.glDrawArrays(GL11.GL_TRIANGLES, 0, size);
 	}
 	
+	/**
+	 * Draw currently bound vertex array with indices
+	 * @param indexCount - size of indices
+	 */
 	public static void DrawIndexed(int indexCount) {
 		GL30.glDrawElements(GL11.GL_TRIANGLES, indexCount, GL11.GL_UNSIGNED_INT, 0);
 	}
 		
+	/**
+	 * Draw currently bound vertex array with indices
+	 * @param count - size of indices
+	 */
 	public static void DrawElements(int count) {
 		GL30.glDrawElements(GL11.GL_TRIANGLES, count, GL11.GL_UNSIGNED_INT, 0);
 	}
 	
-	
-	public static void Draw(VertexArray ar, int size) {
-		if (ar == null)
-			return;
-		ar.Bind();
-		GL30.glDrawArrays(GL11.GL_TRIANGLES, 0, size);
-		ar.UnBind();
-	}
-	
-	
-	public static void Draw(Mesh2D mesh) {
-		if (mesh == null)
-			return;
-		mesh.Bind();
-		GL30.glDrawArrays(GL11.GL_TRIANGLES, 0, mesh.GetVertexCount());
-		mesh.UnBind();
-	}
-
+	/**
+	 * 
+	 * @param id - id of buffer to add
+	 */
 	public static void AddBuffer(int id) {
 		Buffers.add(id);
 	}
 	
+	/**
+	 * 
+	 * @param id - id of buffer to remove
+	 */
 	public static void RemoveBuffer(int id) {
 		Buffers.remove((Object)id);
 	}
 
+	/**
+	 * 
+	 * @param id - id of vertex array to add
+	 */
 	public static void AddVertexArray(int id) {
 		VertexArrays.add(id);
 	}
-	
+	/**
+	 * 
+	 * @param id - id of vertex array to remove
+	 */
 	public static void RemoveVertexArray(int id) {
 		VertexArrays.remove((Object)id);
 	}
 	
+	/**
+	 * 
+	 * @param t - texture to add
+	 */
 	public static void AddTexture(Texture t) {
 		Textures.add(t);
 	}
 	
+	/**
+	 * 
+	 * @param t - texture to remove
+	 */
 	public static void RemoveTexture(Texture t) {
 		Textures.remove(t);
 	}
-	
+	/**
+	 * 
+	 * @param s - shader to add
+	 */
 	public static void AddShader(Shader s) {
 		Shaders.add(s);
 	}
-	
-
+	/**
+	 * 
+	 * @param s - shader to remove
+	 */
 	public static void RemoveShader(Shader s) {
 		Shaders.remove(s);
 	}
 
+	/**
+	 * 
+	 * @param textureAtlas - texture atlas to add
+	 */
 	public static void AddTextureAtlas(TextureAtlas textureAtlas) {
 		TextureAtlas.add(textureAtlas);
 	}
 
+	/**
+	 * 
+	 * @param textureAtlas - texture atlas to remove
+	 */
 	public static void RemoveAtlas(TextureAtlas textureAtlas) {
 		TextureAtlas.remove(textureAtlas);
 	}
 	
+	/**
+	 * CleanUp all uncleared buffers, vertex arrays, textures, shaders, atlases
+	 */
 	public static void ShutDown() {
 		for (int id : Buffers) {
 			GL30.glDeleteBuffers(id);

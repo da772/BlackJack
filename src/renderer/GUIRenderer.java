@@ -12,6 +12,10 @@ public class GUIRenderer {
 
 	public static List<GUI> huds = new ArrayList<GUI>();
 	
+	/**
+	 * 
+	 * @param hud - GUI to add to renderer
+	 */
 	public static void Add(GUI hud) {
 		if (!huds.contains(hud)) {
 			huds.add(hud);
@@ -24,6 +28,10 @@ public class GUIRenderer {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param hud - GUI to add to renderer
+	 */
 	public static void Remove(GUI hud) {
 		if (huds.contains(hud)) {
 			huds.remove(hud);
@@ -36,7 +44,9 @@ public class GUIRenderer {
 		}
 	}
 	
-	
+	/**
+	 * Render Pipeline
+	 */
 	public static void Render() {
 		Renderer.SetDepth(false);
 		for (int i =0; i < huds.size(); i++) {
@@ -56,7 +66,6 @@ public class GUIRenderer {
 		huds.clear();	
 	}
 
-	
 	public static int GetWidth() {
 		return Application.app.GetWindow().GetWidth();
 	}

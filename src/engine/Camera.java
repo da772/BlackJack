@@ -18,17 +18,34 @@ public abstract class Camera {
 	}
 	
 	protected abstract void RecalculateViewMatrix();
+	/**
+	 * 
+	 * @param left - camera left
+	 * @param right - camera right
+	 * @param bottom - camera bottom
+	 * @param top - camera top
+	 */
 	public abstract void SetProjection(float left, float right, float bottom, float top);
 
+	/**
+	 * @return Matrix4f - ViewProjectionMatrix
+	 */
 	public Matrix4f GetViewProjectionMatrix() {
 		return ViewProjectionMatrix;
 	}
 
+	/**
+	 * @param position
+	 */
 	public void SetPosition(final Vector3f position) {
 		this.Position = position;
 		RecalculateViewMatrix();
 	}
 	
+	/**
+	 * 
+	 * @param rot
+	 */
 	public void SetRotation(final float rot) {
 		this.rotation = rot;
 		RecalculateViewMatrix();
@@ -43,7 +60,15 @@ public abstract class Camera {
 			ProjectionMatrix.mul(ViewMatrix, ViewProjectionMatrix);
 		}
 
+		
 		@Override
+		/**
+		 * 
+		 * @param left - FOV
+		 * @param right - Aspect Ratio
+		 * @param bottom - 
+		 * @param top - 
+		 */
 		public void SetProjection(float left, float right, float bottom, float top) {
 			ProjectionMatrix.perspective(45f, right, -1, 1, ProjectionMatrix);
 		}
@@ -54,6 +79,13 @@ public abstract class Camera {
 	
 	public static class OrthographicCamera extends Camera {
 		
+		/**
+		 * 
+		 * @param left - negative aspect ratio
+		 * @param right - aspect ratio
+		 * @param bottom
+		 * @param top
+		 */
 		public OrthographicCamera(float left, float right, float bottom, float top) {
 			super();
 			ProjectionMatrix.ortho(left, right, -1.f, 1.f, -1.f, 100000.f, ProjectionMatrix);
@@ -68,6 +100,13 @@ public abstract class Camera {
 		}
 		
 		@Override
+		/**
+		 * 
+		 * @param left - negative aspect ratio
+		 * @param right - aspect ratio
+		 * @param bottom
+		 * @param top
+		 */
 		public void SetProjection(float left, float right, float bottom, float top) {
 			ProjectionMatrix = new Matrix4f().ortho(left, right, bottom, top, -1.f, 100000.f, ProjectionMatrix);
 			RecalculateViewMatrix();

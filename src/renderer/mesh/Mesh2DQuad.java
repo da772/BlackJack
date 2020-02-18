@@ -15,6 +15,9 @@ import renderer.VertexArray.BufferLayout;
 
 public class Mesh2DQuad extends Mesh2D {
 	
+	/**
+	 * Cube vertices 
+	 */
 	float[] vertices = {
 			 -.5f,  -.5f,   .0f,  0.f, 0.f, //0
 			  .5f,  -.5f,   .0f,  1.f, 0.f, //1
@@ -28,6 +31,9 @@ public class Mesh2DQuad extends Mesh2D {
 			 
 	};
 	
+	/*
+	 * Cube indices
+	 */
 	int[] indices = {
 			// front
 			0, 1, 2,
@@ -64,6 +70,17 @@ public class Mesh2DQuad extends Mesh2D {
 	private Vector4f color = new Vector4f(1f);
 
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param shader
+	 * @param texture
+	 * @param color
+	 * @param TexCoords
+	 * @param UVScale
+	 * @param camera - active camera
+	 */
 	public Mesh2DQuad(String name, Transform transform, String[] shader, String texture,
 			Vector4f color,TextureCoords TexCoords, Vector2f UVScale, Camera camera) {
 		super(name, transform, shader, texture, camera);
@@ -75,7 +92,16 @@ public class Mesh2DQuad extends Mesh2D {
 		this.color = color;
 	}
 	
-	
+	/**
+	 * 
+	 * @param name  - unique identifier
+	 * @param transform
+	 * @param texture
+	 * @param color
+	 * @param TexCoords
+	 * @param UVScale
+	 * @param camera - active camera
+	 */
 	public Mesh2DQuad(String name, Transform transform, String texture, Vector4f color, TextureCoords TexCoords, Vector2f UVScale, Camera camera) {
 		super(name, transform, ShaderLib.Shader_2DQuad, texture, camera);
 		this.xCoordsFront = TexCoords.GetXCoords1();
@@ -86,6 +112,14 @@ public class Mesh2DQuad extends Mesh2D {
 		this.UVScale = UVScale;
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param texture
+	 * @param color
+	 * @param camera - active camera
+	 */
 	public Mesh2DQuad(String name, Transform transform, String texture, Vector4f color, Camera camera) {
 		super(name, transform, ShaderLib.Shader_2DQuad, texture, camera);
 		this.xCoordsFront = new Vector4f(0,0,1f,1f);
@@ -96,6 +130,15 @@ public class Mesh2DQuad extends Mesh2D {
 		UVScale = new Vector2f(1f);
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param shader
+	 * @param texture
+	 * @param color
+	 * @param camera - active camera
+	 */
 	public Mesh2DQuad(String name, Transform transform, String[] shader, 
 			String texture, Vector4f color, Camera camera) {
 		super(name, transform, shader, texture, camera);

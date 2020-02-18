@@ -6,6 +6,10 @@ import engine.Events.Event;
 
 public abstract class Collider2D extends Component {
 
+	/**
+	 * 
+	 * @param s - unique identifier
+	 */
 	public Collider2D(String s) {
 		super(s);
 	}
@@ -16,8 +20,16 @@ public abstract class Collider2D extends Component {
 	
 	public abstract CollisionObjectType GetCollisionObjectType();
 	
+	/**
+	 * 
+	 * @return Vector4f - rect of object
+	 */
 	public abstract Vector4f GetRect();
 	
+	/**
+	 * 
+	 * @return float - order to be renderered
+	 */
 	public abstract float GetZOrder();
 	
 	public abstract void SelectedOnEvent(Event e);

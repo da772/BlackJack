@@ -37,17 +37,41 @@ public class Mesh2DBackground extends Mesh2D {
 	private Vector2f UVScale;
 	private Vector4f color;
 	
-	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param shader
+	 * @param texture
+	 * @param UVScale
+	 * @param camera - active camera
+	 */
 	public Mesh2DBackground(String name, Transform transform, String[] shader, String texture, Vector2f UVScale, Camera camera) {
 		super(name, transform, shader, texture, camera);
 		this.UVScale = UVScale;
 	}
-	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param texture
+	 * @param UVScale
+	 * @param camera - active camera
+	 */
 	public Mesh2DBackground(String name, Transform transform, String texture, Vector2f UVScale, Camera camera) {
 		super(name, transform, ShaderLib.Shader_2DBackground, texture, camera);
 		this.UVScale = UVScale;
 	}
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform
+	 * @param texture
+	 * @param color
+	 * @param UVScale
+	 * @param camera - active camera
+	 */
 	public Mesh2DBackground(String name,Transform transform, String texture, Vector4f color, Vector2f UVScale, Camera camera) {
 		super(name, transform, ShaderLib.Shader_2DBackground, texture, camera);
 		this.color = color;

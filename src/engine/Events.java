@@ -2,6 +2,7 @@ package engine;
 
 public class Events {
 
+	// Event types
 	enum EventType {
 		None, WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		AppUpdate, AppTick, AppRender,
@@ -9,6 +10,7 @@ public class Events {
 		MouseButton, MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	}
 	
+	//Event category bits
 	enum EventCategory {
 		None(0x00), Application(0x01), Input(0x02), Keyboard(0x04), Mouse(0x08), Window(0x10);
 		private final int bit;
@@ -17,6 +19,12 @@ public class Events {
 		
 	}
 	
+	/**
+	 * 
+	 * Event class
+	 * 		- Used to capture and distribute events from the window
+	 *
+	 */
 	public static abstract class Event {
 		public boolean handled = false;
 		public abstract EventType GetEventType();
@@ -32,6 +40,7 @@ public class Events {
 		
 	}
 	
+	// Overrideable class to add functions to 
 	public static abstract class EventFunction<T extends Event> {
 		public EventFunction(T c) {
 			this.clss = c;
@@ -42,6 +51,7 @@ public class Events {
 		public abstract boolean run(T t);
 	}
 	
+	// Dispatch events
 	public static class EventDispatcher<T extends Event> { 
 		Event m_Event;
 		
@@ -65,6 +75,7 @@ public class Events {
 		
 	}
 	
+	// Mouse Moved Event
 	public static class MouseMovedEvent extends Event {
 		private float m_MouseX, m_MouseY;
 		public int Type = EventCategory.Input.getValue() | EventCategory.Keyboard.getValue();
@@ -112,7 +123,7 @@ public class Events {
 		
 	}
 	
-	
+	// Window Resized Event
 	public static class WindowResizedEvent extends Event {
 		private float m_Width, m_Height;
 		public int Type = EventCategory.Application.getValue() | EventCategory.Window.getValue();
@@ -156,6 +167,7 @@ public class Events {
 		
 	}
 	
+	// Mouse Scrolled Event
 	public static class MouseScrolledEvent extends Event {
 		private float m_ScrollX, m_ScrollY;
 		
@@ -200,6 +212,7 @@ public class Events {
 		
 	}
 	
+	//Window Closed Event
 	public static class WindowClosedEvent extends Event {
 		private float m_ScrollX, m_ScrollY;
 		
@@ -243,7 +256,7 @@ public class Events {
 		
 	}
 	
-
+	// Mouse Button Event
 	public static abstract class MouseButtonEvent extends Event {
 		protected int m_Keycode;
 		public final int Type = EventCategory.Mouse.getValue() | EventCategory.Input.getValue();
@@ -272,6 +285,7 @@ public class Events {
 		
 	}
 	
+	// Mouse Button Pressed Event
 	public static class MouseButtonPressedEvent extends MouseButtonEvent {
 
 		private int m_RepeatCount;
@@ -304,6 +318,7 @@ public class Events {
 	}
 	
 	
+	// Mouse Button Released Event
 	public static class MouseButtonReleasedEvent extends MouseButtonEvent {
 		
 		protected MouseButtonReleasedEvent(int keycode) {
@@ -327,7 +342,7 @@ public class Events {
 		
 	}
 	
-	
+	// Key event
 	public static abstract class KeyEvent extends Event {
 		protected int m_Keycode;
 		public final int Type = EventCategory.Keyboard.getValue() | EventCategory.Input.getValue();
@@ -358,6 +373,8 @@ public class Events {
 		
 	}
 	
+	
+	// Key pressed event
 	public static class KeyPressedEvent extends KeyEvent {
 
 		private int m_RepeatCount;
@@ -389,6 +406,7 @@ public class Events {
 		
 	}
 	
+	// Key released event
 	public static class KeyReleasedEvent extends KeyEvent {
 		
 		protected KeyReleasedEvent(int keycode) {
@@ -412,7 +430,8 @@ public class Events {
 		
 	}
 	
-public static class KeyTypedEvent extends KeyEvent {
+	// Key typed event 
+	public static class KeyTypedEvent extends KeyEvent {
 	
 		public final int Type = EventCategory.Keyboard.getValue() | EventCategory.Input.getValue();
 	

@@ -19,6 +19,21 @@ public class GUITextQuad extends GUI {
 	private boolean textCentered;
 	Vector2f TextOffset;
 	
+	/**
+	 * 
+	 * @param name - unique identifier
+	 * @param transform - quad transfom
+	 * @param texture - quad texture
+	 * @param quadColor - quad color
+	 * @param textOffset - text position offset
+	 * @param font - font file path
+	 * @param text - text to write
+	 * @param textColor - text color
+	 * @param textWidth - text width
+	 * @param textHeight - text height
+	 * @param center - center text?
+	 * @param autoSize - auto size width?
+	 */
 	public GUITextQuad (String name, Transform transform, String QuadTexture, Vector4f QuadColor, 
 			Vector2f TextOffset, String font, String textString, Vector4f TextColor, 
 			float TextWidth, float FontHeight, boolean textCentered, boolean autoSizeText) {
