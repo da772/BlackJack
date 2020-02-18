@@ -1,22 +1,9 @@
-package application;
 
+package application; 
 import java.util.Collections;
 import java.util.Stack;
 
 public class Deck {
-	
-	//create a number code for each card in the deck 
-	//0 -> 2 of diamonds
-	//1 -> 2 of clubs
-	//2 -> 2 of hearts
-	//3 -> 2 of spades
-	//4 -> 3 of diamonds
-	//etc...
-	//so every multiple of 4 is a new number in diamond, #%4 = 1 is clubs, #%4 = 2 is hearts, #%4 = 3 is spades
-	
-	//we can keep track of cards either by keeping them in an array, or jsut keeping track of the count of each
-	//card
-	
 	// need two stack which act as Decks and will store Card objects
 	private Stack<Card> deck;
 	private Stack<Card> usedCards;
@@ -38,19 +25,19 @@ public class Deck {
 	
 	// constructor
 	public Deck(int decksCount) {
-		this.deck = new Stack<Integer>();
-		this.usedCards = new Stack<Integer>();
+		this.deck = new Stack<Card>();
+		this.usedCards = new Stack<Card>();
 		
 		// Loop over to create the number of decks we want into one big ass deck
 		for(int i = 0; i < decksCount; i++) {
 		    // now this loop will set the count from 0-3 which will just represent suits
 			for(int j = 0; j < 4; j++) {
 			    // set suit for each set of 13 cards
-				String suit;
-				if (j == 0) suit = "Heart";
-				else if (j == 1) suit = "Spade";
-				else if (j == 2) suit = "Diamond";
-				else if (j == 3) suit = "Club";
+				String suit = "";
+				if (j == 0) suit = "Diamond";
+				else if (j == 1) suit = "Club";
+				else if (j == 2) suit = "Heart";
+				else if (j == 3) suit = "Spade";
 				// loop over 13 cards and create and add to the Deck
 				for (int k = 1; k <= 13; k++) {
 				    // make a new card and check if ace or not for initialization
@@ -64,56 +51,20 @@ public class Deck {
 		}
 	}
 	
-	
-	
-	
-	
-	public void printDeckFromBottom(int printType) {
-		//Print every card in the deck starting with the bottom card.
-		//printType == 0 -> print the integer value of each card
-		//printType == 1 -> print the card with suit in string
-		int deckCount = this.deck.size();
-		if(printType == 0) {
-			for(int i = 0; i < deckCount; i++) {
-				System.out.print(convertCardToValue(this.deck.get(i)) + " ");
-			}
-		}
-		else if(printType == 1) {
-			for(int i = 0; i < deckCount; i++) {
-				System.out.print(convertCardToString(this.deck.get(i)) + " ");
-			}
-		}
-		else {
-			System.out.println("Invalid print type specified. 0 is for the value, 1 is for the string.");
+	public void printDeck() {
+		//print deck contents from top
+		int cardsCount = this.deck.size();
+		for(int i = cardsCount-1; i >= 0; i--) {
+			if(i % 52 == 0) System.out.println();
+			System.out.print("[" + this.deck.get(i).getValue() + " " + this.deck.get(i).getSuit() + "] ");
 		}
 	}
-	
-	public void printDeckFromTop(int printType) {
-		//Print every card in the deck starting with the top card.
-		//printType == 0 -> print the integer value of each card
-		//printType == 1 -> print the card with suit in string
-		int deckCount = this.deck.size();
-		if(printType == 0) {
-			for(int i = deckCount - 1; i >= 0; i--) {
-				System.out.print(convertCardToValue(this.deck.get(i)) + " ");
-			}
-		}
-		else if(printType == 1) {
-			for(int i = deckCount - 1; i >= 0; i--) {
-				System.out.print(convertCardToString(this.deck.get(i)) + " ");
-			}
-		}
-		else {
-			System.out.println("Invalid print type specified. 0 is for the value, 1 is for the string.");
-		}
-	}
-	
-	
 	
 	public void printUsedCards() {
-		int usedDeckCount = this.usedCards.size();
-		for(int i = 0; i < usedDeckCount; i++) {
-			System.out.print(convertCardToString(this.usedCards.get(i)) + " ");
+		//print used cards
+		int count = this.usedCards.size();
+		for(int i = count-1; i >= 0; i--) {
+			System.out.print("[" + this.usedCards.get(i).getValue() + " " + this.usedCards.get(i).getSuit() + "] ");
 		}
 	}
 	
@@ -122,10 +73,10 @@ public class Deck {
 		Collections.shuffle(deck);
 	}
 	
-	public void addUsedCards() {
+	public void addUsedCardsBack() {
 		//Add used cards back into the deck
-		int usedDeckCount = this.usedCards.size();
-		for(int i = 0; i < usedDeckCount; i++) {
+		int usedCardsCount = this.usedCards.size();
+		for(int i = 0; i < usedCardsCount; i++) {
 			this.deck.add(this.usedCards.pop());
 		}
 	}
@@ -133,7 +84,9 @@ public class Deck {
 	
 	//Draw the top card. Return top Card from Deck.
 	public Card drawCard() {
-		return this.deck.pop();
+		Card drawnCard = this.deck.pop();
+		usedCards.add(drawnCard);
+		return drawnCard;
 	}
 	
 	public int getCardCount() {
@@ -145,43 +98,32 @@ public class Deck {
 	}
 	
 	public static void main(String[] args) {
-		//Show the basic functionality of the deck
-	
-		Deck gameDeck = new Deck(1);
-		System.out.println("Printing 1 deck: ");
-		gameDeck.printDeckFromBottom(0);
 		
-		System.out.println("\n\nPrinting 1 deck in string: ");
-		gameDeck = new Deck(1);
-		gameDeck.printDeckFromBottom(1);
+		Deck cur = new Deck(1);
+		System.out.println("Printing 1 deck:");
+		cur.printDeck();
 		
-		System.out.println("\n\nPrinting 2 shuffled decks: ");
-		gameDeck = new Deck(2);
-		gameDeck.shuffle();
-		gameDeck.printDeckFromBottom(0);
+		cur = new Deck(2);
+		System.out.println("\n\nPrinting 2 decks:");
+		cur.printDeck();
+		
+		cur.shuffle();
+		Card draw1 = cur.drawCard();
+		Card draw2 = cur.drawCard();
+		Card draw3 = cur.drawCard();
+		
+		System.out.println("\n\nShuffling and drawing 3 cards and printing:");
+		System.out.println("[" + draw1.getCard() + "] [" + draw2.getCard() + "] [" + draw3.getCard() + "]");
+		System.out.println("Printing used cards (should match last line):");
+		cur.printUsedCards();
+		System.out.println("\nDeck now has " + cur.getCardCount() + " cards.");
+		System.out.print("Readding " + cur.getUsedCardCount());
+		cur.addUsedCardsBack();
+		System.out.print(" used cards. Deck count is now " + cur.getCardCount());
 
-		System.out.println("\n\nDraw 2 cards from a shuffled deck: ");
-		gameDeck = new Deck(1);
-		gameDeck.shuffle();
-		System.out.print(gameDeck.convertCardToString(gameDeck.drawCard()) + " " + gameDeck.convertCardToString(gameDeck.drawCard()));
-		System.out.println("\nPrint used pile (cards just drawn): ");
-		gameDeck.printUsedCards();
-		System.out.println("\nPrint current deck: ");
-		gameDeck.printDeckFromBottom(0);
-		System.out.println("\nNow adding used cards to deck..");
-		gameDeck.addUsedCards();
-		
-		System.out.println("\nPrint readded deck in values and in string: ");
-		gameDeck.printDeckFromBottom(0);
-		System.out.println();
-		gameDeck.printDeckFromBottom(1);
-		System.out.println("\nPrint deck from the top card: ");
-		gameDeck.printDeckFromTop(1);
-		
-		
-		
-		
+	
 		
 	}
+
 	
 }
