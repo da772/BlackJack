@@ -42,8 +42,8 @@ public class Player {
 		
 		
 		System.out.println("Making a dealer");
-		Player dealer = new Player(0, DEFAULT_START_BALANCE);
-		System.out.println("New player made. Current player type is: " + dealer.getPlayerType() + " Balance is: " + dealer.getBalance());
+		Player dealer = new Player(DEFAULT_START_BALANCE);
+		//System.out.println("New player made. Current player type is: " + dealer.getPlayerType() + " Balance is: " + dealer.getBalance());
 		dealer.addToBalance(50000);
 		System.out.println("Adding 50000 to balance. Balance is: " + dealer.getBalance());
 		dealer.subtractFromBalance(50000);
@@ -52,8 +52,8 @@ public class Player {
 		
 		
 		System.out.println("\n\nMaking a player");
-		Player player1 = new Player(1, DEFAULT_START_BALANCE);
-		System.out.println("New player made. Current player type is: " + player1.getPlayerType() + " Balance is: " + player1.getBalance());
+		Player player1 = new Player(DEFAULT_START_BALANCE);
+		//System.out.println("New player made. Current player type is: " + player1.getPlayerType() + " Balance is: " + player1.getBalance());
 		player1.clearBalance();
 		System.out.println("Clearing balance. Balance is: " + player1.getBalance());
 

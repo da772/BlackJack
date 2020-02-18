@@ -135,7 +135,9 @@ public class GUITextQuad extends GUI {
 
 	@Override
 	public void CleanUp() {
+		if (text != null)
 		text.CleanUp();
+		if (quad != null)
 		quad.CleanUp();
 		text = null;
 		quad = null;

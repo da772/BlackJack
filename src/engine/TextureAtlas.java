@@ -51,6 +51,10 @@ public class TextureAtlas {
 	private void CleanUp() {
 		
 	}
+	
+	public static int GetCount() {
+		return atlas.size();
+	}
 
 	public static void Remove(String file) {
 		atlas.remove(file);

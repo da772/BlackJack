@@ -55,8 +55,8 @@ public class Debugger {
 				"\n                   Height: " +Application.app.window.GetHeight() +
 				
 				"\n\nRender Info  " +" Texture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() +
-				"\n                    Font Pool: " + FontType.GetPoolSize() +" | Buffers: " + Renderer.GetBufferCount() + 
-				"\n                    Vertex Arrays: " + Renderer.GetVertexArrayCount()+
+				"\n                    Font Pool: " + FontType.GetPoolSize() +" | Atlas Pool: " + TextureAtlas.GetCount() +
+				"\n                    Vertex Arrays: " + Renderer.GetVertexArrayCount() + " | Buffers: " + Renderer.GetBufferCount() +  
 				
 				
 				"\n\nMemory Info  Usage: " + Math.round( (Runtime.getRuntime().totalMemory()- Runtime.getRuntime().freeMemory())/1e6 ) +"mb"  +
@@ -71,6 +71,7 @@ public class Debugger {
 				"\n                    Actor Count: " + (SceneManager.GetCurrentScene() != null ? SceneManager.GetCurrentScene().GetActorCount() : "0")
 				
 					);
+		
 		}
 		
 		if (keyPressed != -1 && !Input.IsKeyPressed(keyPressed)) {

@@ -39,7 +39,7 @@ public class TestingApp extends Application {
 		// Initalize Scene Manager
 		new MainMenuScene("mainMenu",cam);
 		new TestScene("testScene",cam);
-		SceneManager.SetCurrentScene("testScene");
+		SceneManager.SetCurrentScene("mainMenu");
 	}
 		
 		

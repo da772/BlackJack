@@ -4,8 +4,8 @@ import engine.Events.Event;
 import renderer.Renderer;
 import renderer.Transform;
 import renderer.GUI.GUITextQuad;
-import renderer.GUI.GUITextQuad_Draggable;
 import renderer.mesh.Mesh2DBackground;
+import renderer.mesh.Mesh2DQuad;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -30,10 +30,14 @@ public class MainMenuScene extends Scene {
 
 	@Override
 	public void OnUpdate(float deltaTime) {
-		
-		//((CardMesh)GetActor("card").GetComponent("Mesh")).SetRotation(((CardMesh)GetActor("card").GetComponent("Mesh")).GetRotation().x,
-		//		((CardMesh)GetActor("card").GetComponent("Mesh")).GetRotation().y-rotationSpeed*deltaTime, ((CardMesh)GetActor("card").GetComponent("Mesh")).GetRotation().z+rotationSpeed*deltaTime );
-		
+		if (GetActor("card") != null) {
+		((CardMesh)GetActor("card").GetComponent("Mesh")).SetRotation(((CardMesh)GetActor("card").GetComponent("Mesh")).GetRotation().x,
+				((CardMesh)GetActor("card").GetComponent("Mesh")).GetRotation().y-rotationSpeed*deltaTime, ((CardMesh)GetActor("card").GetComponent("Mesh")).GetRotation().z+rotationSpeed*deltaTime );
+		}
+		if (GetActor("card4") != null) {
+			((CardMesh)GetActor("card4").GetComponent("Mesh")).SetRotation(((CardMesh)GetActor("card4").GetComponent("Mesh")).GetRotation().x,
+					((CardMesh)GetActor("card4").GetComponent("Mesh")).GetRotation().y+rotationSpeed*deltaTime, ((CardMesh)GetActor("card4").GetComponent("Mesh")).GetRotation().z-rotationSpeed*deltaTime );
+		}
 	}
 
 	@Override
@@ -42,12 +46,50 @@ public class MainMenuScene extends Scene {
 		
 		Actor.Create("card", this).AddComponent(new CardMesh("Mesh", 
 				new Transform( // Card Transform
-						new Vector3f(0, 0, 0), // Position
-						new Vector3f(0f, 0, 0f), // Rotation
+						new Vector3f(0, -.35f, 1f), // Position
+						new Vector3f(0f, 0, 0), // Rotation
 						new Vector3f(.75f, 1f, 1f) ), // Scale
 				"AS", // Card front Suit
 				"card_back_red", // Card back Suit
 				this.cam.GetCamera()));// Camera))
+		
+		Actor.Create("card2", this).AddComponent(new CardMesh("Mesh", 
+				new Transform( // Card Transform
+						new Vector3f(0, .75f, 0), // Position
+						new Vector3f(0f, 0, 0), // Rotation
+						new Vector3f(.75f, 1f, 1f) ), // Scale
+				"4H", // Card front Suit
+				"card_back_red", // Card back Suit
+				this.cam.GetCamera()));// Camera))
+		
+		
+		Actor.Create("card3", this).AddComponent(new CardMesh("Mesh", 
+				new Transform( // Card Transform
+						new Vector3f(-.75f, -.35f, 0), // Position
+						new Vector3f(0f, 0, 0), // Rotation
+						new Vector3f(.75f, 1f, 1f) ), // Scale
+				"JH", // Card front Suit
+				"card_back_red", // Card back Suit
+				this.cam.GetCamera()));// Camera))
+		
+		Actor.Create("card4", this).AddComponent(new CardMesh("Mesh", 
+				new Transform( // Card Transform
+						new Vector3f(-.75f, .75f, 1f), // Position
+						new Vector3f(0f, 0, 0), // Rotation
+						new Vector3f(.75f, 1f, 1f) ), // Scale
+				"8C", // Card front Suit
+				"card_back_red", // Card back Suit
+				this.cam.GetCamera()));// Camera))
+		
+		Actor.Create("example", this).AddComponent(new Mesh2DQuad("quad", //Name
+				new Transform( // Card Transform
+				new Vector3f(2, 0, 0), // Position
+				new Vector3f(0f, 0, 0f), // Rotation
+				new Vector3f(3f, 3f, 1f) ),// Scale)
+				"Atlas/cardAtlas.png",// Texture
+				new Vector4f(1f), // Color
+				this.cam.GetCamera())
+				);
 		
 		Actor.Create("background", this).AddComponent(new Mesh2DBackground("background",
 				new Transform(
@@ -62,7 +104,7 @@ public class MainMenuScene extends Scene {
 
 	 
 	 
-		Actor.Create("blackJackText", this).AddComponent(new GUITextQuad_Draggable("textQuad",new Transform(
+		Actor.Create("blackJackText", this).AddComponent(new GUITextQuad("textQuad",new Transform(
 				new Vector3f(0, .775f, 0f), // Position
 				new Vector3f(0f), // Rotation (buggy keep at 0)
 				new Vector3f(.225f, .225f, 1f) // Quad Scale
@@ -71,13 +113,15 @@ public class MainMenuScene extends Scene {
 				new Vector4f(.125f, .125f,.25f,0f), // Quad Color
 				new Vector2f(.825f, -.95f), // Text Position offset
 				"Fonts/poker1", // Text Font
-				"Black Jack Main Menu", // Text
+				"Black Jack", // Text
 				new Vector4f(0.f,0f,0f,1f), // Text Color
 				.45f, // Textbox Width
 				2f,// Font size
 				true, // Center?
 				false // Auto width based on quad?
 				));
+		
+		
 		
 	}
 
@@ -90,18 +134,16 @@ public class MainMenuScene extends Scene {
 	public void OnEvent(Event e) {
 		if (e instanceof Events.KeyPressedEvent) {
 			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_T) {
-				Actor a = Actor.Create("card2", this);
-				if (a == null) {
-					System.out.println("NULL");
-					Actor.Remove("card2", this);
-				} else {
-					System.out.println("Adding?");
-					a.AddComponent(new CardMesh("Mesh", 
+				Actor.Create("cardRunTime", this);
+				if (GetActor("cardRunTime") != null && GetActor("cardRunTime").GetComponent("Mesh") != null) {
+					Actor.Remove("cardRunTime", this);
+				} else if (GetActor("cardRunTime") != null) {
+					GetActor("cardRunTime").AddComponent(new CardMesh("Mesh", 
 							new Transform( // Card Transform
-									new Vector3f(1f, 0, 0), // Position
-									new Vector3f(0f, 0, 0f), // Rotation
+									new Vector3f(-.75f, .75f, 0f), // Position
+									new Vector3f(0f, 0, 0), // Rotation
 									new Vector3f(.75f, 1f, 1f) ), // Scale
-							"AS", // Card front Suit
+							"AH", // Card front Suit
 							"card_back_red", // Card back Suit
 							this.cam.GetCamera()));
 				}

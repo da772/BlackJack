@@ -49,7 +49,7 @@ public class Table {
 			//win condition? dealer runs out of money
 		}
 		else {
-			this.players.get(id).setPlayerType(2); 
+			//this.players.get(id).setPlayerType(2); 
 		}
 	}
 	
@@ -60,13 +60,15 @@ public class Table {
 	}
 	
 	public Player getRealPlayer() {
-		return this.players.get(this.playerID);
+		return null;
+		//return this.players.get(this.playerID);
 	}
 	
 	
 	
 	public int getRealPlayerID() {
-		return this.playerID;
+		return 0;
+		//return this.playerID;
 	}
 	
 	public static void main(String args[]) {
