@@ -2,22 +2,20 @@
  * This class will keep track of a hand of cards that will be used by the Player
  * to keep track of the cards that they will have while they are playing the round
  */
- 
 package application;
 import java.util.ArrayList;
 import java.util.List;
  
  public class Hand {
-    
-    // store a list of cards
+	//Store cards into a hand. Adding a card updates a list of cards in the hand, and their corresponding values. 
+	//Get a player's total with getTotal(). getTotal() may need more test cases.
+	 
     private ArrayList<Card> hand;
     private ArrayList<ArrayList<Integer>> handValues;
     
-    // constructor just initializes everything!
     public Hand() {
         this.hand = new ArrayList<Card>();
         this.handValues = new ArrayList<ArrayList<Integer>>();
-
     }
     
     public void addCard(Card card) {
@@ -45,13 +43,12 @@ import java.util.List;
     	System.out.print(this.handValues);
     }
     
-    
-    public int getTotal() {
+    public int getTotal() { //calculate total of current hand
     	ArrayList<Integer> totals = new ArrayList<Integer>(); //all possible totals
     	totals.add(0); //start with 0
     	for(int i = 0; i < this.handValues.size(); i++) { //for every card in a hand
     		ArrayList<Integer> curValue = this.handValues.get(i); //get the value
-    		if(curValue.size() == 1) { //no ace
+    		if(curValue.size() == 1) { //not an ace
     			for(int j = 0; j < totals.size(); j++) { 
     				//add current card value to every total
     				totals.set(j, totals.get(j) + curValue.get(0)); 
@@ -72,24 +69,25 @@ import java.util.List;
     	int maximum = Integer.MIN_VALUE;
     	for(int i = 0; i < totals.size(); i++) {
     		int curTotal = totals.get(i);
-    		if(curTotal == 21) {
+    		if(curTotal == 21) {//if 21 is a total, then end here
     			return 21;
     		}
-    		else {
-    			if(curTotal < minimum) {
+    		else {//total is not 21
+    			if(curTotal < 21 && curTotal < minimum) {//update minimum under 21
     				minimum = curTotal;
     			}
-    			if(curTotal > maximum) {
+    			if(curTotal < 21 && curTotal > maximum) {//update maximum under 21
     				maximum = curTotal;
+    			}
+    			if(curTotal > 21) { //get the largest total over 21 that is not Integer.MAX_VALUE or Integer.MIN_VALUE
+    				return Math.max(Math.min(curTotal, maximum), Math.min(curTotal, minimum));
     			}
     		}
     	}
-    	
-    	if(maximum < 21) {
-    		return maximum;
+    	if(maximum < 21 || minimum < 21) {
+    		return Math.max(maximum, minimum); //return largest value under 21
     	}
-    	return minimum;
-    	
+    	return 0;//never reached
     }
     
     public static void main(String[] args) {
@@ -124,34 +122,81 @@ import java.util.List;
     	System.out.println("\nGet current total: " + curHand.getTotal());
     	
     	curHand.clearHand();
-    	
     	System.out.println("\nHand cleared, and now dealing 3. Total is: ");
     	curHand.addCard(new Card(3, "Ace"));
     	System.out.println(curHand.getTotal());
-
     	System.out.println("Dealing 4. Total is: ");
     	curHand.addCard(new Card(4, "Ace"));
     	System.out.println(curHand.getTotal());
-    	
-
     	System.out.println("Dealing Ace. Total is: ");
     	curHand.addCard(new Card(1, "Ace"));
     	System.out.println(curHand.getTotal());
-    	
-
     	System.out.println("Dealing 4. Total is: ");
     	curHand.addCard(new Card(4, "Ace"));
     	System.out.println(curHand.getTotal());
-    	System.out.println("Check current hand (3,4,Ace,3,4): ");
+    	System.out.println("Check current hand (3,4,Ace,4): ");
     	curHand.printHand();
-    	curHand.addCard(new Card(1, "Ace"));
-    	System.out.println("\nDealing Ace. Total is: " + curHand.getTotal());
-
     	curHand.addCard(new Card(8, "Ace"));
-    	System.out.println("Dealing 8. Total is: " + curHand.getTotal());
-
+    	System.out.println("\nDealing 8. Total is: " + curHand.getTotal());
+    	curHand.addCard(new Card(1, "Ace"));
+    	System.out.println("Dealing Ace. Total is: " + curHand.getTotal());
     	System.out.println("Final hand:");
     	curHand.printHand();
+    	
+    	curHand.clearHand();
+    	System.out.println("\n\n\nHand cleared, and now dealing 7. Total is: ");
+    	curHand.addCard(new Card(7, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Dealing 11 (Jack). Total is: ");
+    	curHand.addCard(new Card(11, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Dealing Ace. Total is: ");
+    	curHand.addCard(new Card(1, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Dealing 4. Total is: ");
+    	curHand.addCard(new Card(4, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Check current hand (7, J, A, 4): ");
+    	curHand.printHand();
+    	
+    	curHand.clearHand();
+    	System.out.println("\n\n\nHand cleared, and now dealing Q. Total is: ");
+    	curHand.addCard(new Card(12, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Dealing J. Total is: ");
+    	curHand.addCard(new Card(11, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Dealing 2. Total is: ");
+    	curHand.addCard(new Card(2, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Check current hand (Q, J, 2): ");
+    	curHand.printHand();
+    	
+    	curHand.clearHand();
+    	System.out.println("\n\n\nHand cleared, and now dealing 8. Total is: ");
+    	curHand.addCard(new Card(8, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Dealing Ace. Total is: ");
+    	curHand.addCard(new Card(1, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Dealing Ace. Total is: ");
+    	curHand.addCard(new Card(1, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Dealing 4. Total is: ");
+    	curHand.addCard(new Card(4, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Dealing Ace. Total is: ");
+    	curHand.addCard(new Card(1, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Dealing 5. Total is: ");
+    	curHand.addCard(new Card(5, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Dealing Ace. Total is: ");
+    	curHand.addCard(new Card(1, "Ace"));
+    	System.out.println(curHand.getTotal());
+    	System.out.println("Check current hand (8, Ace, Ace, 4, Ace, 5, Ace): ");
+    	curHand.printHand();
+    	
     	
     }
     
