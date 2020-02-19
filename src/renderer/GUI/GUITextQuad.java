@@ -10,14 +10,14 @@ import renderer.Transform;
 
 public class GUITextQuad extends GUI {
 	
-	private GUIText text;
-	private GUIQuad quad;
-	private boolean autoSize;
-	private String name, textString, font, QuadTexture;
-	private Vector4f TextColor,  QuadColor;
-	private float TextWidth, FontHeight;
-	private boolean textCentered;
-	Vector2f TextOffset;
+	protected GUIText text;
+	protected GUIQuad quad;
+	protected boolean autoSize;
+	protected String name, textString, font, QuadTexture;
+	protected Vector4f TextColor,  QuadColor;
+	protected float TextWidth, FontHeight;
+	protected boolean textCentered;
+	protected Vector2f TextOffset;
 	
 	/**
 	 * 
@@ -128,6 +128,7 @@ public class GUITextQuad extends GUI {
 		this.quad.SetColor(rgba);
 	}
 	
+	
 	public void SetQuadTexture(String texturePath) {
 		quad.SetTexture(texturePath);
 	}
@@ -149,7 +150,7 @@ public class GUITextQuad extends GUI {
 	}
 
 	@Override
-	public void CleanUp() {
+	public void OnCleanUp() {
 		if (text != null)
 		text.CleanUp();
 		if (quad != null)

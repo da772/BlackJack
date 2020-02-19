@@ -37,7 +37,7 @@ public class SceneManager {
 	
 	
 	public static void OnUpdate(float deltaTime) {
-		if (activeScene != null) activeScene.OnUpdate(deltaTime);
+		if (activeScene != null) activeScene.Update(deltaTime);
 	}
 	
 	/**

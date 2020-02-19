@@ -39,6 +39,7 @@ public class Application {
 	protected long lastTime = 0;
 	protected int fps = 0, frames = 0;
 	protected int fpsCap = 255;
+	protected static long threadId = -1;
 	protected boolean vsync = false;
 	
 		
@@ -73,6 +74,7 @@ public class Application {
 	**/
 	
 	public void Init() {
+		threadId = Thread.currentThread().getId();
 		window = new Window(title, width, height);
 		if (window != null) {
 			window.Init();
@@ -293,6 +295,8 @@ public class Application {
 	 **/
 	protected void OnShutdown() {};
 	
-	
+	public static boolean ThreadSafe() {
+		return threadId == Thread.currentThread().getId();
+	}
 
 }

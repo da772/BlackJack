@@ -15,13 +15,15 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
+import engine.Application;
+
 
 public class Texture {
 	
 	int width;
 	int height;
 	ByteBuffer data;
-	private int rendererId;
+	private int rendererId = -1;
 	int referenceCount = 0;
 	String fileName;
 	boolean generateMipMap = false;
@@ -209,7 +211,8 @@ public class Texture {
 	}
 	
 	protected void CleanUp() {
-		GL30.glDeleteTextures(rendererId);
+		if (Application.ThreadSafe())
+			GL30.glDeleteTextures(rendererId);
 	}
 	
 	public String GetFileName() {

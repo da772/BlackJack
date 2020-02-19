@@ -12,6 +12,16 @@ import renderer.VertexArray;
 import renderer.Buffer.IndexBuffer;
 import renderer.Buffer.VertexBuffer;
 
+
+
+/**
+ * 
+ * @param name - unique identifier
+ * @param transform
+ * @param texture
+ * @param color
+ * @param UVScale
+ */
 public class GUIQuad extends GUI {
 	protected static final float[] vertices = {
 			-1f,  -1f,   0,  0f, 0f,
@@ -129,7 +139,7 @@ public class GUIQuad extends GUI {
 		return indices.length;
 	}
 	@Override
-	public void CleanUp() {
+	public void OnCleanUp() {
 		Texture.Remove(texture);
 		Shader.Remove(shader);
 	}
@@ -155,11 +165,6 @@ public class GUIQuad extends GUI {
 		// TODO Auto-generated method stub
 		
 	}
-	
-
-	
-	
-	
 	
 	
 }

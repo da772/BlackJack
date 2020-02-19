@@ -4,6 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import engine.Application;
 import engine.Camera;
 import engine.Collider2D;
 import engine.Events.Event;
@@ -88,9 +89,11 @@ public abstract class  Mesh2D extends Collider2D {
 	
 	
 	public void CleanUp() {
-		Shader.Remove(shader);
-		Texture.Remove(texture);
-		OnCleanUp();
+		if (Application.ThreadSafe()) {
+			Shader.Remove(shader);
+			Texture.Remove(texture);
+			OnCleanUp();
+		}
 	}
 	
 	protected abstract void OnCleanUp();

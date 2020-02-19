@@ -5,6 +5,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import engine.Application;
 import engine.Collider2D;
 import engine.Collision2D;
 import engine.Events.Event;
@@ -314,7 +315,13 @@ public abstract class GUI extends Collider2D {
 		return this.EnableCollision;
 	}
 	
-	public abstract void CleanUp ();
+	public void CleanUp () {
+		if (Application.ThreadSafe()) {
+			OnCleanUp();
+		}
+	};
+	
+	public abstract void OnCleanUp();
 	
 	public int VertexCount() {
 		return 0;

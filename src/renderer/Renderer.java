@@ -8,7 +8,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import engine.TextureAtlas;
-import renderer.mesh.Mesh2D;
 
 
 public class Renderer {
@@ -19,6 +18,7 @@ public class Renderer {
 	private static List<Texture> Textures = new ArrayList<Texture>();
 	private static List<TextureAtlas> TextureAtlas = new ArrayList<TextureAtlas>();
 	private static Vector4f clearColor = new Vector4f(1f,0f,1f,1f);
+
 	
 	public static void Init() {
 		GL30.glEnable(GL11.GL_DEPTH_TEST);

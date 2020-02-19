@@ -248,7 +248,7 @@ public class GUIText extends GUI {
 	}
 
 	@Override
-	public void CleanUp() {
+	public void OnCleanUp() {
 		varray.CleanUp();
 		vbuffer.CleanUp();
 		Texture.Remove(texture);
