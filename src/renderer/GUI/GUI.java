@@ -32,7 +32,7 @@ public abstract class GUI extends Collider2D {
 	protected Vector3f position;
 	
 	
-	private Vector2f dragPos = new Vector2f(0f);
+	protected Vector2f dragPos = new Vector2f(0f);
 	
 	protected Shader shader;
 	protected boolean added = false;

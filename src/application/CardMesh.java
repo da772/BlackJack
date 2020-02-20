@@ -9,7 +9,14 @@ import renderer.TextureCoords;
 import renderer.Transform;
 import renderer.mesh.Mesh2DQuad;
 
-
+/**
+ * 
+ * @param name - unique identifier for component
+ * @param transform - location in world space
+ * @param cardFront - card front image ex: "AS" = ace of spaces, "4H" = 4 of hearts 
+ * @param cardBack - card front image ex: "AS" = ace of spaces, "4H" = 4 of hearts, "card_back_red" = red card back
+ * @param cam - camera to render to
+ */
 public class CardMesh extends Mesh2DQuad {
 
 	
@@ -72,6 +79,13 @@ public class CardMesh extends Mesh2DQuad {
 		
 		SetTextureCoords(textureCoord);	
 	}
+	
+	@Override
+	protected void OnCleanUp() {
+		super.OnCleanUp();
+		TextureAtlas.Remove(textureAtlas);
+	}
+
 	
 	
 }

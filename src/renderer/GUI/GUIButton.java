@@ -29,7 +29,7 @@ import util.MathLib;
  * @param center - center text?
  * @param autoSize - auto size width?
  */
-public abstract class GUIButton extends GUITextQuad {
+public abstract class GUIButton extends GUIText {
 
 	boolean leftClicked = false;
 	private String textureString2;
@@ -60,21 +60,7 @@ public abstract class GUIButton extends GUITextQuad {
 	
 	@Override
 	public void _Init() {
-		text = new GUIText(name+"1",
-				textString, // Text to display
-				FontHeight, // Font height
-				font, // Font path without png or fnt
-				 // Create transform
-				new Transform(
-				new Vector3f(transform.GetPosition().x+TextOffset.x-TextWidth/2f,
-						transform.GetPosition().y+TextOffset.y,
-						transform.GetPosition().z), // Position (x, y,z)
-				transform.GetRotation(),  // Rotation (x, y ,z)
-				new Vector3f(1f)),  // Scale (x, y, z)
-				TextColor, // Color (r, g, b)
-				TextWidth, // Text Length 0-1 (Percentage of screen)
-				textCentered // Center Text   
-				);
+		SetupText();
 		
 		quad = new GUIQuad (name+"2",
 				transform,
@@ -116,7 +102,7 @@ public abstract class GUIButton extends GUITextQuad {
 		};
 		quad.SetTexture(textureString2);
  		quad.Init();
-		text.Init();
+ 		SetTransform(this.transform);
 	}
 	
 	

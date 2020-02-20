@@ -262,6 +262,42 @@ public class Window {
 		
 	}
 	
+	public int[] GetFrameBuffers() {
+		int coords[] = new int[2];
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			IntBuffer w = stack.mallocInt(1);
+			IntBuffer h = stack.mallocInt(1);	
+			glfwGetFramebufferSize(window, w, h);
+			coords[0] = w.get();
+			coords[1] = h.get();
+			w.clear();
+			h.clear();	
+		}
+		return coords;
+	}
+	
+	/**
+	 * 
+	 * @param xPos - buffer to return x position
+	 * @param yPos - buffer to return y position
+	 */
+	public int[] GetWindowPosition() {
+		int coords[] = new int[2];
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			IntBuffer xpos = stack.mallocInt(1);
+			IntBuffer ypos = stack.mallocInt(1);	
+			glfwGetWindowPos(window, xpos, ypos);
+			coords[0] = xpos.get();
+			coords[1] = ypos.get();
+			xpos.clear();
+			ypos.clear();	
+		}
+		return coords;
+		
+	}
+	
 	public String GetGLInfo() {
 		return glGetString(GL_VENDOR) + " " + glGetString(GL_VERSION) + ", " + glGetString(GL_RENDERER);
 	}

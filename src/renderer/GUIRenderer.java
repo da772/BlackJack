@@ -11,7 +11,7 @@ import renderer.GUI.GUI;
 public class GUIRenderer {
 
 	public static List<GUI> huds = new ArrayList<GUI>();
-	
+
 	/**
 	 * 
 	 * @param hud - GUI to add to renderer

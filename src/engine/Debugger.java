@@ -11,27 +11,26 @@ import renderer.Renderer;
 import renderer.Shader;
 import renderer.Texture;
 import renderer.Transform;
-import renderer.GUI.GUITextQuad_Draggable;
+import renderer.GUI.GUIText_Draggable;
 import renderer.text.FontType;
 
 public class Debugger {
 
-	private static GUITextQuad_Draggable debugMenu;
+	private static GUIText_Draggable debugMenu;
 	
 	private static boolean DisplayMenu = true;
 	public static final int MenuKeyCode = KeyCodes.KEY_GRAVE_ACCENT; // ~
 	
-	private static final float xPos = .775f, yPos = .6f;
+	private static float xPos = .775f, yPos = .6f;
 	
 	private static int keyPressed = -1;
 	private static int mousePressed = -1;
-	
+
 	private static Vector4f quadHoverColor = new Vector4f(.25f,.25f,.25f, .8f);
 	private static Vector4f quadColor = new Vector4f(0.1f,0.1f,0.1f,.8f);
 	
 	// Initialize by creating Menus
 	public static void Init() {
-		CreateMenu();
 		ShowMenu(DisplayMenu);
 	}
 	
@@ -39,6 +38,7 @@ public class Debugger {
 	public static void ShowMenu(boolean b) {
 		DisplayMenu = b;
 		if (b) {
+			CreateMenu();
 			debugMenu.Add();
 		}else {
 			debugMenu.Remove();
@@ -125,13 +125,13 @@ public class Debugger {
 	// Create menu
 	private static void CreateMenu() {
 		// Create draggable GUI Text Quad
-		debugMenu = new GUITextQuad_Draggable("DraggableQuad",new Transform( 
+		debugMenu = new GUIText_Draggable("DraggableQuad",new Transform( 
 				new Vector3f(xPos,yPos, 10000.f), // Position x,y, Z-Order higher is on top
 				new Vector3f(0f, 0f,0f),  // Rotation
 				new Vector3f(.225f,.4f,1f)), // Scale x,y,z
 				"Images/blankTexture.png",  // Quad Texture path
 				quadColor, // Quad Color r,g,b,a
-				new Vector2f(.9f, -.65f), // Font Offset (used to center text if needed) 
+				new Vector2f(0f), // Font Offset (used to center text if needed) 
 				"Fonts/verdana",  // Font path
 				"", // Font String
 				new Vector4f(.95f,.95f,.95f,1f), // Font color r,g,b,a
@@ -151,15 +151,18 @@ public class Debugger {
 			}
 			
 			@Override
-			protected void StartDragging() {
-				isDragging = true;
-				SetQuadColor(quadHoverColor);
-				BeginDrag(Input.GetMouseX(), Input.GetMouseY());
+			protected void OnDrag() {
+				xPos = nXPos;
+				yPos = nYPos;
 			}
 			
 			@Override
-			public void StopDragging() {
-				isDragging = false;
+			protected void OnDragStart() {
+				SetQuadColor(quadHoverColor);
+			}
+			
+			@Override
+			public void OnDragEnd() {
 				SetQuadColor(quadColor);
 			}
 			

@@ -4,27 +4,27 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import renderer.GUI.GUIText;
+import renderer.GUI.GUITextBase;
 
 public class TextMeshCreator {
 
 	protected static final double LINE_HEIGHT = 0.03f;
 	protected static final int SPACE_ASCII = 32;
 	protected static final int NEWLINE_ASCII = 10;
-
+	
 	private MetaFile metaData;
 
 	protected TextMeshCreator(File metaFile) {
 		metaData = new MetaFile(metaFile);
 	}
 
-	protected TextMeshData createTextMesh(GUIText text) {
+	protected TextMeshData createTextMesh(GUITextBase text) {
 		List<Line> lines = createStructure(text);
 		TextMeshData data = createQuadVertices(text, lines);
 		return data;
 	}
 
-	private List<Line> createStructure(GUIText text) {
+	private List<Line> createStructure(GUITextBase text) {
 		char[] chars = text.getTextString().toCharArray();
 		List<Line> lines = new ArrayList<Line>();
 		Line currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
@@ -55,7 +55,7 @@ public class TextMeshCreator {
 		return lines;
 	}
 
-	private void completeStructure(List<Line> lines, Line currentLine, Word currentWord, GUIText text) {
+	private void completeStructure(List<Line> lines, Line currentLine, Word currentWord, GUITextBase text) {
 		boolean added = currentLine.attemptToAddWord(currentWord);
 		if (!added) {
 			lines.add(currentLine);
@@ -65,7 +65,7 @@ public class TextMeshCreator {
 		lines.add(currentLine);
 	}
 
-	private TextMeshData createQuadVertices(GUIText text, List<Line> lines) {
+	private TextMeshData createQuadVertices(GUITextBase text, List<Line> lines) {
 		text.setNumberOfLines(lines.size());
 		double cursorX = 0f;
 		double cursorY = 0f;
@@ -140,6 +140,10 @@ public class TextMeshCreator {
 			array[i] = listOfFloats.get(i);
 		}
 		return array;
+	}
+	
+	public static float GetLineHeight() {
+		return (float)LINE_HEIGHT;
 	}
 
 }

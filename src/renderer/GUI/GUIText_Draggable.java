@@ -11,8 +11,7 @@ import renderer.GUIRenderer;
 import renderer.Transform;
 import util.MathLib;
 
-public class GUITextQuad_Draggable extends GUITextQuad {
-
+public class GUIText_Draggable extends GUIText {
 	
 	protected boolean isDragging = false;
 	/**
@@ -30,11 +29,15 @@ public class GUITextQuad_Draggable extends GUITextQuad {
 	 * @param center - center text?
 	 * @param autoSize - auto size width?
 	 */
-	public GUITextQuad_Draggable(String name, Transform transform, String texture, Vector4f quadColor, Vector2f textOffset,
+	public GUIText_Draggable(String name, Transform transform, String texture, Vector4f quadColor, Vector2f textOffset,
 			String font, String text, Vector4f textColor, float textWidth, float textHeight, boolean center,
 			boolean autoSize) {
 		super(name, transform, texture, quadColor, textOffset, font, text, textColor, textWidth, textHeight, center, autoSize);
+		nXPos = this.transform.GetPosition().x;
+		nYPos = this.transform.GetPosition().y;
 	}
+	
+	protected float nXPos, nYPos;
 	
 	
 	@Override
@@ -50,10 +53,21 @@ public class GUITextQuad_Draggable extends GUITextQuad {
 	protected void StartDragging() {
 		isDragging = true;
 		BeginDrag(Input.GetMouseX(), Input.GetMouseY());
+		OnDragStart();
 	}
+	
+	protected void OnDragStart() {
+		
+	}
+	
+	protected void OnDragEnd() {
+		
+	}
+	
 	
 	protected void StopDragging() {
 		isDragging = false;
+		OnDragEnd();
 	}
 	
 	
@@ -66,6 +80,17 @@ public class GUITextQuad_Draggable extends GUITextQuad {
 	public void OnDeselect() {
 		SetQuadColor(new Vector4f(.125f, .125f,.25f,.9f));
 		isDragging = false;
+	}
+	
+	protected void OnDrag() {
+		
+	}
+	 
+	protected void _Drag(float x, float y) {
+		Drag( x, y);
+		nXPos = this.transform.GetPosition().x;
+		nYPos = this.transform.GetPosition().y;
+		OnDrag();
 	}
 	
 	@Override
@@ -90,7 +115,7 @@ public class GUITextQuad_Draggable extends GUITextQuad {
 				return;
 			}
 			if (isDragging) {
-				Drag( ((Events.MouseMovedEvent)e).GetMouseX(),
+				_Drag( ((Events.MouseMovedEvent)e).GetMouseX(),
 				((Events.MouseMovedEvent)e).GetMouseY());
 				}
 		}

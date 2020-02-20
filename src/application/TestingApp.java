@@ -1,8 +1,9 @@
 package application;
 
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
-
+import org.joml.Vector4f;
 
 import engine.Application;
 import engine.CameraController;
@@ -39,7 +40,7 @@ public class TestingApp extends Application {
 		// Initalize Scene Manager
 		new MainMenuScene("mainMenu",cam);
 		new TestScene("testScene",cam);
-		SceneManager.SetCurrentScene("mainMenu");
+		SceneManager.SetCurrentScene("testScene");
 	}
 		
 		
@@ -72,10 +73,28 @@ public class TestingApp extends Application {
 		if (Input.IsKeyPressed(KeyCodes.KEY_E)) {
 			cam.rotation -= 10 * deltaTime;
 		}
+		
+		int[] w_pos = window.GetWindowPosition();
+		Vector2f w_pos_ = new Vector2f(w_pos[0], w_pos[1]);
+		
+		if (Input.IsKeyPressed(KeyCodes.KEY_RIGHT)) {
+			w_pos_.x +=  1f;
+		}
+		if (Input.IsKeyPressed(KeyCodes.KEY_LEFT)) {
+			w_pos_.x += -1f;
+		}
+		if (Input.IsKeyPressed(KeyCodes.KEY_UP)) {
+			w_pos_.y += -1f;
+		}
+		if (Input.IsKeyPressed(KeyCodes.KEY_DOWN)) {
+			w_pos_.y += 1f;
+		}
 		// Camera Update
 		cam.OnUpdate(deltaTime);
 		// Title Update
+		window.SetWindowLocation((int)w_pos_.x,(int) w_pos_.y);
 		window.SetTitle(title+" - " + fps + " FPS - OpenGL" + window.GetGLInfo() );
+		
 		
 	}
 	
