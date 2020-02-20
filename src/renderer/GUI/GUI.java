@@ -1,6 +1,9 @@
 package renderer.GUI;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -30,9 +33,12 @@ public abstract class GUI extends Collider2D {
 	protected String texturePath;
 	
 	protected Vector3f position;
+	protected List<GUI> children = new ArrayList<GUI>();
+	protected GUI parent = null;
 	
 	
 	protected Vector2f dragPos = new Vector2f(0f);
+	protected Vector3f RelativePosition = new Vector3f(0);
 	
 	protected Shader shader;
 	protected boolean added = false;
@@ -148,6 +154,7 @@ public abstract class GUI extends Collider2D {
 	
 	
 	public void Init() {
+		this.RelativePosition = transform.GetPosition();
 		UpdateTransform();
 		_Init();
 	}
@@ -160,6 +167,9 @@ public abstract class GUI extends Collider2D {
 	 * Add Gui to GUI render pipeline
 	 */
 	public void Add() {
+		for (GUI c : children) {
+			c.Add();
+		}
 		GUIRenderer.Add(this);
 		added = true;
 	}
@@ -168,8 +178,12 @@ public abstract class GUI extends Collider2D {
 	 * Remove Gui from GUI render pipeline
 	 */
 	public void Remove() {
-		GUIRenderer.Remove(this);
 		added = false;
+		DeselectGUI();
+		for (GUI c : children) {
+			c.Remove();
+		}
+		GUIRenderer.Remove(this);
 	}
 	
 	public abstract void Draw();
@@ -199,9 +213,9 @@ public abstract class GUI extends Collider2D {
 	}
 	
 	public Vector3f GetRealPosition() {
-		UpdateTransform();
-		return _transform.GetPosition();
+		return new Vector3f(_transform.GetPosition().x,_transform.GetPosition().y, transform.GetPosition().z);
 	}
+	
 	
 	public Vector3f GetScale() {
 		return this.transform.GetScale();
@@ -263,6 +277,19 @@ public abstract class GUI extends Collider2D {
 		SetPosition(p);
 	}
 	
+	public void SetRelativePosition(float x, float y, float z) {
+		RelativePosition = new Vector3f(x,y,z);
+		UpdateTransform();
+	}
+	
+	public Vector3f GetRelativePosition() {
+		return RelativePosition;
+	}
+	
+	public void SetRelativePosition(Vector3f pos) {
+		RelativePosition = pos;
+	}
+	
 	public void SetScale(Vector3f scale) {
 		SetTransform(new Transform(transform.GetPosition(), transform.GetRotation(), scale));
 	}
@@ -275,18 +302,62 @@ public abstract class GUI extends Collider2D {
 		this.color = new Vector4f(r,g,b,a);
 	}
 	
+	public GUI AddChild(GUI g) {
+		children.add(g);
+		if (g.GetActor() != null) g.GetActor().RemoveComponent_NOCLEAN(g);
+		g.SetParent(this);
+		if (added && !g.added) {
+			g.Add();
+		}
+		return this;
+	}
+	
+	public GUI AddChild(GUI g, boolean b) {
+		children.add(g);
+		if (b) g.SetRelativePosition( g.GetPosition().x - this.GetPosition().x, g.GetPosition().y - this.GetPosition().y , g.GetZOrder());
+		if (g.GetActor() != null) g.GetActor().RemoveComponent_NOCLEAN(g);
+		g.SetParent(this);
+		if (added && !g.added) g.Add();
+		return this;
+		
+	}
+	 
+	public GUI GetChild(String id) {
+		for (GUI c : children) {
+			if (c.GetName().equals(id)) {
+				return c;
+			}
+		}
+		return null;
+	}
+		
+	public GUI RemoveChild(GUI g) {
+		if (children.contains(g)) {
+			children.remove(g);
+			g.SetParent(null);
+			if (g.added) g.Remove();
+		}
+		return this;
+	}
+	
+	private void SetParent(GUI p) {
+		this.parent = p;
+	}
+	
 	public void SetTransform(Transform transform) {
 		this.transform = transform;
 		UpdateTransform();
 	}
 	
-	protected void UpdateTransform() {
-		this.zOrder = transform.GetPosition().z;
-		this.transform.SetPosition(transform.GetPosition().x, transform.GetPosition().y, 0f);
-		this._transform = new Transform(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
+	public void UpdateTransform() {
+		this.zOrder = transform.GetPosition().z + (parent == null ? 0 : GetRelativePosition().z);
+		this.transform.SetPosition(transform.GetPosition().x + (parent == null ? 0 : GetRelativePosition().x)
+				, transform.GetPosition().y + (parent == null ? 0 : GetRelativePosition().y), 0f);
+		this._transform = new Transform(transform.GetPosition(), transform.GetRotation(), 
+				transform.GetScale());
 		this._transform.SetPosition(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2,_transform.GetPosition().x)/2f, 
 				-MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -_transform.GetPosition().y)/2f,_transform.GetPosition().z ));
-		//this._transform = Transform.ScaleBasedPosition(_transform);
+		for (GUI c : children) c.SetPosition(this.GetPosition().x, this.GetPosition().y, this.zOrder);
 	}
 	
 	public void SetMouseEnter() {
@@ -318,6 +389,8 @@ public abstract class GUI extends Collider2D {
 	public void CleanUp () {
 		if (Application.ThreadSafe()) {
 			OnCleanUp();
+			children.clear();
+			parent = null;
 		}
 	};
 	
@@ -355,6 +428,23 @@ public abstract class GUI extends Collider2D {
 	protected void OnSelect() {
 		
 		
+	}
+	
+	public GUI DetachChild(GUI c) {
+		if (children.contains(c)) {
+			if (c.GetActor() == null) {
+				GetActor().AddComponent(c);
+			}
+			children.remove(c);
+			c.SetParent(null);
+		}
+		
+		return this;
+	}
+	
+	public GUI SetGUICollision(boolean b) {
+		SetCollision(b);
+		return this;
 	}
 	
 	@Override

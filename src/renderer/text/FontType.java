@@ -3,7 +3,7 @@ package renderer.text;
 import java.util.HashMap;
 import java.util.Map;
 
-import renderer.GUI.GUITextBase;
+import renderer.GUI.GUIText;
 import util.FileLoader;
 
 
@@ -91,7 +91,7 @@ public class FontType {
 	 *            - the unloaded text.
 	 * @return Information about the vertices of all the quads.
 	 */
-	public TextMeshData loadText(GUITextBase text) {
+	public TextMeshData loadText(GUIText text) {
 		return loader.createTextMesh(text);
 	}
 

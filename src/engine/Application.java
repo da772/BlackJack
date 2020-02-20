@@ -83,6 +83,7 @@ public class Application {
 		Renderer.Init();
 		Debugger.Init();
 		Collision2D.Begin();
+		TitleBar.Init();
 		OnInit();
 	}
 	
@@ -122,6 +123,7 @@ public class Application {
 		dispatcher.Dispatch(WindowClosedEvent.GetGenericType(), new Events.EventFunction<Event>(event) {
 			@Override public boolean run(Event t) {return WindowClosedEvent((WindowClosedEvent)t ); } });
 		Collision2D.OnEvent(event);
+		TitleBar.OnEvent(event);
 		Debugger.OnEvent(event);
 		OnEvent(event);
 		SceneManager.OnEvent(event);
@@ -262,6 +264,7 @@ public class Application {
 	public void Shutdown() {
 		OnShutdown();
 		SceneManager.Shutdown();
+		TitleBar.Shutdown();
 		Debugger.ShutDown();
 		Collision2D.CleanUp();
 		Renderer2D.CleanUp();

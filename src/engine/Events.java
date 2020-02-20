@@ -4,7 +4,7 @@ public class Events {
 
 	// Event types
 	enum EventType {
-		None, WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
+		None, WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved, WindowFullScreen, WindowSetTitle,
 		AppUpdate, AppTick, AppRender,
 		Key, KeyPressed, KeyReleased, KeyTyped,
 		MouseButton, MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
@@ -78,7 +78,7 @@ public class Events {
 	// Mouse Moved Event
 	public static class MouseMovedEvent extends Event {
 		private float m_MouseX, m_MouseY;
-		public int Type = EventCategory.Input.getValue() | EventCategory.Keyboard.getValue();
+		protected int Type = EventCategory.Input.getValue() | EventCategory.Keyboard.getValue();
 		
 		public MouseMovedEvent(final float mouseX, final float mouseY) {
 			this.m_MouseX = mouseX;
@@ -120,6 +120,89 @@ public class Events {
 		public String toString() {
 			return "MouseMovedEvent: " + m_MouseX + ", " + m_MouseY;
 		};
+		
+	}
+	
+	public static class WindowFullScreenEvent extends Event {
+
+		protected int Type = EventCategory.Window.getValue();
+		private boolean fullscreen;
+		
+		public WindowFullScreenEvent(boolean fullscreen) {
+			this.fullscreen = fullscreen;
+		}
+		
+		
+		public boolean IsFullScreen() {
+			return this.fullscreen;
+		}
+		
+		@Override
+		public EventType GetEventType() {
+			return EventType.WindowFullScreen;
+		}
+
+		@Override
+		public String GetName() {
+			return "WindowFullScreen";
+		}
+
+		@Override
+		public int GetCategoryFlags() {
+			return Type;
+		}
+
+		@Override
+		public String toString() {
+			return this.fullscreen ? "true" : "false";
+		}
+
+		@Override
+		protected EventType GenericType() {
+			return EventType.WindowFullScreen;
+		}
+		
+	}
+	
+	
+	public static class WindowSetTitleEvent extends Event {
+
+		protected int Type = EventCategory.Window.getValue();
+		private String title;
+		
+		public WindowSetTitleEvent(String title) {
+			this.title = title;
+		}
+		
+		
+		public String GetTitle() {
+			return this.title;
+		}
+		
+		@Override
+		public EventType GetEventType() {
+			return EventType.WindowSetTitle;
+		}
+
+		@Override
+		public String GetName() {
+			return "SetTitle";
+		}
+
+		@Override
+		public int GetCategoryFlags() {
+			return Type;
+		}
+
+		@Override
+		public String toString() {
+			return title;
+		}
+
+		@Override
+		protected EventType GenericType() {
+			return EventType.WindowSetTitle;
+		}
 		
 	}
 	

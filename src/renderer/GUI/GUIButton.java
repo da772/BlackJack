@@ -1,14 +1,11 @@
 package renderer.GUI;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import engine.Events;
 import engine.KeyCodes;
 import engine.Events.Event;
 import renderer.GUIRenderer;
-import renderer.Shader;
 import renderer.Texture;
 import renderer.Transform;
 import util.MathLib;
@@ -20,91 +17,60 @@ import util.MathLib;
  * @param transform - quad transform
  * @param texture - quad texture
  * @param quadColor - quad color
- * @param textOffset - text position offset
- * @param font - font file path
- * @param text - text to write
- * @param textColor - text color
- * @param textWidth - text width
- * @param textHeight - text height
- * @param center - center text?
- * @param autoSize - auto size width?
+
  */
-public abstract class GUIButton extends GUIText {
+public abstract class GUIButton extends GUIQuad {
 
 	boolean leftClicked = false;
-	private String textureString2;
+	private String textureString1, textureString2;
 	
 	/**
 	 * 
 	 * @param name - unique identifier
-	 * @param transform - quad transfom
+	 * @param transform - quad transform
 	 * @param texture1 - quad texture before clicked
 	 * @param texture - quad texture when clicked
 	 * @param quadColor - quad color
-	 * @param textOffset - text position offset
-	 * @param font - font file path
-	 * @param text - text to write
-	 * @param textColor - text color
-	 * @param textWidth - text width
-	 * @param textHeight - text height
-	 * @param center - center text?
-	 * @param autoSize - auto size width?
+
 	 */
-	public GUIButton(String name, Transform transform, String texture1, String texture2, Vector4f quadColor, Vector2f textOffset,
-			String font, String text, Vector4f textColor, float textWidth, float textHeight, boolean center,
-			boolean autoSize) {
-		super(name, transform, texture1, quadColor, textOffset, font, text, textColor, textWidth, textHeight, center, autoSize);
+	public GUIButton(String name, Transform transform, String texture1, String texture2, Vector4f quadColor) {
+		super(name, transform, texture1, quadColor);
 		textureString2 = texture2;
+		textureString1 = texture1;
+		SetTexture(textureString2);
+	}
+	
+	
+	private Texture texture1;
+	private Texture texture2;
+
+	
+
+	
+	public void SetTexture(String texturePath) {
+		if (textureString2 == null && !this.texturePath.equals(texturePath)) {
+			this.textureString2 = texturePath;
+		}
+		if (texture2 == null) {
+			texture2 = Texture.Create(this.textureString2);
+		}
+		
+		if (this.texturePath.equals(texturePath)) {
+			texture = texture1;
+		}
+		if (textureString2.equals(texturePath)) {
+			texture1 = texture;
+			texture = texture2;
+		}
 	}
 	
 	
 	@Override
-	public void _Init() {
-		SetupText();
-		
-		quad = new GUIQuad (name+"2",
-				transform,
-				QuadTexture, // Texture of the hud
-				QuadColor // Color of the hud
-				) {
-			
-			public Texture texture1;
-			public Texture texture2;
-
-			private String texture2String;
-			
-			
-			public void SetTexture(String texturePath) {
-				if (texture2String == null && !this.texturePath.equals(texturePath)) {
-					this.texture2String = texturePath;
-				}
-				if (texture2 == null) {
-					texture2 = Texture.Create(this.texture2String);
-				}
-				
-				if (this.texturePath.equals(texturePath)) {
-					texture = texture1;
-				}
-				if (texture2String.equals(texturePath)) {
-					texture1 = texture;
-					texture = texture2;
-				}
-			}
-			
-			
-			@Override
-			public void OnCleanUp() {
-				Texture.Remove(texture);
-				Texture.Remove(texture1);
-				Texture.Remove(texture2);
-				Shader.Remove(shader);
-			}
-		};
-		quad.SetTexture(textureString2);
- 		quad.Init();
- 		SetTransform(this.transform);
+	public void OnCleanUp() {
+		super.OnCleanUp();
+		Texture.Remove(texture1);
+		Texture.Remove(texture2);
 	}
-	
 	
 	
 	@Override
@@ -121,7 +87,7 @@ public abstract class GUIButton extends GUIText {
 	protected abstract void OnMouseReleased();
 	
 	public void SetButtonTexture(boolean pressed) {
-		quad.SetTexture(pressed ? textureString2 : QuadTexture );
+		SetTexture(pressed ? textureString2 : textureString1);
 	}
 	
 	@Override

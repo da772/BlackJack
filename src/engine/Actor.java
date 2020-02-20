@@ -95,6 +95,7 @@ public class Actor {
 	**/
 	public Actor AddComponent(Component component) {
 		components.put(component.GetName(), component);
+		component.SetActor(this);
 		if (begin) {
 			component.OnBegin();
 		}
@@ -109,6 +110,7 @@ public class Actor {
 	**/
 	public Actor AddComponents(Component[] component) {
 		for (Component _c : component) {
+			_c.SetActor(this);
 			components.put(_c.GetName(), _c);
 			if (begin) _c.OnBegin();
 		}
@@ -123,7 +125,22 @@ public class Actor {
 	**/
 	public Actor RemoveComponent(Component component) {
 		components.remove(component.GetName());
+		component.SetActor(null);
 		component.OnEnd();
+		return this;
+	}
+
+	
+	/**
+	 * DOES NOT CLEAN UP COMPONENTS (USED FOR CHANGING OWNERSHIP)
+	 * @param component (Component)
+	 *            - the component to remove from the actor
+	 * @return Actor
+	 * 			  - return actor this call is made on
+	**/
+	public Actor RemoveComponent_NOCLEAN(Component component) {
+		components.remove(component.GetName());
+		component.SetActor(null);
 		return this;
 	}
 	
@@ -135,6 +152,7 @@ public class Actor {
 	**/
 	public Actor RemoveComponent(String name) {
 		components.get(name).OnEnd();
+		components.get(name).SetActor(null);
 		components.remove(name);
 		return this;
 	}

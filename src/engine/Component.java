@@ -12,6 +12,17 @@ public abstract class Component {
 	
 	protected String _name;
 	
+	protected Actor actor;
+	
+	public void SetActor(Actor a) {
+		actor = a;
+	}
+	
+	
+	public Actor GetActor() {
+		return actor;
+	}
+	
 	/**
 	 * 
 	 * @return String - unique identifier

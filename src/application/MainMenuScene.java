@@ -42,15 +42,8 @@ public class MainMenuScene extends Scene {
 						new Vector3f(.2f,.1f,1f)), // Scale x,y,z
 						"Images/Buttons/mainMenuButtonUp.png",  // Button texture
 						"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-						new Vector4f(0f,.6f,.075f,1f), // Quad Color r,g,b,a
-						new Vector2f(0f,0f), // Font Offset (used to center text if needed) 
-						"Fonts/BebasNeue",  // Font path
-						"Start Game!", // Font String
-						new Vector4f(.95f,.95f,.95f,1f), // Font color r,g,b,a
-						.25f, // Text Line Width ( how wide each line will be can use \n in string for new line)
-						2f, // Font Size
-						true, // Center Text
-						false // Auto expand width to match quad)
+						new Vector4f(0f,.6f,.075f,1f) // Quad Color r,g,b,a
+						
 						) {
 							@Override
 							protected void OnSelect() {
@@ -69,7 +62,16 @@ public class MainMenuScene extends Scene {
 							public void OnDeselect() {
 								SetButtonTexture(false);
 							}
-						});
+						}.AddChild(new GUIText(
+								"StartText",
+								new Transform(new Vector3f(0f,0f,1f)),
+								"Fonts/BebasNeue",
+								"Start Game",
+								new Vector4f(1f),
+								.19f,
+								2f,
+								true
+								)));
 		
 	
 		
@@ -81,15 +83,8 @@ public class MainMenuScene extends Scene {
 						new Vector3f(.2f,.1f,1f)), // Scale x,y,z
 						"Images/Buttons/mainMenuButtonUp.png",  // Button texture
 						"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-						new Vector4f(0f,.6f,.075f,1f), // Quad Color r,g,b,a
-						new Vector2f(0f,0f), // Font Offset (used to center text if needed) 
-						"Fonts/BebasNeue",  // Font path
-						"Settings!", // Font String
-						new Vector4f(.95f,.95f,.95f,1f), // Font color r,g,b,a
-						.25f, // Text Line Width ( how wide each line will be can use \n in string for new line)
-						2f, // Font Size
-						true, // Center Text
-						false // Auto expand width to match quad)
+						new Vector4f(0f,.6f,.075f,1f) // Quad Color r,g,b,a
+						
 						) {
 							@Override
 							protected void OnSelect() {
@@ -108,7 +103,16 @@ public class MainMenuScene extends Scene {
 							public void OnDeselect() {
 								SetButtonTexture(false);
 							}
-						});
+						}.AddChild(new GUIText(
+								"SettingText",
+								new Transform(new Vector3f(0f,0f,1f)),
+								"Fonts/BebasNeue",
+								"Settings",
+								new Vector4f(1f),
+								.19f,
+								2f,
+								true
+								)));
 			
 		// Create Quit Button
 		Actor.Create("QuitButton", this).AddComponent(new GUIButton(
@@ -118,15 +122,7 @@ public class MainMenuScene extends Scene {
 						new Vector3f(.2f,.1f,1f)), // Scale x,y,z
 						"Images/Buttons/mainMenuButtonUp.png",  // Button texture
 						"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-						new Vector4f(0f,.6f,.075f,1f), // Quad Color r,g,b,a
-						new Vector2f(0f,0f), // Font Offset (used to center text if needed) 
-						"Fonts/BebasNeue",  // Font path
-						"Quit!", // Font String
-						new Vector4f(.95f,.95f,.95f,1f), // Font color r,g,b,a
-						.25f, // Text Line Width ( how wide each line will be can use \n in string for new line)
-						2f, // Font Size
-						true, // Center Text
-						true // Auto expand width to match quad)
+						new Vector4f(0f,.6f,.075f,1f) // Quad Color r,g,b,a
 						) {
 							@Override
 							protected void OnSelect() {
@@ -145,7 +141,16 @@ public class MainMenuScene extends Scene {
 							public void OnDeselect() {
 								SetButtonTexture(false);
 							}
-						});
+						}.AddChild(new GUIText(
+								"QuitText",
+								new Transform(new Vector3f(0f,0f,1f)),
+								"Fonts/BebasNeue",
+								"Quit",
+								new Vector4f(1f),
+								.19f,
+								2f,
+								true
+								)));
 				
 		// Create background image
 		Actor.Create("background").AddComponent(new GUIQuad(
@@ -157,22 +162,23 @@ public class MainMenuScene extends Scene {
 				));
 		
 		// Create Text
-		Actor.Create("blackJackText", this).AddComponent(new GUIText("textQuad",new Transform(
+		Actor.Create("blackJackText", this).AddComponent(new GUIQuad("textQuad",new Transform(
 				new Vector3f(0, .75f, .1f), // Position
 				new Vector3f(0f), // Rotation (buggy keep at 0)
 				new Vector3f(1f,.25f, 1f) // Quad Scale
 				),
 				"Images/blankTexture.png", // Texture
-				new Vector4f(.125f, .125f,.25f,0f), // Quad Color
-				new Vector2f(0f,0f), // Text Position offset
-				"Fonts/poker1", // Text Font
-				"Black Jack", // Text
-				new Vector4f(1.f,1f,1f,1f), // Text Color
-				1f, // Textbox Width
-				5f,// Font size
-				true, // Center?
-				false // Auto width based on quad?
-				));
+				new Vector4f(.125f, .125f,.25f,0f)// Quad Color
+				).SetGUICollision(false).AddChild(new GUIText(
+						"text",
+						new Transform(),
+						"Fonts/poker1",
+						"Black Jack!",
+						new Vector4f(1f),
+						1f,
+						5f,
+						true
+						)));
 	}
 
 	@Override

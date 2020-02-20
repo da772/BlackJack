@@ -17,7 +17,7 @@ public class Transform {
 	private Matrix4f transform;
 	
 	public Transform() {
-		this.position = new Vector3f(0f);
+		this.position = new Vector3f(0f,0f,0f);
 		this.rotation = new Vector3f(0,0,0);
 		this.scale = new Vector3f(1.f);
 		CalculateTransformMatrix();

@@ -8,16 +8,15 @@ import engine.Actor;
 import engine.Application;
 import engine.CameraController;
 import engine.Events;
-import engine.Input;
 import engine.KeyCodes;
 import engine.Events.Event;
-import renderer.GUIRenderer;
 import renderer.Renderer;
 import renderer.Transform;
+import renderer.GUI.GUI;
+import renderer.GUI.GUIButton;
 import renderer.GUI.GUIText;
-import renderer.GUI.GUIText_Draggable;
+import renderer.GUI.GUIQuad_Draggable;
 import renderer.mesh.Mesh2DBackground;
-import renderer.mesh.Mesh2DQuad;
 import engine.Scene;
 
 public class TestScene extends Scene {
@@ -42,6 +41,10 @@ public class TestScene extends Scene {
 
 	@Override
 	public void OnBegin() {
+		
+		System.out.println(Application.app.GetWindow().GetWindowPosition()[0] + ", "+
+				Application.app.GetWindow().GetWindowPosition()[1]);
+		
 		Renderer.SetClearColor(0f,1f,0f,1f);
 		
 		Actor.Create("card", this).AddComponent(new CardMesh("Mesh", 
@@ -104,86 +107,89 @@ public class TestScene extends Scene {
 
 	 
 	 
-		Actor.Create("blackJackText", this).AddComponent(new GUIText_Draggable("textQuad",new Transform(
-				new Vector3f(0, 0f, 0f), // Position
-				new Vector3f(0f), // Rotation (buggy keep at 0)
-				new Vector3f(.225f, .25f, 1f) // Quad Scale
-				),
-				"Images/blankTexture.png", // Texture
-				new Vector4f(.125f, .125f,.25f,1f), // Quad Color
-				new Vector2f(0f, 0f), // Text Position offset
-				"Fonts/BebasNeue", // Text Font
-				"Black Jack is a game of chance, but it is also a game of great skill!", // Text
-				new Vector4f(1.f,1f,1f,1f), // Text Color
-				.2f, // Textbox Width
-				2f,// Font size  2 : .925   1 : .95   0.5 : .975
-				true, // Center?
-				false // Auto width based on quad?
-				));
+		Actor.Create("blackJackText", this).AddComponent(new GUIQuad_Draggable(
+				"quad",
+				new Transform(
+						new Vector3f(0f,0f,3f),
+						new Vector3f(0f),
+						new Vector3f(.25f,.25f,1f)
+						),
+				"Images/blankTexture.png", // Texture of the hud
+				new Vector4f(.125f, .125f,.25f,.9f)).AddChild(new GUIText(
+						"text",
+						new Transform(
+								new Vector3f(0f,0f,.1f),
+								new Vector3f(0f),
+								new Vector3f(1f)
+								),
+						"Fonts/BebasNeue",
+						"Drag Me!",
+						new Vector4f(1f),
+						.2f,
+						1f,
+						true
+						)).AddChild(new GUIButton(
+								"AttachButton",new Transform( 
+						new Vector3f(0,-.25f,.1f), // Position x,y, Z-Order higher is on top
+						new Vector3f(0f, 0f,0f),  // Rotation
+						new Vector3f(.2f,.1f,1f)), // Scale x,y,z
+						"Images/Buttons/mainMenuButtonUp.png",  // Button texture
+						"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
+						new Vector4f(.55f,.6f,.075f,1f) // Quad Color r,g,b,a
+						
+						) {
+							private GUI lastParent = null;
+							@Override
+							protected void OnSelect() {
+								if (this.GetChild("AttachText") != null) {
+									this.GetChild("AttachText").SetColor(1,0,0,1);
+								}
+							}
+							@Override
+							protected void OnMousePressed() {
+								SetButtonTexture(true);
+							}
+							@Override
+							protected void OnMouseReleased() {
+								SetButtonTexture(false);
+								if (this.parent != null) {
+									lastParent = this.parent;
+									this.parent.DetachChild(this.parent.GetChild(this.GetName()));
+									if (this.GetChild("AttachText") != null) {
+										((GUIText)this.GetChild("AttachText")).SetText("Re-Attach?");
+									}
+								} else {
+									lastParent.AddChild(this, true);
+									this.parent.UpdateTransform();
+									if (this.GetChild("AttachText") != null) {
+										((GUIText)this.GetChild("AttachText")).SetText("Detach?");
+									}
+								}
+							}
+							@Override
+							public void OnDeselect() {
+								SetButtonTexture(false);
+								if (this.GetChild("AttachText") != null) {
+									this.GetChild("AttachText").SetColor(1,1,1,1);
+								}
+							}
+						}.AddChild(new GUIText(
+								"AttachText",
+								new Transform(
+										new Vector3f(0f,0f,.1f),
+										new Vector3f(0f),
+										new Vector3f(1f)
+										),
+								"Fonts/BebasNeue",
+								"Deatch?",
+								new Vector4f(1f),
+								.2f,
+								1f,
+								true
+								)))
+				);
+	
 		
-		
-		/*
-		Actor.Create("testDrag").AddComponent(new GUITextQuad_Draggable("DraggableQuad",new Transform( 
-				new Vector3f(0,0, 999.f), // Position x,y, Z-Order higher is on top
-				new Vector3f(0f, 0f,0f),  // Rotation
-				new Vector3f(.225f,.4f,1f)), // Scale x,y,z
-				"Images/blankTexture.png",  // Quad Texture path
-				new Vector4f(0f,0f,0f,.75f), // Quad Color r,g,b,a
-				new Vector2f(.9f, -.65f), // Font Offset (used to center text if needed) 
-				"Fonts/verdana",  // Font path
-				"", // Font String
-				new Vector4f(.95f,.95f,.95f,1f), // Font color r,g,b,a
-				.2f, // Text Line Width ( how wide each line will be can use \n in string for new line)
-				.6f, // Font Size
-				false, // Center Text
-				false // Auto expand width to match quad
-		) {
-			@Override
-			protected void OnMouseEnter() {
-				SelectGUI();
-			}
-			
-			@Override
-			protected void OnSelect() {
-				
-			}
-			
-			@Override
-			protected void StartDragging() {
-				isDragging = true;
-				dragPos.x = Input.GetMouseX();
-				dragPos.y = Input.GetMouseY();
-			}
-			
-			@Override
-			public void StopDragging() {
-				isDragging = false;
-			}
-			
-			@Override
-			protected void OnMouseExit() {
-				DeselectGUI();
-			}
-			
-			@Override
-			protected void OnDrag(float x, float y) {
-				int[] w_pos = Application.app.GetWindow().GetWindowPosition(); 
-				int[] b_size = Application.app.GetWindow().GetFrameBuffers();
-				SetPosition( this.transform.GetPosition().x + ( ((x-dragPos.x)/GUIRenderer.GetWidth())*2f ),
-						this.transform.GetPosition().y - ( ((y-dragPos.y)/GUIRenderer.GetHeight()*2f)),
-						this.transform.GetPosition().z
-						);
-				dragPos.x = x;
-				dragPos.y = y;
-			}
-			
-			@Override
-			public void OnDeselect() {
-				StopDragging();
-			}
-			
-		});
-		*/
 	}
 
 	@Override

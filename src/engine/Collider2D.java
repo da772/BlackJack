@@ -44,5 +44,16 @@ public abstract class Collider2D extends Component {
 	
 	protected float zOrder = 0f;
 
+	protected boolean collision = true;
+	
+	protected void SetCollision(boolean b) {
+		collision = b;
+		if (!b) {
+			Collision2D.Remove(this);
+		} else {
+			Collision2D.Add(this);
+		}
+	}
+	
 	
 }

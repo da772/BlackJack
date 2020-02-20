@@ -5,6 +5,8 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryStack;
 
 import engine.Events.Event;
+import engine.Events.WindowFullScreenEvent;
+import engine.Events.WindowSetTitleEvent;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -20,7 +22,9 @@ public class Window {
 	int width, height;
 	long window;
 	long monitor;
+	boolean fullScreen = false;
 	int vsync = 0;
+	float xpos = 0, ypos;
 	float contentScaleX, contentScaleY;
 	EventFunction OnEventCallback;
 	
@@ -87,6 +91,9 @@ public class Window {
 	    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 	    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	    glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+	 
+	    
 		monitor = glfwGetPrimaryMonitor();
 		
 		// Create the window
@@ -188,6 +195,7 @@ public class Window {
 		{
 			Events.WindowClosedEvent e = new Events.WindowClosedEvent();
 			OnEvent( (Events.Event) e );
+			
 		});
 		
 		// Get the resolution of the primary monitor
@@ -232,6 +240,8 @@ public class Window {
 	public void SetTitle(String title) {
 		this.title = title;
 		glfwSetWindowTitle(window, title);
+		WindowSetTitleEvent e = new Events.WindowSetTitleEvent(title);
+		OnEvent( (Events.Event) e );
 	}
 	
 	public void Update() {
@@ -277,6 +287,42 @@ public class Window {
 		return coords;
 	}
 	
+	public int[] GetWindowSize() {
+		int coords[] = new int[2];
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			IntBuffer w = stack.mallocInt(1);
+			IntBuffer h = stack.mallocInt(1);	
+			glfwGetWindowSize(window, w, h);
+			coords[0] = w.get();
+			coords[1] = h.get();
+			w.clear();
+			h.clear();	
+		}
+		return coords;
+	}
+	
+	public void SetFullScreen(boolean b) {
+		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		fullScreen = b;
+		if (b) {
+		 glfwSetWindowMonitor( window, 0, 0, 0, vidmode.width(), vidmode.height(), 0 );
+		
+		} else {
+			glfwSetWindowMonitor( window, 0,  0, 0, 1280, 720, 0 );
+		}
+		WindowFullScreenEvent e = new Events.WindowFullScreenEvent(fullScreen);
+		OnEvent( (Events.Event) e );
+	}
+	
+	public void MinimizeWindow() {
+		glfwIconifyWindow(window);
+	}
+	
+	public boolean IsFullScreen() {
+		return fullScreen;
+	}
+	
 	/**
 	 * 
 	 * @param xPos - buffer to return x position
@@ -294,12 +340,15 @@ public class Window {
 			xpos.clear();
 			ypos.clear();	
 		}
+		xpos = coords[0];
+		ypos = coords[1];
 		return coords;
 		
 	}
 	
 	public int[] GetGpuUsage() {
 		int[] gpu = new int[3];
+		gpu[2] = 0;
 		try (MemoryStack stack = MemoryStack.stackPush())
 		{
 			IntBuffer t = stack.mallocInt(1);
@@ -311,9 +360,15 @@ public class Window {
 			t.clear();
 			u.clear();
 		}
+		if (gpu[0] > 50000 || gpu[0] <= 0 ) {
+			gpu[0] = 0;
+			gpu[1] = 1;
+			return gpu;
+		}
 		gpu[2] = gpu[0]-gpu[1];
 		return gpu;
 	}
+	
 	
 	public String GetGLInfo() {
 		return  glGetString(GL_VENDOR) + " " + glGetString(GL_VERSION) + ", " + glGetString(GL_RENDERER);
@@ -331,7 +386,7 @@ public class Window {
 		return glfwWindowShouldClose(window);
 	}
 
-	
+
 	public float GetContentScaleX() {
 		return contentScaleX;
 	}

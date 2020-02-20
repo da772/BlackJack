@@ -80,7 +80,7 @@ public class Texture {
 	 * @param texture - texture to remove
 	 */
 	public static void Remove(Texture texture) {
-		if (textures.containsKey(texture.fileName)) {
+		if (texture != null && textures.containsKey(texture.fileName)) {
 			Texture t = textures.get(texture.fileName);
 			t.AddReferenceCount(-1);
 		}
@@ -114,7 +114,7 @@ public class Texture {
 		    setParameter(GL30.GL_TEXTURE_WRAP_T, GL30.GL_CLAMP_TO_EDGE);
 		    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
 		    setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
-		    setParameter(GL30.GL_TEXTURE_LOD_BIAS, -.4f);   
+		    setParameter(GL30.GL_TEXTURE_LOD_BIAS, -.2f);   
 		}
 		
 	}

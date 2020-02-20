@@ -151,6 +151,7 @@ public class Collision2D extends Thread {
 	 * @param collider - collider to add
 	 */
 	public static void Add(Collider2D collider) {
+		if (!collider.collision) return;
 		if (collider.GetCollisionObjectType() == CollisionObjectType.GUI) {
 			AddGUICollider(collider);
 		} else if (collider.GetCollisionObjectType() == CollisionObjectType.Mesh) {

@@ -1,6 +1,5 @@
 package renderer.GUI;
 
-import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import engine.Events;
@@ -11,7 +10,7 @@ import renderer.GUIRenderer;
 import renderer.Transform;
 import util.MathLib;
 
-public class GUIText_Draggable extends GUIText {
+public class GUIQuad_Draggable extends GUIQuad {
 	
 	protected boolean isDragging = false;
 	/**
@@ -29,10 +28,8 @@ public class GUIText_Draggable extends GUIText {
 	 * @param center - center text?
 	 * @param autoSize - auto size width?
 	 */
-	public GUIText_Draggable(String name, Transform transform, String texture, Vector4f quadColor, Vector2f textOffset,
-			String font, String text, Vector4f textColor, float textWidth, float textHeight, boolean center,
-			boolean autoSize) {
-		super(name, transform, texture, quadColor, textOffset, font, text, textColor, textWidth, textHeight, center, autoSize);
+	public GUIQuad_Draggable(String name, Transform transform, String texture, Vector4f color) {
+		super(name, transform, texture, color);
 		nXPos = this.transform.GetPosition().x;
 		nYPos = this.transform.GetPosition().y;
 	}
@@ -47,7 +44,7 @@ public class GUIText_Draggable extends GUIText {
 	
 	@Override
 	protected void OnSelect() {
-		SetQuadColor(new Vector4f(.125f, .125f,.45f,.9f));
+		SetColor(new Vector4f(.125f, .125f,.45f,.9f));
 	}
 	
 	protected void StartDragging() {
@@ -78,7 +75,7 @@ public class GUIText_Draggable extends GUIText {
 	
 	@Override
 	public void OnDeselect() {
-		SetQuadColor(new Vector4f(.125f, .125f,.25f,.9f));
+		SetColor(new Vector4f(.125f, .125f,.25f,.9f));
 		isDragging = false;
 	}
 	

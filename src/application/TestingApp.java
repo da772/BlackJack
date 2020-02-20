@@ -3,7 +3,6 @@ package application;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import engine.Application;
 import engine.CameraController;
@@ -23,6 +22,7 @@ public class TestingApp extends Application {
 	public TestingApp() {
 		// Call super - Set window Title to "Blackjack" set width to 1280 set height to 720
 		super("Testing", 1280, 720);
+		this.fpsCap = 5000;
 		
 	}
 	
