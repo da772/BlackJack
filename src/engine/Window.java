@@ -298,8 +298,25 @@ public class Window {
 		
 	}
 	
+	public int[] GetGpuUsage() {
+		int[] gpu = new int[3];
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			IntBuffer t = stack.mallocInt(1);
+			IntBuffer u = stack.mallocInt(1);
+			glGetIntegerv(0x9048, t);
+			glGetIntegerv(0x9049, u);
+			gpu[0] = (int) Math.round(t.get()/1e03);
+			gpu[1] = (int) Math.round(u.get()/1e03);
+			t.clear();
+			u.clear();
+		}
+		gpu[2] = gpu[0]-gpu[1];
+		return gpu;
+	}
+	
 	public String GetGLInfo() {
-		return glGetString(GL_VENDOR) + " " + glGetString(GL_VERSION) + ", " + glGetString(GL_RENDERER);
+		return  glGetString(GL_VENDOR) + " " + glGetString(GL_VERSION) + ", " + glGetString(GL_RENDERER);
 	}
 	
 	public boolean Vsync() {

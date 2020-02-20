@@ -106,7 +106,7 @@ public class GUIText_Draggable extends GUIText {
 				if (isDragging) StopDragging();
 			}
 		}
-		
+
 		if (e instanceof Events.MouseMovedEvent) {
 			if ( !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseX(), 0f, (float)GUIRenderer.GetWidth())
 				|| !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseY(), 0f, (float)GUIRenderer.GetHeight()))

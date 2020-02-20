@@ -107,13 +107,13 @@ public class TestScene extends Scene {
 		Actor.Create("blackJackText", this).AddComponent(new GUIText_Draggable("textQuad",new Transform(
 				new Vector3f(0, 0f, 0f), // Position
 				new Vector3f(0f), // Rotation (buggy keep at 0)
-				new Vector3f(.225f, .225f, 1f) // Quad Scale
+				new Vector3f(.225f, .25f, 1f) // Quad Scale
 				),
 				"Images/blankTexture.png", // Texture
 				new Vector4f(.125f, .125f,.25f,1f), // Quad Color
 				new Vector2f(0f, 0f), // Text Position offset
 				"Fonts/BebasNeue", // Text Font
-				"Black Jack is a game of chance, but also a game of great skill!", // Text
+				"Black Jack is a game of chance, but it is also a game of great skill!", // Text
 				new Vector4f(1.f,1f,1f,1f), // Text Color
 				.2f, // Textbox Width
 				2f,// Font size  2 : .925   1 : .95   0.5 : .975

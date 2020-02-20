@@ -21,7 +21,7 @@ public class Debugger {
 	private static boolean DisplayMenu = true;
 	public static final int MenuKeyCode = KeyCodes.KEY_GRAVE_ACCENT; // ~
 	
-	private static float xPos = .775f, yPos = .6f;
+	private static float xPos = .775f, yPos = .55f;
 	
 	private static int keyPressed = -1;
 	private static int mousePressed = -1;
@@ -49,6 +49,7 @@ public class Debugger {
 	public static void Update() {
 		// If we are shown
 		if (DisplayMenu) {
+		int[] gpu = Application.app.GetWindow().GetGpuUsage();
 		debugMenu.SetText(
 			    "Debug Menu: (Press ~ to toggle) \n \n" +
 				"App Info       " + "Title: "+ Application.app.title +" | " + Application.app.fps + " FPS"+
@@ -58,18 +59,21 @@ public class Debugger {
 				"\n\nRender Info  " +" Texture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() +
 				"\n                    Font Pool: " + FontType.GetPoolSize() +" | Atlas Pool: " + TextureAtlas.GetCount() +
 				"\n                    Vertex Arrays: " + Renderer.GetVertexArrayCount() + " | Buffers: " + Renderer.GetBufferCount() +  
-				
-				
-				"\n\nMemory Info  Usage: " + Math.round( (Runtime.getRuntime().totalMemory()- Runtime.getRuntime().freeMemory())/1e6 ) +"mb"  +
-				"\n                    Alloc: "+Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/"+(Math.round(Runtime.getRuntime().totalMemory()/1e6)) + "mb " + 
-				
 						
 				"\n\nI/O Info        MouseX: " + (int)Input.GetMouseX() +" | MouseY: " + (int)Input.GetMouseY() +
 				"\n                    Key Input: " + keyPressed + " | Mouse Input: " + mousePressed +
 				
 				"\n\nScene Info     Scene Count: " + SceneManager.GetSceneCount() +
 				"\n                    Scene: " + ( SceneManager.GetCurrentScene() != null ? SceneManager.GetCurrentScene().GetName() : "NULL") + 
-				"\n                    Actor Count: " + (SceneManager.GetCurrentScene() != null ? SceneManager.GetCurrentScene().GetActorCount() : "0")
+				"\n                    Actor Count: " + (SceneManager.GetCurrentScene() != null ? SceneManager.GetCurrentScene().GetActorCount() : "0") +
+				
+				"\n\nHardware      Logical VM Processors: " + Runtime.getRuntime().availableProcessors() +
+				"\n                    GPU Memory Usage: " + gpu[2] + "/" + gpu[0] + "mb" +
+				
+				
+				"\n\nMemory Info  Usage: " + Math.round( (Runtime.getRuntime().totalMemory()- Runtime.getRuntime().freeMemory())/1e6 ) +"mb"  +
+				"\n                    Alloc: "+Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/"+(Math.round(Runtime.getRuntime().totalMemory()/1e6)) + "mb " 
+				
 				
 					);
 		
@@ -128,7 +132,7 @@ public class Debugger {
 		debugMenu = new GUIText_Draggable("DraggableQuad",new Transform( 
 				new Vector3f(xPos,yPos, 10000.f), // Position x,y, Z-Order higher is on top
 				new Vector3f(0f, 0f,0f),  // Rotation
-				new Vector3f(.225f,.4f,1f)), // Scale x,y,z
+				new Vector3f(.225f,.45f,1f)), // Scale x,y,z
 				"Images/blankTexture.png",  // Quad Texture path
 				quadColor, // Quad Color r,g,b,a
 				new Vector2f(0f), // Font Offset (used to center text if needed) 
