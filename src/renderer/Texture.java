@@ -12,6 +12,8 @@ import static org.lwjgl.stb.STBImage.*;
 
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
@@ -26,7 +28,7 @@ public class Texture {
 	private int rendererId = -1;
 	int referenceCount = 0;
 	String fileName;
-	boolean generateMipMap = false;
+	boolean generateMipMap = false, fontTexture = false;
 	
 	private static Map<String, Texture> textures = new HashMap<String, Texture>();
 	
@@ -37,6 +39,19 @@ public class Texture {
 	 */
 	public static Texture Create(String fileName) {
 		return Texture.Create(fileName, false, true);
+	}
+	
+	public static Texture Create(String name, ByteBuffer data, int width, int height) {
+		if (textures.containsKey(name)) {
+			Texture t =  textures.get(name);
+			t.AddReferenceCount(1);
+			return t;
+		}
+		Texture t = new Texture(name, data, width, height);
+		t.fileName = name;
+		t.AddReferenceCount(1);
+		textures.put(name, t);
+		return t;
 	}
 	
 	/**
@@ -102,21 +117,31 @@ public class Texture {
 		LoadImage(fileName, true);
 	}
 	
+	
+	protected Texture(String name, ByteBuffer data, int width, int height) {
+		rendererId = GL30.glGenTextures();
+		this.width = width;
+		this.height = height;
+		Renderer.AddTexture(this);
+		LoadImageData(data, width, height);
+	}
+	
 	protected Texture(String fileName, boolean fontTexture, boolean mipMap) {
 		rendererId = GL30.glGenTextures();
 		this.generateMipMap = mipMap;
+		this.fontTexture = fontTexture;
 		
 		Renderer.AddTexture(this);
 		LoadImage(fileName, !fontTexture);
 		
-		if (fontTexture && generateMipMap) {
-			setParameter(GL30.GL_TEXTURE_WRAP_S, GL30.GL_CLAMP_TO_EDGE);
-		    setParameter(GL30.GL_TEXTURE_WRAP_T, GL30.GL_CLAMP_TO_EDGE);
-		    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
-		    setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
-		    setParameter(GL30.GL_TEXTURE_LOD_BIAS, -.2f);   
-		}
-		
+	}
+	
+	public void LoadImageData(ByteBuffer data, int width, int height) {
+		Bind();
+		setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR);
+		setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
+		uploadData(GL30.GL_RGB, width, height, GL30.GL_RGB, data);
+		UnBind();
 	}
 	
 	public void Bind() {
@@ -138,6 +163,7 @@ public class Texture {
 	 */
 	public void setParameter(int name, int value) {
 		GL30.glTexParameteri(GL30.GL_TEXTURE_2D, name, value);
+		
 	}
 	
 	/**
@@ -155,17 +181,25 @@ public class Texture {
     
 	public void CreateTexture() {
 		Bind();
-		uploadData(GL30.GL_RGBA, width, height, GL30.GL_RGBA, data);
 	    setParameter(GL30.GL_TEXTURE_WRAP_S, GL30.GL_REPEAT);
 	    setParameter(GL30.GL_TEXTURE_WRAP_T, GL30.GL_REPEAT);
-	    if (generateMipMap) {
+	    if (!fontTexture && generateMipMap) {
 		    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
 		    setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
 		    GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
-	    } else {
+	    } else if (fontTexture && generateMipMap) {
+			setParameter(GL30.GL_TEXTURE_WRAP_S, GL30.GL_CLAMP_TO_EDGE);
+		    setParameter(GL30.GL_TEXTURE_WRAP_T, GL30.GL_CLAMP_TO_EDGE);
+		    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
+		    setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
+		    setParameter(GL30.GL_TEXTURE_LOD_BIAS, -.6f);   
+		   
+		} else {
 	    	setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
 	  		setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR);
 	    }
+	    uploadData(GL30.GL_RGBA, width, height, GL30.GL_RGBA, data);
+	    GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
 	    stbi_image_free(data);
 	    UnBind();
 	    

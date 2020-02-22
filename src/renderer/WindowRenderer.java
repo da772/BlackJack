@@ -9,7 +9,7 @@ import engine.WindowFrame;
 import renderer.GUI.GUI;
 
 
-public class GUIRenderer {
+public class WindowRenderer {
 
 	public static List<GUI> huds = new ArrayList<GUI>();
 
@@ -19,10 +19,6 @@ public class GUIRenderer {
 	 */
 	public static void Add(GUI hud) {
 		if (!huds.contains(hud)) {
-			if (hud.isWindow) {
-				WindowRenderer.Add(hud);
-				return;
-			}
 			huds.add(hud);
 			hud.Init();
 			Collision2D.Add(hud);
@@ -44,10 +40,6 @@ public class GUIRenderer {
 			hud.CleanUp();
 		} else {
 			if (hud != null) {
-				if (hud.isWindow) {
-					WindowRenderer.Remove(hud);
-					return;
-				}
 				hud.CleanUp();
 			}
 		}
@@ -64,7 +56,7 @@ public class GUIRenderer {
 			h.Draw();
 			h.UnBind();
 		}
-		Renderer.SetDepth(false);
+		Renderer.SetDepth(true);
 	}
 	
 	

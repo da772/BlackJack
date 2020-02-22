@@ -8,6 +8,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import engine.TextureAtlas;
+import renderer.Buffer.FrameBuffer;
+import renderer.Buffer.RenderBuffer;
 
 
 public class Renderer {
@@ -18,15 +20,23 @@ public class Renderer {
 	private static List<Texture> Textures = new ArrayList<Texture>();
 	private static List<TextureAtlas> TextureAtlas = new ArrayList<TextureAtlas>();
 	private static Vector4f clearColor = new Vector4f(1f,0f,1f,1f);
-
+	private static FrameBuffer fbuffer;
+	private static RenderBuffer rbuffer;
 	
-	public static void Init() {
+	public static void Init(int width, int height) {
 		GL30.glEnable(GL11.GL_DEPTH_TEST);
 		EnableCulling();
 		GL30.glEnable(GL11.GL_BLEND);
 		GL30.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL30.glEnable(GL30.GL_MULTISAMPLE);  
+		ResizeBuffer(width,height);
+		
 	}
+	
+	public static Texture GetScreenTexture() {
+		return fbuffer.GetTexture();
+	}
+	
 	
 	public static int GetBufferCount() {
 		return Buffers.size();
@@ -45,6 +55,15 @@ public class Renderer {
 		GL30.glCullFace(GL11.GL_BACK);
 	}
 	
+	public static void Render() {
+		fbuffer.Bind();
+		Prepare();		
+		Renderer2D.Render();
+		GUIRenderer.Render();
+		fbuffer.UnBind();
+		WindowRenderer.Render();
+	}
+	
 	/**
 	 * 
 	 * @param r - red
@@ -55,6 +74,7 @@ public class Renderer {
 	public static void SetClearColor(float r,float g,float b,float a) {
 		clearColor = new Vector4f(r,g,b,a);
 	}
+	
 	
 	public static void Prepare() {
 		GL30.glClearColor(clearColor.x,clearColor.y,clearColor.z, clearColor.w);
@@ -80,8 +100,21 @@ public class Renderer {
 	 * @param width - width of viewport
 	 * @param height - height of viewport
 	 */
-	public static void SetViewport(int x, int y, int width, int height) {
+	private static void SetViewport(int x, int y, int width, int height) {
 		GL30.glViewport(x, y, width, height);
+	}
+	
+	public static void Resize(int x, int y, int width, int height) {
+		SetViewport(x,y,width,height);
+		ResizeBuffer(width, height);
+	}
+	
+	private static void ResizeBuffer(int width, int height) {
+		if (fbuffer == null) fbuffer = new FrameBuffer("ScreenFrameBuffer", width, height);	
+		if (rbuffer != null) rbuffer.CleanUp();
+		rbuffer = new RenderBuffer(width, height);
+		fbuffer.UpdateSize(width, height);
+		fbuffer.Render(rbuffer);
 	}
 
 	/**
@@ -189,6 +222,10 @@ public class Renderer {
 	 * CleanUp all uncleared buffers, vertex arrays, textures, shaders, atlases
 	 */
 	public static void ShutDown() {
+		
+		Renderer2D.CleanUp();
+		GUIRenderer.CleanUp();
+		
 		for (int id : Buffers) {
 			GL30.glDeleteBuffers(id);
 		}
@@ -206,6 +243,10 @@ public class Renderer {
 			s.Cleanup();
 		}
 		Shaders.clear();
+		
+		rbuffer.CleanUp();
+		fbuffer.CleanUp();
+
 	}
 	
 	

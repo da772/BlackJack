@@ -42,6 +42,9 @@ public abstract class Collider2D extends Component {
 
 	public abstract void RemoveSelection();
 	
+	
+	public boolean isWindow = false;
+	
 	protected float zOrder = 0f;
 
 	protected boolean collision = true;

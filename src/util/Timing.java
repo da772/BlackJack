@@ -56,4 +56,8 @@ public class Timing {
 	    return System.nanoTime();
 	}
 	
+	public static double getTimeMS() {
+		return System.nanoTime()/1e6f;
+	}
+	
 }

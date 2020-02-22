@@ -64,7 +64,7 @@ public class GUIQuad extends GUI {
 	 * @param UVScale
 	 * @param shader
 	 */
-	public GUIQuad(String name, Transform transform, Texture texture, Vector4f color, Vector2f UVScale, String[] shader) {
+	public GUIQuad(String name, Transform transform, String texture, Vector4f color, Vector2f UVScale, String[] shader) {
 		super(name, transform, texture,color,UVScale, shader);
 	}
 	

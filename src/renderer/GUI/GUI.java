@@ -80,10 +80,10 @@ public abstract class GUI extends Collider2D {
 	 * @param UVScale
 	 * @param shaders
 	 */
-	public GUI(String name,Transform transform, Texture texture, Vector4f color, Vector2f UVScale, String[] shaders) {
+	public GUI(String name,Transform transform, String texture, Vector4f color, Vector2f UVScale, String[] shaders) {
 		super(name);
-		this.texture = texture;
-		this.texturePath = texture.GetFileName();
+		this.texture = Texture.Create(texture);
+		this.texturePath = texture;
 		this.transform = transform;
 		this.color = color;
 		this.UVScale = UVScale;
@@ -344,6 +344,13 @@ public abstract class GUI extends Collider2D {
 		this.parent = p;
 	}
 	
+	public void SetWindowElement(boolean b) {
+		this.isWindow = b;
+		for (GUI c : children) {
+			c.SetWindowElement(b);
+		}
+	}
+	
 	public void SetTransform(Transform transform) {
 		this.transform = transform;
 		UpdateTransform();
@@ -358,6 +365,7 @@ public abstract class GUI extends Collider2D {
 		this._transform.SetPosition(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2,_transform.GetPosition().x)/2f, 
 				-MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -_transform.GetPosition().y)/2f,_transform.GetPosition().z ));
 		for (GUI c : children) c.SetPosition(this.GetPosition().x, this.GetPosition().y, this.zOrder);
+	
 	}
 	
 	public void SetMouseEnter() {
@@ -466,6 +474,12 @@ public abstract class GUI extends Collider2D {
 	@Override
 	public void OnEnd() {
 		Remove();
+	}
+
+	public void SetTexture(Texture newTexture) {
+		Texture.Remove(this.texture);
+		this.texture = newTexture;
+		
 	}
 	
 	

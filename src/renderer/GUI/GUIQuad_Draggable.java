@@ -87,7 +87,12 @@ public class GUIQuad_Draggable extends GUIQuad {
 		Drag( x, y);
 		nXPos = this.transform.GetPosition().x;
 		nYPos = this.transform.GetPosition().y;
-		OnDrag();
+		OnDrag();	
+		
+	}
+	
+	protected void OnMouseUp() {
+		
 	}
 	
 	@Override
@@ -101,12 +106,13 @@ public class GUIQuad_Draggable extends GUIQuad {
 		if (e instanceof Events.MouseButtonReleasedEvent) {
 			if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT) {
 				if (isDragging) StopDragging();
+				OnMouseUp();
 			}
 		}
 
 		if (e instanceof Events.MouseMovedEvent) {
 			if ( !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseX(), 0f, (float)GUIRenderer.GetWidth())
-				|| !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseY(), 0f, (float)GUIRenderer.GetHeight()))
+					|| !MathLib.InBounds( ((Events.MouseMovedEvent)e).GetMouseY(), 0f, (float)GUIRenderer.GetHeight()))
 			{
 				DeselectGUI();
 				return;

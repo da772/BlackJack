@@ -131,7 +131,7 @@ public class Debugger {
 		
 		// Create draggable GUI Text Quad
 		debugMenu = (GUIQuad_Draggable) new GUIQuad_Draggable("DraggableQuad",new Transform( 
-				new Vector3f(xPos,yPos-TitleBar.GetHeight(), 10000.f), // Position x,y, Z-Order higher is on top
+				new Vector3f(xPos,yPos-WindowFrame.GetHeight(), 10000.f), // Position x,y, Z-Order higher is on top
 				new Vector3f(0f, 0f,0f),  // Rotation
 				new Vector3f(.225f,.45f,1f)), // Scale x,y,z
 				"Images/blankTexture.png",  // Quad Texture path

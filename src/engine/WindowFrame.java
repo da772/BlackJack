@@ -1,30 +1,41 @@
 package engine;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import engine.Events.Event;
+import renderer.ShaderLib;
 import renderer.Transform;
 import renderer.GUI.GUI;
 import renderer.GUI.GUIButton;
+import renderer.GUI.GUIQuad;
 import renderer.GUI.GUIQuad_Draggable;
 import renderer.GUI.GUIText;
+import util.Timing;
 
-public class TitleBar {
+public class WindowFrame {
 
-	static GUI tbar, resizeTab, text;
+	static GUI tbar, resizeTab, text, screen;
+	static final float heightv = .035f;
 	static float height = .035f;
 	static float barButtonSize = .9f;
 	static boolean resizeTabHidden = false;
+	static final String fontType = "Fonts/Segoe";
+	static final float titleFontSize = .8f;
 	
 	public static void Init() {
 		CreateTitleBar();
 		CreateResizeTab();
+		CreateScreen();
 		
 		tbar.Add();
 		resizeTab.Add();
+		screen.Add();
 	}
 	
+
+
 	public static float GetHeight() {
 		return height;
 	}
@@ -39,16 +50,37 @@ public class TitleBar {
 			resizeTabHidden = _e.IsFullScreen();
 			if (resizeTabHidden) {
 				resizeTab.Remove();
+				//tbar.Remove();
+				//height = 0f;
 			} else {
 				resizeTab.Add();
+				//tbar.Add();
+				//height = heightv;
 			}
-			
 		}
+		
+		
 	}
 	
 	public static void Shutdown() {
 		tbar.Remove();
 		resizeTab.Remove();
+	}
+	
+	
+	
+	private static void CreateScreen() {
+		screen = new GUIQuad("Screen", new Transform(
+				new Vector3f(0, -height, 1e6f),
+				new Vector3f(0f),
+				new Vector3f(1f, 1f-height, 1f)
+				), 
+				"ScreenFrameBuffer",
+				new Vector4f(1f),
+				new Vector2f(1f),
+				ShaderLib.Shader_GUIQuad);
+		screen.SetWindowElement(true);
+		screen.SetGUICollision(false);
 	}
 	
 	private static void CreateTitleBar() {
@@ -61,6 +93,22 @@ public class TitleBar {
 				"Images/blankTexture.png",  // Quad Texture path
 				new Vector4f(.15f,.15f,.15f,1f) // Quad Color r,g,b,a
 		) {
+			
+			@Override
+			public GUI AddChild(GUI g) { 
+				super.AddChild(g);
+				g.SetWindowElement(true);
+				return this;
+			}
+			
+			@Override
+			public GUI RemoveChild(GUI g) { 
+				super.RemoveChild(g);
+				g.isWindow = false;
+				return this;
+			}
+			
+			private double lastTime = 0;
 			@Override
 			protected void OnMouseEnter() {
 				SelectGUI();
@@ -68,7 +116,25 @@ public class TitleBar {
 			
 			@Override
 			protected void OnSelect() {
+			}
+			
+			@Override
+			protected void OnDragEnd() {
 				
+			}
+			
+			@Override
+			protected void OnMouseUp() {
+				double nt = Timing.getTimeMS();
+				if (lastTime == 0) {
+					lastTime = Timing.getTimeMS();
+					return;
+				}
+				
+				if (nt - lastTime <= 300 && !isDragging) {
+					Application.app.GetWindow().SetFullScreen(!Application.app.GetWindow().IsFullScreen());
+				}
+				lastTime = nt;
 			}
 			
 			
@@ -95,16 +161,19 @@ public class TitleBar {
 				StopDragging();
 			}
 			
-		}.AddChild(new GUIText("titleBarText",
+		};
+		
+		tbar.AddChild(new GUIText("titleBarText",
 				new Transform(
 						new Vector3f(.05f,0f,1f)),
-				"Fonts/verdana",
+				fontType,
 				"TitleBar",
 				new Vector4f(1f),
 				1f,
-				.6f,
+				titleFontSize,
 				false
-				)).AddChild(
+				));
+		tbar.AddChild(
 		new GUIButton(
 		"MinimizeButton",new Transform( 
 		new Vector3f(.875f,0,.1f), // Position x,y, Z-Order higher is on top
@@ -113,7 +182,6 @@ public class TitleBar {
 		"Images/blankTexture.png",  // Button texture
 		"Images/blankTexture.png", // Button pressed texture
 		new Vector4f(.55f,.6f,.075f,0f) // Quad Color r,g,b,a
-		
 		) {
 			@Override
 			protected void OnSelect() {
@@ -133,8 +201,7 @@ public class TitleBar {
 				SetButtonTexture(false);
 				SetColor(.55f,.6f,.075f,0f);
 			}
-		}.
-		AddChild(new GUIText(
+		}.AddChild(new GUIText(
 				"AttachText",
 				new Transform(
 						new Vector3f(0f,0f,.1f),
@@ -147,8 +214,10 @@ public class TitleBar {
 				.2f,
 				barButtonSize,
 				true
-				)))
-		.AddChild(new GUIButton(
+				)));
+		
+		
+		tbar.AddChild(new GUIButton(
 				"FullScreenButton",new Transform( 
 		new Vector3f(.925f,0,.1f), // Position x,y, Z-Order higher is on top
 		new Vector3f(0f, 0f,0f),  // Rotation
@@ -157,7 +226,7 @@ public class TitleBar {
 		"Images/blankTexture.png", // Button pressed texture
 		new Vector4f(.55f,.6f,.075f,0f) // Quad Color r,g,b,a
 		
-		){
+		) {
 			@Override
 			protected void OnSelect() {
 				SetColor(.4f,.4f,.4f,1f);
@@ -176,22 +245,23 @@ public class TitleBar {
 				SetButtonTexture(false);
 				SetColor(.55f,.6f,.075f,0f);
 			}
-		}
-		.AddChild(new GUIText(
+		}.AddChild(new GUIText(
 		"AttachText",
 				new Transform(
 						new Vector3f(0f,0f,.1f),
 						new Vector3f(0f),
 						new Vector3f(1f)
 						),
-				"Fonts/BebasNeue",
-				"[]",
+				fontType,
+				"[ ]",
 				new Vector4f(1f),
 				.2f,
 				barButtonSize,
 				true
-				)))
-		.AddChild(new GUIButton(
+				)));
+		
+		
+		tbar.AddChild(new GUIButton(
 		"CloseButton",new Transform( 
 			new Vector3f(.975f,0,.1f), // Position x,y, Z-Order higher is on top
 			new Vector3f(0f, 0f,0f),  // Rotation
@@ -219,15 +289,14 @@ public class TitleBar {
 				SetButtonTexture(false);
 				SetColor(.95f,.01f,.075f,0f);
 			}
-		}
-		.AddChild(new GUIText(
+		}.AddChild(new GUIText(
 				"AttachText",
 				new Transform(
 						new Vector3f(0f,0f,.1f),
 						new Vector3f(0f),
 						new Vector3f(1f)
 						),
-				"Fonts/verdana",
+				fontType,
 				"X",
 				new Vector4f(1f),
 				.2f,
@@ -235,6 +304,7 @@ public class TitleBar {
 				true
 				)));
 		
+		tbar.isWindow = true;
 		text = tbar.GetChild("titleBarText");
 		
 	};

@@ -12,9 +12,7 @@ import engine.Events.MouseScrolledEvent;
 import engine.Events.WindowClosedEvent;
 import engine.Events.WindowResizedEvent;
 import util.Timing;
-import renderer.GUIRenderer;
 import renderer.Renderer;
-import renderer.Renderer2D;
 
 
 
@@ -80,10 +78,10 @@ public class Application {
 			window.Init();
 			window.SetWindowEventCallback(new Window.EventFunction() { @Override public boolean run(Event e) { Event(e); return false; } });
 		}
-		Renderer.Init();
+		Renderer.Init(width, height);
 		Debugger.Init();
 		Collision2D.Begin();
-		TitleBar.Init();
+		WindowFrame.Init();
 		OnInit();
 	}
 	
@@ -118,12 +116,13 @@ public class Application {
 			@Override public boolean run(Event t) { return MouseScrolledEvent((MouseScrolledEvent) t);} });
 		
 		dispatcher.Dispatch(WindowResizedEvent.GetGenericType(), new Events.EventFunction<Event>(event) {
-			@Override public boolean run(Event t) { return WindowResizedEvent((WindowResizedEvent) t);} });
-		
+			@Override public boolean run(Event t) {
+				return WindowResizedEvent((WindowResizedEvent) t);}
+			});
 		dispatcher.Dispatch(WindowClosedEvent.GetGenericType(), new Events.EventFunction<Event>(event) {
 			@Override public boolean run(Event t) {return WindowClosedEvent((WindowClosedEvent)t ); } });
 		Collision2D.OnEvent(event);
-		TitleBar.OnEvent(event);
+		WindowFrame.OnEvent(event);
 		Debugger.OnEvent(event);
 		OnEvent(event);
 		SceneManager.OnEvent(event);
@@ -140,7 +139,7 @@ public class Application {
 		IntBuffer w = BufferUtils.createIntBuffer(1);
 		IntBuffer h = BufferUtils.createIntBuffer(1);
 		window.GetFrameBuffers(w, h);
-		Renderer.SetViewport(0, 0, w.get(),h.get());
+		Renderer.Resize(0, 0, w.get(),h.get());
 		w.clear();
 		h.clear();
 		return false;
@@ -229,12 +228,10 @@ public class Application {
 			float time = window.GetTime();
 			float deltaTime = time - lastFrameTime;
 			lastFrameTime = time;
-			Renderer.Prepare();
 			OnUpdate(deltaTime);
 			SceneManager.OnUpdate(deltaTime);
 			Debugger.Update();
-			Renderer2D.Render();
-			GUIRenderer.Render();
+			Renderer.Render();
 			window.Update();
 			Timing.sync(fpsCap, window.Vsync());
 		}
@@ -264,11 +261,10 @@ public class Application {
 	public void Shutdown() {
 		OnShutdown();
 		SceneManager.Shutdown();
-		TitleBar.Shutdown();
+		WindowFrame.Shutdown();
 		Debugger.ShutDown();
 		Collision2D.CleanUp();
-		Renderer2D.CleanUp();
-		GUIRenderer.CleanUp();
+
 		Renderer.ShutDown();
 		if (window != null) {
 			window.Shutdown();

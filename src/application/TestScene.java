@@ -5,7 +5,6 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import engine.Actor;
-import engine.Application;
 import engine.CameraController;
 import engine.Events;
 import engine.KeyCodes;
@@ -42,10 +41,7 @@ public class TestScene extends Scene {
 	@Override
 	public void OnBegin() {
 		
-		System.out.println(Application.app.GetWindow().GetWindowPosition()[0] + ", "+
-				Application.app.GetWindow().GetWindowPosition()[1]);
-		
-		Renderer.SetClearColor(0f,1f,0f,1f);
+		Renderer.SetClearColor(1f,0f,1f,1f);
 		
 		Actor.Create("card", this).AddComponent(new CardMesh("Mesh", 
 				new Transform( // Card Transform
@@ -98,7 +94,7 @@ public class TestScene extends Scene {
 				new Transform(
 						new Vector3f(0f,0,-1f),  // Position
 						new Vector3f(0f), // Rotation
-						new Vector3f(50000, 50000, 1f)), // Scale
+						new Vector3f(10000, 10000, 1f)), // Scale
 				"Images/blankTexture.png", // Texture
 				new Vector4f(0f,.5f,.15f,1f) , // Color
 				new Vector2f(1f), // UV Scale

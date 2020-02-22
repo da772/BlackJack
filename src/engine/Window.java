@@ -86,12 +86,12 @@ public class Window {
 		glfwDefaultWindowHints(); // optional, the current window hints are already the default
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-		glfwWindowHint(GLFW_SAMPLES, 4); // MSAA x4
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 	    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	    glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+	    glfwWindowHint(GLFW_DECORATED, GL_FALSE); // Remove default title bar
+		glfwWindowHint(GLFW_SAMPLES, 4); // MSAA x4
 	 
 	    
 		monitor = glfwGetPrimaryMonitor();
@@ -306,10 +306,15 @@ public class Window {
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		fullScreen = b;
 		if (b) {
-		 glfwSetWindowMonitor( window, 0, 0, 0, vidmode.width(), vidmode.height(), 0 );
+			glfwSetWindowMonitor( window, 0, 0, 0, vidmode.width(), vidmode.height(), 0 );
 		
 		} else {
 			glfwSetWindowMonitor( window, 0,  0, 0, 1280, 720, 0 );
+			glfwSetWindowPos(
+					window,
+					(vidmode.width() - width) / 2,
+					(vidmode.height() - height) / 2
+				);
 		}
 		WindowFullScreenEvent e = new Events.WindowFullScreenEvent(fullScreen);
 		OnEvent( (Events.Event) e );
