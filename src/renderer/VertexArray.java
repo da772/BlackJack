@@ -14,6 +14,9 @@ import renderer.Buffer.VertexBuffer;
 public class VertexArray {
 
 	private int rendererId;
+	private int vertexCount;
+	private int indexCount;
+	private int vertexSize;
 	
 	public VertexArray() {
 		rendererId = GL30.glGenVertexArrays();
@@ -42,13 +45,25 @@ public class VertexArray {
 	public VertexArray AddVertexBuffer(VertexBuffer vb, BufferLayout layout) {
 		Bind();
 		vb.Bind();
+		vertexCount = vb.GetVertexCount();
+		int div = 0;
 		for (int i = 0; i < layout.size(); i++) {
 			GL30.glEnableVertexAttribArray(i);
+			div += layout.get(i).GetComponentCount();
 			GL30.glVertexAttribPointer(i, layout.get(i).GetComponentCount(), layout.get(i).GetGLBaseType(), layout.get(i).normalized, layout.GetStride(), layout.get(i).offset);
 		}
+		vertexSize = vertexCount/div;
 		vb.UnBind();
 		UnBind();
 		return this;
+	}
+	
+	public int GetVertexSize() {
+		return vertexSize;
+	}
+	
+	public int GetIndexCount() {
+		return indexCount;
 	}
 	
 	/**
@@ -61,6 +76,7 @@ public class VertexArray {
 		ib.Bind();
 		UnBind();
 		ib.UnBind();
+		indexCount = ib.GetIndexCount();
 		return this;
 	}
 	

@@ -57,7 +57,7 @@ public class Renderer {
 	
 	public static void Render() {
 		fbuffer.Bind();
-		Prepare();		
+		Prepare();
 		Renderer2D.Render();
 		GUIRenderer.Render();
 		fbuffer.UnBind();

@@ -23,6 +23,7 @@ public class Word {
 	 * @param character - the character to be added.
 	 */
 	protected void addCharacter(Character character){
+		if (character == null) return;
 		characters.add(character);
 		width += character.getxAdvance() * fontSize;
 	}

@@ -78,7 +78,7 @@ public class Application {
 			window.Init();
 			window.SetWindowEventCallback(new Window.EventFunction() { @Override public boolean run(Event e) { Event(e); return false; } });
 		}
-		Renderer.Init(width, height);
+		Renderer.Init(window.GetFrameBuffers()[0], window.GetFrameBuffers()[1]);
 		Debugger.Init();
 		Collision2D.Begin();
 		WindowFrame.Init();

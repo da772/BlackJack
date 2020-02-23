@@ -5,12 +5,52 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
+import org.lwjgl.BufferUtils;
 
 public class FileLoader {
 
+	
+	
+	public static ByteBuffer getResourceAsByteBuffer(String resourcePath) {
+
+		try {
+			InputStream ss = ClassLoader.getSystemClassLoader().getResourceAsStream(resourcePath);
+			byte[] bytes = IOUtils.toByteArray(ss);
+			ss.close();
+			ByteBuffer buffer = BufferUtils.createByteBuffer(bytes.length);
+			buffer.put(bytes);
+			buffer.flip();
+			return buffer;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+		
+	}
+	
+	
+	public static byte[] getResourceAsByteArray(String resourcePath) {
+
+		try {
+			InputStream ss = ClassLoader.getSystemClassLoader().getResourceAsStream(resourcePath);
+			byte[] bytes = IOUtils.toByteArray(ss);
+			ss.close();
+			return bytes;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+		
+	}
+	
 	public static File getResourceAsFile(String resourcePath) {
 	    try {
 	        InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(resourcePath);

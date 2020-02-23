@@ -1,8 +1,7 @@
 package renderer;
 
 
-import java.io.IOException;
-import java.io.InputStream;
+
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
@@ -10,14 +9,11 @@ import java.util.Map;
 
 import static org.lwjgl.stb.STBImage.*;
 
-import org.apache.commons.io.IOUtils;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
 import engine.Application;
+import util.FileLoader;
 
 
 public class Texture {
@@ -214,31 +210,22 @@ public class Texture {
 			
 			stbi_set_flip_vertically_on_load(flip);
 			
-			InputStream ss = this.getClass().getClassLoader().getResourceAsStream(path);
-			byte[] bytes = IOUtils.toByteArray(ss);
 			
-			ByteBuffer buffer = BufferUtils.createByteBuffer(bytes.length);
-			buffer.put(bytes);
-			buffer.flip();
+			ByteBuffer buffer = FileLoader.getResourceAsByteBuffer(path);
 			
 			data = stbi_load_from_memory(buffer, w, h, comp, 4);
 			
 			if (data == null) {
-				ss.close();
 				 throw new RuntimeException("Failed to load a texture file!"
                          + System.lineSeparator() + stbi_failure_reason());
 			}
 			
 			width = w.get();
 			height = h.get();
-			ss.close();
 			w.clear();
 			h.clear();
 			comp.clear();
 			
-			
-	} catch (IOException e1) {
-		e1.printStackTrace();
 	}
 							
 		CreateTexture();

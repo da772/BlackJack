@@ -9,8 +9,6 @@ import renderer.Buffer.VertexBuffer;
 import renderer.text.FontType;
 import renderer.text.TextMeshCreator;
 import renderer.text.TextMeshData;
-import util.MathLib;
-import renderer.GUIRenderer;
 import renderer.Renderer;
 import renderer.Shader;
 import renderer.ShaderLib;
@@ -126,12 +124,12 @@ public class GUIText extends GUI {
 	 */
 	public void setMeshInfo(float[] vertices) {
 		varray = new VertexArray();
-		verticesSize = vertices.length;
 		vbuffer = new VertexBuffer(vertices, vertices.length);
 		varray.AddVertexBuffer(vbuffer, new VertexArray.BufferLayout( new VertexArray.BufferElement[]{
 			new VertexArray.BufferElement(VertexArray.ElementType.Float2, "position"),
 			new VertexArray.BufferElement(VertexArray.ElementType.Float2, "textureCoords")
 		}));
+		verticesSize = varray.GetVertexSize();
 	}
 
 	/**

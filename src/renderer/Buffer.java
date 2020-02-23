@@ -13,6 +13,7 @@ public class Buffer {
 	public static class VertexBuffer {
 	
 		private int rendererId;
+		private int vertexCount;
 		
 		/**
 		 * 
@@ -21,6 +22,7 @@ public class Buffer {
 		 */
 		public VertexBuffer(float[] vertices, int size) {
 			rendererId = GL15.glGenBuffers();
+			this.vertexCount = size;
 			SetBufferData(vertices, size);
 		}
 		
@@ -37,6 +39,10 @@ public class Buffer {
 			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, ptr, GL15.GL_STATIC_DRAW);
 			ptr.clear();
 			Renderer.AddBuffer(rendererId);
+		}
+		
+		public int GetVertexCount() {
+			return vertexCount;
 		}
 		
 		public void Bind() {
@@ -57,6 +63,7 @@ public class Buffer {
 	public static class IndexBuffer {
 		
 		private int rendererId;
+		private int indexCount;
 		
 		/**
 		 * 
@@ -65,6 +72,7 @@ public class Buffer {
 		 */
 		public IndexBuffer(int[] indices, int size) {
 			rendererId = GL15.glGenBuffers();
+			indexCount = size;
 			SetIndexData(indices, size);
 		}
 		
@@ -81,6 +89,10 @@ public class Buffer {
 			GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, ptr, GL15.GL_STATIC_DRAW);
 			ptr.clear();
 			Renderer.AddBuffer(rendererId);
+		}
+		
+		public int GetIndexCount() {
+			return indexCount;
 		}
 		
 		public void Bind() {
