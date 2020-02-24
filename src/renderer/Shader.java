@@ -169,7 +169,7 @@ public class Shader {
 	 * @param name - name of uniform
 	 * @param data - data to upload
 	 */
-	public void UploadUniformFloat4(String name, Vector4f data) {
+	public int UploadUniformFloat4(String name, Vector4f data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
 		try (MemoryStack stack = MemoryStack.stackPush())
 		{
@@ -178,6 +178,7 @@ public class Shader {
 			GL30.glUniform4fv(loc, fb);
 			fb.clear();
 		}
+		return loc;
 	}
 	
 	/**
@@ -185,7 +186,7 @@ public class Shader {
 	 * @param name - name of uniform
 	 * @param data - data to upload
 	 */
-	public void UploadUniformFloat3(String name, Vector3f data) {
+	public int UploadUniformFloat3(String name, Vector3f data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
 		try (MemoryStack stack = MemoryStack.stackPush())
 		{
@@ -194,6 +195,7 @@ public class Shader {
 			GL30.glUniform3fv(loc, fb);
 			fb.clear();
 		}
+		return loc;
 	}
 	
 	/**
@@ -201,7 +203,7 @@ public class Shader {
 	 * @param name - name of uniform
 	 * @param data - data to upload
 	 */
-	public void UploadUniformFloat2(String name, Vector2f data) {
+	public int UploadUniformFloat2(String name, Vector2f data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
 		try (MemoryStack stack = MemoryStack.stackPush())
 		{
@@ -210,6 +212,7 @@ public class Shader {
 			GL30.glUniform2fv(loc, fb);
 			fb.clear();
 		}
+		return loc;
 	}
 	
 	/**
@@ -217,23 +220,25 @@ public class Shader {
 	 * @param name - name of uniform
 	 * @param data - data to upload
 	 */
-	public void UploadUniformFloat(String name, float data) {
+	public int UploadUniformFloat(String name, float data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
-		try (MemoryStack stack = MemoryStack.stackPush())
-		{
-			FloatBuffer fb = stack.mallocFloat(1);
-			fb.put(data);
-			GL30.glUniform1fv(loc, fb);
-			fb.clear();
-		}
+		GL30.glUniform1f(loc, data);
+		return loc;
 	}
+	
+	public int UploadUniformInt(String name, int data) {
+		int loc = GL30.glGetUniformLocation(rendererId, name);
+		GL30.glUniform1i(loc, data);
+		return loc;
+	}
+	
 
 	/**
 	 * Upload uniform to currently bound shader
 	 * @param name - name of uniform
 	 * @param data - data to upload
 	 */
-	public void UploadUniformMat4(String name, Matrix4f data) {
+	public int UploadUniformMat4(String name, Matrix4f data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
 		try (MemoryStack stack = MemoryStack.stackPush())
 		{
@@ -242,6 +247,7 @@ public class Shader {
 			GL30.glUniformMatrix4fv(loc, false, fb);
 			fb.clear();
 		}
+		return loc;
 	}
 
 	/**
@@ -249,7 +255,7 @@ public class Shader {
 	 * @param name - name of uniform
 	 * @param data - data to upload
 	 */
-	public void UploadUniformMat3(String name, Matrix3f data) {
+	public int UploadUniformMat3(String name, Matrix3f data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
 		try (MemoryStack stack = MemoryStack.stackPush())
 		{
@@ -258,6 +264,12 @@ public class Shader {
 			GL30.glUniformMatrix3fv(loc, false, fb);
 			fb.clear();
 		}
+		return loc;
+	}
+	
+	
+	public int GetUniformLocation(String name) {
+		return GL30.glGetUniformLocation(rendererId, name);
 	}
 	
 	

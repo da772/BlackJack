@@ -37,13 +37,13 @@ public class Texture {
 		return Texture.Create(fileName, false, true);
 	}
 	
-	public static Texture Create(String name, ByteBuffer data, int width, int height) {
+	public static Texture Create(String name, ByteBuffer data, int width, int height, int format) {
 		if (textures.containsKey(name)) {
 			Texture t =  textures.get(name);
 			t.AddReferenceCount(1);
 			return t;
 		}
-		Texture t = new Texture(name, data, width, height);
+		Texture t = new Texture(name, data, width, height, format);
 		t.fileName = name;
 		t.AddReferenceCount(1);
 		textures.put(name, t);
@@ -114,12 +114,12 @@ public class Texture {
 	}
 	
 	
-	protected Texture(String name, ByteBuffer data, int width, int height) {
+	protected Texture(String name, ByteBuffer data, int width, int height, int format) {
 		rendererId = GL30.glGenTextures();
 		this.width = width;
 		this.height = height;
 		Renderer.AddTexture(this);
-		LoadImageData(data, width, height);
+		LoadImageData(data, width, height, format);
 	}
 	
 	protected Texture(String fileName, boolean fontTexture, boolean mipMap) {
@@ -132,19 +132,26 @@ public class Texture {
 		
 	}
 	
-	public void LoadImageData(ByteBuffer data, int width, int height) {
+	public void LoadImageData(ByteBuffer data, int width, int height, int format) {
 		Bind();
 		setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR);
 		setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
-		uploadData(GL30.GL_RGB, width, height, GL30.GL_RGB, data);
+		uploadData(format, width, height, format, data);
 		UnBind();
 	}
 	
+	public void Bind(int slot) {
+		GL30.glActiveTexture(GL30.GL_TEXTURE1);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, rendererId);
+	}
+	
 	public void Bind() {
+		GL30.glActiveTexture(GL30.GL_TEXTURE0);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, rendererId);
     }
 	
 	public void UnBind() {
+		GL30.glActiveTexture(GL30.GL_TEXTURE0);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
     }
 	

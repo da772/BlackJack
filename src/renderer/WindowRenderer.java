@@ -11,7 +11,8 @@ import renderer.GUI.GUI;
 
 public class WindowRenderer {
 
-	public static List<GUI> huds = new ArrayList<GUI>();
+	private static List<GUI> huds = new ArrayList<GUI>();
+	private static GUI meshScreen;
 
 	/**
 	 * 
@@ -19,6 +20,11 @@ public class WindowRenderer {
 	 */
 	public static void Add(GUI hud) {
 		if (!huds.contains(hud)) {
+			if (hud.isMeshScreen) {
+				meshScreen = hud;
+				hud.Init();
+				return;
+			}
 			huds.add(hud);
 			hud.Init();
 			Collision2D.Add(hud);
@@ -59,12 +65,25 @@ public class WindowRenderer {
 		Renderer.SetDepth(true);
 	}
 	
+	public static void RenderMeshScreen() {
+		Renderer.SetDepth(false);
+		if (meshScreen != null) {
+			meshScreen.Bind();
+			meshScreen.Draw();
+			meshScreen.UnBind();
+		}
+		Renderer.SetDepth(true);
+	}
+	
 	
 	public static void CleanUp () {
 		for (GUI h : huds) {
 			h.CleanUp();
 		}
-		huds.clear();	
+		huds.clear();
+		if (meshScreen != null) {
+			meshScreen.CleanUp();
+		}
 	}
 
 	public static int GetWidth() {

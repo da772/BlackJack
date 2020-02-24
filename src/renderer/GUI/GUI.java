@@ -351,6 +351,13 @@ public abstract class GUI extends Collider2D {
 		}
 	}
 	
+	public void SetMeshScreen(boolean b) {
+		this.isMeshScreen = b;
+		for (GUI c : children) {
+			c.SetMeshScreen(b);
+		}
+	}
+	
 	public void SetTransform(Transform transform) {
 		this.transform = transform;
 		UpdateTransform();

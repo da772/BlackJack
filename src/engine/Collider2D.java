@@ -44,6 +44,7 @@ public abstract class Collider2D extends Component {
 	
 	
 	public boolean isWindow = false;
+	public boolean isMeshScreen = false;
 	
 	protected float zOrder = 0f;
 

@@ -112,20 +112,21 @@ public class Buffer {
 	
 public static class FrameBuffer {
 		
-		private int rendererId;
+		private int rendererId, format;
 		Texture texture;
+		
 		
 		/**
 		 * 
 		 * 
 		 */
-		public FrameBuffer(String name, int width, int height) {
+		public FrameBuffer(String name, int width, int height, int format) {
 			rendererId = GL30.glGenFramebuffers();
+			this.format = format;
 			Bind();
-			texture = Texture.Create(name, null, width, height);
+			texture = Texture.Create(name, null, width, height, format);
 			texture.Bind();
-			GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0,
-					GL30.GL_TEXTURE_2D, texture.GetID(), 0);
+			GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0,GL30.GL_TEXTURE_2D, texture.GetID(), 0);
 			texture.UnBind();
 			UnBind();
 		}
@@ -161,7 +162,7 @@ public static class FrameBuffer {
 		}
 		
 		public void UpdateSize(int width, int height) {
-			texture.LoadImageData(null, width, height);
+			texture.LoadImageData(null, width, height, this.format);
 		}
 		
 		public Texture GetTexture() {

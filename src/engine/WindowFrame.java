@@ -16,7 +16,7 @@ import util.Timing;
 
 public class WindowFrame {
 
-	static GUI tbar, resizeTab, text, screen;
+	static GUI tbar, resizeTab, text, screen, meshScreen;
 	static final float heightv = .035f;
 	static float height = .035f;
 	static float barButtonSize = .9f;
@@ -32,6 +32,7 @@ public class WindowFrame {
 		tbar.Add();
 		resizeTab.Add();
 		screen.Add();
+		meshScreen.Add();
 	}
 	
 
@@ -70,17 +71,42 @@ public class WindowFrame {
 	
 	
 	private static void CreateScreen() {
+		meshScreen = new GUIQuad("MeshScreen", new Transform(
+				new Vector3f(0, 0, 1e6f),
+				new Vector3f(0f),
+				new Vector3f(1f, 1f, 1f)
+				), 
+				"MeshFrameBuffer",
+				new Vector4f(1f),
+				new Vector2f(1f),
+				ShaderLib.Shader_GUIQuad_Wave) {
+			
+			
+			@Override
+			public void Bind() {
+				super.Bind();
+				shader.UploadUniformFloat("offset", Application.app.GetWindow().GetTime());
+			}
+			
+			
+		};
+		meshScreen.SetWindowElement(true);
+		meshScreen.SetMeshScreen(true);
+		meshScreen.SetGUICollision(false);
+		
 		screen = new GUIQuad("Screen", new Transform(
 				new Vector3f(0, -height, 1e6f),
 				new Vector3f(0f),
 				new Vector3f(1f, 1f-height, 1f)
 				), 
-				"ScreenFrameBuffer",
+				"GUIFrameBuffer",
 				new Vector4f(1f),
 				new Vector2f(1f),
-				ShaderLib.Shader_GUIQuad);
+				ShaderLib.Shader_GUIQuad) {
+		};
 		screen.SetWindowElement(true);
 		screen.SetGUICollision(false);
+		
 	}
 	
 	private static void CreateTitleBar() {
@@ -309,7 +335,7 @@ public class WindowFrame {
 		
 	};
 	
-private static void CreateResizeTab() {
+	private static void CreateResizeTab() {
 		
 		resizeTab = new GUIQuad_Draggable(
 				"resizeTab", new Transform( 

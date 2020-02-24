@@ -20,21 +20,34 @@ public class Renderer {
 	private static List<Texture> Textures = new ArrayList<Texture>();
 	private static List<TextureAtlas> TextureAtlas = new ArrayList<TextureAtlas>();
 	private static Vector4f clearColor = new Vector4f(1f,0f,1f,1f);
-	private static FrameBuffer fbuffer;
-	private static RenderBuffer rbuffer;
+	private static FrameBuffer MeshFrameBuffer, GUIFrameBuffer;
+	private static RenderBuffer MeshRenderBuffer, GUIRenderBuffer;
 	
 	public static void Init(int width, int height) {
 		GL30.glEnable(GL11.GL_DEPTH_TEST);
 		EnableCulling();
-		GL30.glEnable(GL11.GL_BLEND);
-		GL30.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		EnableBlending();
 		GL30.glEnable(GL30.GL_MULTISAMPLE);  
 		ResizeBuffer(width,height);
 		
 	}
 	
-	public static Texture GetScreenTexture() {
-		return fbuffer.GetTexture();
+	public static void DisableBlending() {
+		GL30.glDisable(GL11.GL_BLEND);
+	}
+	
+	public static void EnableBlending() {
+		GL30.glEnable(GL11.GL_BLEND);
+		GL30.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		
+	}
+	
+	public static Texture GetMeshTexture() {
+		return MeshFrameBuffer.GetTexture();
+	}
+	
+	public static Texture GetGUITexture() {
+		return GUIFrameBuffer.GetTexture();
 	}
 	
 	
@@ -56,11 +69,29 @@ public class Renderer {
 	}
 	
 	public static void Render() {
-		fbuffer.Bind();
+		RenderMesh();
+		RenderGUI();
+		RenderWindow();
+	}
+	
+	private static void RenderMesh() {
+		MeshFrameBuffer.Bind();
 		Prepare();
 		Renderer2D.Render();
+		MeshFrameBuffer.UnBind();
+	}
+	
+	private static void RenderGUI() {
+		
+		GUIFrameBuffer.Bind();
+		Prepare();
+		WindowRenderer.RenderMeshScreen();
 		GUIRenderer.Render();
-		fbuffer.UnBind();
+		GUIFrameBuffer.UnBind();
+	}
+	
+	private static void RenderWindow() {
+		Prepare();
 		WindowRenderer.Render();
 	}
 	
@@ -110,11 +141,21 @@ public class Renderer {
 	}
 	
 	private static void ResizeBuffer(int width, int height) {
-		if (fbuffer == null) fbuffer = new FrameBuffer("ScreenFrameBuffer", width, height);	
-		if (rbuffer != null) rbuffer.CleanUp();
-		rbuffer = new RenderBuffer(width, height);
-		fbuffer.UpdateSize(width, height);
-		fbuffer.Render(rbuffer);
+		if (MeshFrameBuffer == null) MeshFrameBuffer = new FrameBuffer("MeshFrameBuffer",
+				width, height, GL30.GL_RGB);	
+		if (MeshRenderBuffer != null) MeshRenderBuffer.CleanUp();
+		MeshRenderBuffer = new RenderBuffer(width, height);
+		MeshFrameBuffer.UpdateSize(width, height);
+		MeshFrameBuffer.Render(MeshRenderBuffer);
+		
+		if (GUIFrameBuffer == null) GUIFrameBuffer = new FrameBuffer("GUIFrameBuffer",
+				width, height, GL30.GL_RGB);	
+		if (GUIRenderBuffer != null) GUIRenderBuffer.CleanUp();
+		
+		GUIRenderBuffer = new RenderBuffer(width, height);
+		GUIFrameBuffer.UpdateSize(width, height);
+		GUIFrameBuffer.Render(GUIRenderBuffer);
+	
 	}
 
 	/**
@@ -244,8 +285,10 @@ public class Renderer {
 		}
 		Shaders.clear();
 		
-		rbuffer.CleanUp();
-		fbuffer.CleanUp();
+		GUIRenderBuffer.CleanUp();
+		MeshRenderBuffer.CleanUp();
+		GUIFrameBuffer.CleanUp();
+		MeshFrameBuffer.CleanUp();
 
 	}
 	
