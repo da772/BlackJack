@@ -306,7 +306,11 @@ public class Window {
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		fullScreen = b;
 		if (b) {
-			glfwSetWindowMonitor( window, 0, 0, 0, vidmode.width(), vidmode.height(), 0 );
+			if (System.getProperty("os.name").contains("Windows")) {
+				glfwSetWindowMonitor( window, 0, 0, 0, vidmode.width(), vidmode.height(), 0 );
+			} else {
+				glfwSetWindowMonitor( window, glfwGetPrimaryMonitor(), 0, 0, vidmode.width(), vidmode.height(), 0 );
+			}
 		
 		} else {
 			glfwSetWindowMonitor( window, 0,  0, 0, 1280, 720, 0 );
