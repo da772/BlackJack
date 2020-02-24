@@ -11,10 +11,10 @@ import org.joml.Vector4f;
 import engine.Application;
 import engine.Collider2D;
 import engine.Collision2D;
+import engine.ShaderLib;
 import engine.Events.Event;
 import renderer.GUIRenderer;
 import renderer.Shader;
-import renderer.ShaderLib;
 import renderer.Texture;
 import renderer.Transform;
 import util.MathLib;
@@ -284,6 +284,11 @@ public abstract class GUI extends Collider2D {
 	
 	public Vector3f GetRelativePosition() {
 		return RelativePosition;
+	}
+	
+	public void SetShader(Shader s) {
+		Shader.Remove(this.shader);
+		this.shader = s;
 	}
 	
 	public void SetRelativePosition(Vector3f pos) {

@@ -3,8 +3,8 @@ package application;
 import org.joml.Vector4f;
 
 import engine.Camera;
+import engine.ShaderLib;
 import engine.TextureAtlas;
-import renderer.ShaderLib;
 import renderer.TextureCoords;
 import renderer.Transform;
 import renderer.mesh.Mesh2DQuad;

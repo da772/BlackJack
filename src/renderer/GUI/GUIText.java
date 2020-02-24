@@ -4,6 +4,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import engine.ShaderLib;
 import engine.Events.Event;
 import renderer.Buffer.VertexBuffer;
 import renderer.text.FontType;
@@ -11,7 +12,6 @@ import renderer.text.TextMeshCreator;
 import renderer.text.TextMeshData;
 import renderer.Renderer;
 import renderer.Shader;
-import renderer.ShaderLib;
 import renderer.Texture;
 import renderer.Transform;
 import renderer.VertexArray;

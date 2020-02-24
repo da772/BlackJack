@@ -5,7 +5,8 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import engine.Events.Event;
-import renderer.ShaderLib;
+import renderer.Renderer;
+import renderer.Shader;
 import renderer.Transform;
 import renderer.GUI.GUI;
 import renderer.GUI.GUIButton;
@@ -69,6 +70,14 @@ public class WindowFrame {
 	}
 	
 	
+	public static void SetMeshShader(String[] shaders) {
+		meshScreen.SetShader(Shader.Create(shaders));
+	}
+	
+	public static void SetScreenShader(String[] shaders) {
+		screen.SetShader(Shader.Create(shaders));
+	}
+	
 	
 	private static void CreateScreen() {
 		meshScreen = new GUIQuad("MeshScreen", new Transform(
@@ -76,16 +85,16 @@ public class WindowFrame {
 				new Vector3f(0f),
 				new Vector3f(1f, 1f, 1f)
 				), 
-				"MeshFrameBuffer",
+				Renderer.GetMeshTexture().GetFileName(),
 				new Vector4f(1f),
 				new Vector2f(1f),
-				ShaderLib.Shader_GUIQuad_Wave) {
+				ShaderLib.Shader_GUIQuad) {
 			
 			
 			@Override
 			public void Bind() {
 				super.Bind();
-				shader.UploadUniformFloat("offset", Application.app.GetWindow().GetTime());
+				shader.UploadUniformFloat("time", Application.app.GetWindow().GetTime());
 			}
 			
 			
@@ -99,7 +108,7 @@ public class WindowFrame {
 				new Vector3f(0f),
 				new Vector3f(1f, 1f-height, 1f)
 				), 
-				"GUIFrameBuffer",
+				Renderer.GetGUITexture().GetFileName(),
 				new Vector4f(1f),
 				new Vector2f(1f),
 				ShaderLib.Shader_GUIQuad) {

@@ -1,8 +1,8 @@
-package renderer;
+package engine;
 
 /**
  * 
- * Library of staic shader sources
+ * Library of static shader sources
  *
  */
 public class ShaderLib {
@@ -262,6 +262,65 @@ public class ShaderLib {
 							"vec2 texcoord = v_TexCoord*v_uvScale;\r\n" + 
 							"texcoord.x += sin(texcoord.y * 4*2*3.14159 + offset) / 100;\r\n"+
 							"color = texture(u_Texture, texcoord) * v_color;\r\n" + 
+							"}" 
+					};
+	
+	public final static String[] Shader_GUIQuad_ScanLines = new String[] {
+			"#version 330\r\n" + 
+					" \r\n" + 
+					"layout(location = 0) in vec3 a_Position;\r\n" + 
+					"layout(location = 1) in vec2 a_TexCoord;\r\n" + 
+					" \r\n" + 
+					"uniform mat4 u_Transform;\r\n" + 
+					"uniform vec4 u_Color;\r\n" + 
+					"uniform vec2 u_UVScale;\r\n" + 
+					"out vec2 v_TexCoord;\r\n" + 
+					"out vec4 v_color;\r\n" + 
+					"out vec2 v_uvScale;\r\n" + 
+					" \r\n" + 
+					"void main() \r\n" + 
+					"{\r\n" + 
+					"	v_uvScale = u_UVScale;\r\n" + 
+					"	v_TexCoord = a_TexCoord;\r\n" + 
+					"	v_color = u_Color;\r\n" + 
+					"    gl_Position = u_Transform * vec4(a_Position,1.f);\r\n" + 
+					"}",
+					
+					
+					"#version 330 core\r\n" + 
+							"\r\n" + 
+							"layout(location = 0) out vec4 color;\r\n" + 
+							"\r\n" + 
+							"in vec2 v_TexCoord;\r\n" + 
+							"in vec4 v_color;\r\n" + 
+							"in vec2 v_uvScale;\r\n" + 
+							"\r\n" + 
+							"uniform sampler2D u_Texture;\r\n" + 
+							"uniform float time;\r\n" + 
+							"\r\n" + 
+							"void main() {\r\n" +
+							"vec2 q = vec2(v_TexCoord.x, -v_TexCoord.y) ;\r\n" + 
+							"vec2 uv = vec2(v_TexCoord.x, -v_TexCoord.y);\r\n" + 
+							"\r\n" + 
+							"vec3 oricol = texture( u_Texture, vec2(q.x,1.0+q.y) ).xyz;\r\n" + 
+							"vec3 col;\r\n" + 
+							"\r\n" + 
+							"col.r = texture(u_Texture,vec2(uv.x+0.006,-uv.y)).x;\r\n" + 
+							"col.g = texture(u_Texture,vec2(uv.x+0.000,-uv.y)).y;\r\n" + 
+							"col.b = texture(u_Texture,vec2(uv.x-0.006,-uv.y)).z;\r\n" + 
+							"\r\n" + 
+							"col = clamp(col*0.5+0.5*col*col*1.2,0.0,1.0);\r\n" + 
+							"\r\n" + 
+							"col *= 0.5 + 0.5*16.0*uv.x*-uv.y*(1.0-uv.x)*(1.0+uv.y);\r\n" + 
+							"\r\n" + 
+							"col *= vec3(0.95,1.05,0.95);\r\n" + 
+							"\r\n" + 
+							"col *= 0.9+0.1*sin(10.0*time+uv.y*1000.0);\r\n" + 
+							"\r\n" + 
+							"col *= 0.99+0.01*sin(110.0*time);\r\n" + 
+							"\r\n" + 
+							"\r\n" + 
+							"color = vec4(col,1.0);"+
 							"}" 
 					};
 	

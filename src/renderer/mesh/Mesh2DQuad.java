@@ -4,9 +4,9 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import engine.Camera;
+import engine.ShaderLib;
 import renderer.Buffer.VertexBuffer;
 import renderer.Renderer;
-import renderer.ShaderLib;
 import renderer.TextureCoords;
 import renderer.Buffer.IndexBuffer;
 import renderer.Transform;

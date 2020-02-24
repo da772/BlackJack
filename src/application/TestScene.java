@@ -17,10 +17,13 @@ import renderer.GUI.GUIText;
 import renderer.GUI.GUIQuad_Draggable;
 import renderer.mesh.Mesh2DBackground;
 import engine.Scene;
+import engine.ShaderLib;
+import engine.WindowFrame;
 
 public class TestScene extends Scene {
 
 	private float rotationSpeed = 180f;
+	boolean scanLines = false;
 	
 	public TestScene(String name, CameraController cam) {
 		super(name, cam);
@@ -210,6 +213,17 @@ public class TestScene extends Scene {
 							"card_back_red", // Card back Suit
 							this.cam.GetCamera()));
 				}
+			}
+			
+			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_Z) {
+				if (!scanLines) {
+					WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad_ScanLines);
+					scanLines = true;
+				} else {
+					WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad);
+					scanLines = false;
+				}
+				
 			}
 		}
 		
