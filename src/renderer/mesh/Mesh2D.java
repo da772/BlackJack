@@ -108,6 +108,11 @@ public abstract class  Mesh2D extends Collider2D {
 		SetPosition(p);
 	}
 	
+	
+	public void SetScale(float x, float y, float z) {
+		SetScale(new Vector3f(x,y,z));
+	}
+	
 	public void SetScale(Vector3f scale) {
 		SetTransform(new Transform(transform.GetPosition(), transform.GetRotation(), scale));
 	}

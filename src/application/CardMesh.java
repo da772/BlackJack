@@ -39,6 +39,7 @@ public class CardMesh extends Mesh2DQuad {
 		this.generateMipMap = false;
 		this.cardFront = cardFront;
 		this.cardBack = cardBack;
+		this.SetScale(transform.GetScale().x * .75f, transform.GetScale().y, transform.GetScale().z);
 		this.SetRotation(transform.GetRotation().x,transform.GetRotation().y,transform.GetRotation().z+180f);
 		SetupTextureCoords();
 		

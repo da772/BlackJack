@@ -37,8 +37,8 @@ public class TestScene extends Scene {
 				((CardMesh)GetActor("card").GetComponent("Mesh")).GetRotation().y-rotationSpeed*deltaTime, ((CardMesh)GetActor("card").GetComponent("Mesh")).GetRotation().z+rotationSpeed*deltaTime );
 		}
 		if (GetActor("card4") != null) {
-			((CardMesh)GetActor("card4").GetComponent("Mesh")).SetRotation(((CardMesh)GetActor("card4").GetComponent("Mesh")).GetRotation().x,
-					((CardMesh)GetActor("card4").GetComponent("Mesh")).GetRotation().y+rotationSpeed*deltaTime, ((CardMesh)GetActor("card4").GetComponent("Mesh")).GetRotation().z-rotationSpeed*deltaTime );
+			((ChipMesh)GetActor("card4").GetComponent("Mesh")).SetRotation(((ChipMesh)GetActor("card4").GetComponent("Mesh")).GetRotation().x,
+					((ChipMesh)GetActor("card4").GetComponent("Mesh")).GetRotation().y+rotationSpeed*deltaTime, ((ChipMesh)GetActor("card4").GetComponent("Mesh")).GetRotation().z-rotationSpeed*deltaTime );
 		}
 	}
 
@@ -51,38 +51,101 @@ public class TestScene extends Scene {
 				new Transform( // Card Transform
 						new Vector3f(0, -.35f, 1f), // Position
 						new Vector3f(0f, 0, 0), // Rotation
-						new Vector3f(.75f, 1f, 1f) ), // Scale
+						new Vector3f(1f, 1f, 1f) ), // Scale
 				"AS", // Card front Suit
 				"card_back_red", // Card back Suit
 				this.cam.GetCamera()));// Camera))
-		
-		Actor.Create("card2", this).AddComponent(new CardMesh("Mesh", 
-				new Transform( // Card Transform
-						new Vector3f(0, .75f, 0), // Position
-						new Vector3f(0f, 0, 0), // Rotation
-						new Vector3f(.75f, 1f, 1f) ), // Scale
-				"4H", // Card front Suit
-				"card_back_red", // Card back Suit
-				this.cam.GetCamera()));// Camera))
-		
 		
 		Actor.Create("card3", this).AddComponent(new CardMesh("Mesh", 
 				new Transform( // Card Transform
 						new Vector3f(-.75f, -.35f, 0), // Position
 						new Vector3f(0f, 0, 0), // Rotation
-						new Vector3f(.75f, 1f, 1f) ), // Scale
+						new Vector3f(1f, 1f, 1f) ), // Scale
 				"JH", // Card front Suit
 				"card_back_red", // Card back Suit
 				this.cam.GetCamera()));// Camera))
 		
-		Actor.Create("card4", this).AddComponent(new CardMesh("Mesh", 
-				new Transform( // Card Transform
-						new Vector3f(-.75f, .75f, 1f), // Position
-						new Vector3f(0f, 0, 0), // Rotation
-						new Vector3f(.75f, 1f, 1f) ), // Scale
-				"8C", // Card front Suit
-				"card_back_red", // Card back Suit
-				this.cam.GetCamera()));// Camera))
+		for (int i = 0; i < 25; i++ ) {
+			Actor.Create("chip1"+i, this).AddComponent(new ChipMesh("Mesh", 
+					new Transform( // Card Transform
+							new Vector3f(.75f, .55f+i/100.f, i/100f), // Position
+							new Vector3f(0f, 180f, 0), // Rotation
+							new Vector3f(1f, 1f, 1f) ), // Scale
+					"Chip1", // Chip type
+					this.cam.GetCamera()));// Camera))
+		}
+		
+		for (int i = 0; i < 25; i++ ) {
+			Actor.Create("chip5"+i, this).AddComponent(new ChipMesh("Mesh", 
+					new Transform( // Card Transform
+							new Vector3f(.45f, .55f+i/100.f, i/100f), // Position
+							new Vector3f(0f, 180f, 0), // Rotation
+							new Vector3f(1f, 1f, 1f) ), // Scale
+					"Chip5", // Chip type
+					this.cam.GetCamera()));// Camera))
+		}
+		
+		for (int i = 0; i < 25; i++ ) {
+			Actor.Create("chip10"+i, this).AddComponent(new ChipMesh("Mesh", 
+					new Transform( // Card Transform
+							new Vector3f(.15f, .55f+i/100.f, i/100f), // Position
+							new Vector3f(0f, 180f, 0), // Rotation
+							new Vector3f(1f, 1f, 1f) ), // Scale
+					"Chip10", // Chip type
+					this.cam.GetCamera()));// Camera))
+		}
+		
+		for (int i = 0; i < 25; i++ ) {
+			Actor.Create("chip25"+i, this).AddComponent(new ChipMesh("Mesh", 
+					new Transform( // Card Transform
+							new Vector3f(-.15f, .55f+i/100.f, i/100f), // Position
+							new Vector3f(0f, 180f, 0), // Rotation
+							new Vector3f(1f, 1f, 1f) ), // Scale
+					"Chip25", // Chip type
+					this.cam.GetCamera()));// Camera))
+		}
+		
+		for (int i = 0; i < 25; i++ ) {
+			Actor.Create("chip50"+i, this).AddComponent(new ChipMesh("Mesh", 
+					new Transform( // Card Transform
+							new Vector3f(-.45f, .55f+i/100.f, i/100f), // Position
+							new Vector3f(0f, 180f, 0), // Rotation
+							new Vector3f(1f, 1f, 1f) ), // Scale
+					"Chip50", // Chip type
+					this.cam.GetCamera()));// Camera))
+		}
+		
+		for (int i = 0; i < 25; i++ ) {
+			Actor.Create("chip100"+i, this).AddComponent(new ChipMesh("Mesh", 
+					new Transform( // Card Transform
+							new Vector3f(-.75f, .55f+i/100.f, i/100f), // Position
+							new Vector3f(0f, 180f, 0), // Rotation
+							new Vector3f(1f, 1f, 1f) ), // Scale
+					"Chip100", // Chip type
+					this.cam.GetCamera()));// Camera))
+		}
+		
+		for (int i = 0; i < 25; i++ ) {
+			Actor.Create("chip500"+i, this).AddComponent(new ChipMesh("Mesh", 
+					new Transform( // Card Transform
+							new Vector3f(-1.05f, .55f+i/100.f, i/100f), // Position
+							new Vector3f(0f, 180f, 0), // Rotation
+							new Vector3f(1f, 1f, 1f) ), // Scale
+					"Chip500", // Chip type
+					this.cam.GetCamera()));// Camera))
+		}
+		
+		for (int i = 0; i < 25; i++ ) {
+			Actor.Create("chip1000"+i, this).AddComponent(new ChipMesh("Mesh", 
+					new Transform( // Card Transform
+							new Vector3f(-1.35f, .55f+i/100.f, i/100f), // Position
+							new Vector3f(0f, 180f, 0), // Rotation
+							new Vector3f(1f, 1f, 1f) ), // Scale
+					"Chip1000", // Chip type
+					this.cam.GetCamera()));// Camera))
+		}
+		
+		
 		/*
 		Actor.Create("example", this).AddComponent(new Mesh2DQuad("quad", //Name
 				new Transform( // Card Transform
@@ -218,7 +281,7 @@ public class TestScene extends Scene {
 			
 			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_Z) {
 				if (!scanLines) {
-					WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad_VHS);
+					WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad_CRTTV);
 					scanLines = true;
 				} else {
 					WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad);
