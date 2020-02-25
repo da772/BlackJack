@@ -18,28 +18,44 @@ import util.Timing;
 public class WindowFrame {
 
 	static GUI tbar, resizeTab, text, screen, meshScreen;
-	static final float heightv = .035f;
-	static float height = .035f;
-	static float barButtonSize = .9f;
+	static final float top = .035f;
+	static final float left = .0175f/2f;
+	static final float barButtonSize = .9f;
+	static boolean fullScreen = false;
 	static boolean resizeTabHidden = false;
 	static final String fontType = "Fonts/Segoe";
 	static final float titleFontSize = .8f;
+	static final Vector4f borderColor = new Vector4f(.15f,.15f,.15f,1f);
+	static final Transform fullScreenTransform = new Transform(
+			new Vector3f(0f, 0, 1e6f),
+			new Vector3f(0f),
+			new Vector3f(1f, 1f, 1f)
+			);
+	static final Transform minScreenTransform = new Transform(
+			new Vector3f(0f, -top, 1e6f),
+			new Vector3f(0f),
+			new Vector3f(1f, 1f-top, 1f)
+			);
 	
 	public static void Init() {
+		fullScreen = Application.GetWindow().IsFullScreen();
 		CreateTitleBar();
 		CreateResizeTab();
 		CreateScreen();
 		
-		tbar.Add();
 		resizeTab.Add();
+		tbar.Add();
 		screen.Add();
 		meshScreen.Add();
 	}
 	
 
-
-	public static float GetHeight() {
-		return height;
+	public static float GetTop() {
+		return fullScreen ? 0f : top;
+	}
+	
+	public static float GetLeft() {
+		return fullScreen ? 0f : left;
 	}
 	
 	public static void OnEvent(Event e) {
@@ -49,15 +65,15 @@ public class WindowFrame {
 		
 		if (e instanceof Events.WindowFullScreenEvent) {
 			Events.WindowFullScreenEvent _e = ((Events.WindowFullScreenEvent)e);
-			resizeTabHidden = _e.IsFullScreen();
-			if (resizeTabHidden) {
+			fullScreen = _e.IsFullScreen();
+			if (fullScreen) {
 				resizeTab.Remove();
-				//tbar.Remove();
-				//height = 0f;
+				tbar.Remove();
+				screen.SetTransform(fullScreenTransform);
 			} else {
 				resizeTab.Add();
-				//tbar.Add();
-				//height = heightv;
+				tbar.Add();
+				screen.SetTransform(minScreenTransform);
 			}
 		}
 		
@@ -81,7 +97,7 @@ public class WindowFrame {
 	
 	private static void CreateScreen() {
 		meshScreen = new GUIQuad("MeshScreen", new Transform(
-				new Vector3f(0, 0, 1e6f),
+				new Vector3f(0, 0, 0f),
 				new Vector3f(0f),
 				new Vector3f(1f, 1f, 1f)
 				), 
@@ -94,7 +110,7 @@ public class WindowFrame {
 			@Override
 			public void Bind() {
 				super.Bind();
-				shader.UploadUniformFloat("time", Application.app.GetWindow().GetTime());
+				shader.UploadUniformFloat("time", Application.GetWindow().GetTime());
 			}
 			
 			
@@ -103,15 +119,18 @@ public class WindowFrame {
 		meshScreen.SetMeshScreen(true);
 		meshScreen.SetGUICollision(false);
 		
-		screen = new GUIQuad("Screen", new Transform(
-				new Vector3f(0, -height, 1e6f),
-				new Vector3f(0f),
-				new Vector3f(1f, 1f-height, 1f)
-				), 
+		screen = new GUIQuad("Screen", fullScreen ? fullScreenTransform : minScreenTransform , 
 				Renderer.GetGUITexture().GetFileName(),
 				new Vector4f(1f),
 				new Vector2f(1f),
 				ShaderLib.Shader_GUIQuad) {
+			
+			@Override
+			public void Bind() {
+				super.Bind();
+				shader.UploadUniformFloat("time", Application.GetWindow().GetTime());
+			}
+			
 		};
 		screen.SetWindowElement(true);
 		screen.SetGUICollision(false);
@@ -122,13 +141,12 @@ public class WindowFrame {
 		
 		tbar = new GUIQuad_Draggable(
 				"Titlebar",new Transform( 
-						new Vector3f(0,.965f, 1e6f), // Position x,y, Z-Order higher is on top
+						new Vector3f(0, 1-top-left, 1e6f), // Position x,y, Z-Order higher is on top
 						new Vector3f(0f, 0f,0f),  // Rotation
-						new Vector3f(1f, height,1f)), // Scale x,y,z
+						new Vector3f(1f-left, top-left,1f)), // Scale x,y,z
 				"Images/blankTexture.png",  // Quad Texture path
-				new Vector4f(.15f,.15f,.15f,1f) // Quad Color r,g,b,a
+				borderColor // Quad Color r,g,b,a
 		) {
-			
 			@Override
 			public GUI AddChild(GUI g) { 
 				super.AddChild(g);
@@ -167,7 +185,7 @@ public class WindowFrame {
 				}
 				
 				if (nt - lastTime <= 300 && !isDragging) {
-					Application.app.GetWindow().SetFullScreen(!Application.app.GetWindow().IsFullScreen());
+					Application.GetWindow().SetFullScreen(!Application.GetWindow().IsFullScreen());
 				}
 				lastTime = nt;
 			}
@@ -180,14 +198,14 @@ public class WindowFrame {
 			
 			@Override
 			protected void _Drag(float x, float y) {
-				int[] w_pos = Application.app.GetWindow().GetWindowPosition();
-				if (!Application.app.GetWindow().IsFullScreen()) { 
-				Application.app.GetWindow().SetWindowLocation( 
+				int[] w_pos = Application.GetWindow().GetWindowPosition();
+				if (!Application.GetWindow().IsFullScreen()) { 
+				Application.GetWindow().SetWindowLocation( 
 						(int)(w_pos[0] + (x-dragPos.x)),
 						(int)(w_pos[1] + (y-dragPos.y)) 
 								);
 				} else {
-					Application.app.GetWindow().SetFullScreen(false);
+					Application.GetWindow().SetFullScreen(false);
 				}
 			}
 			
@@ -195,12 +213,11 @@ public class WindowFrame {
 			public void OnDeselect() {
 				StopDragging();
 			}
-			
 		};
 		
 		tbar.AddChild(new GUIText("titleBarText",
 				new Transform(
-						new Vector3f(.05f,0f,1f)),
+						new Vector3f(.05f,left,1f)),
 				fontType,
 				"TitleBar",
 				new Vector4f(1f),
@@ -211,9 +228,9 @@ public class WindowFrame {
 		tbar.AddChild(
 		new GUIButton(
 		"MinimizeButton",new Transform( 
-		new Vector3f(.875f,0,.1f), // Position x,y, Z-Order higher is on top
+		new Vector3f(.875f,left,.1f), // Position x,y, Z-Order higher is on top
 		new Vector3f(0f, 0f,0f),  // Rotation
-		new Vector3f(.025f,height,1f)), // Scale x,y,z
+		new Vector3f(.025f,top,1f)), // Scale x,y,z
 		"Images/blankTexture.png",  // Button texture
 		"Images/blankTexture.png", // Button pressed texture
 		new Vector4f(.55f,.6f,.075f,0f) // Quad Color r,g,b,a
@@ -229,7 +246,7 @@ public class WindowFrame {
 			@Override
 			protected void OnMouseReleased() {
 				SetButtonTexture(false);
-				Application.app.GetWindow().MinimizeWindow();
+				Application.GetWindow().MinimizeWindow();
 			}
 			@Override
 			public void OnDeselect() {
@@ -254,9 +271,9 @@ public class WindowFrame {
 		
 		tbar.AddChild(new GUIButton(
 				"FullScreenButton",new Transform( 
-		new Vector3f(.925f,0,.1f), // Position x,y, Z-Order higher is on top
+		new Vector3f(.925f,left,.1f), // Position x,y, Z-Order higher is on top
 		new Vector3f(0f, 0f,0f),  // Rotation
-		new Vector3f(.025f,height,1f)), // Scale x,y,z
+		new Vector3f(.025f,top,1f)), // Scale x,y,z
 		"Images/blankTexture.png",  // Button texture
 		"Images/blankTexture.png", // Button pressed texture
 		new Vector4f(.55f,.6f,.075f,0f) // Quad Color r,g,b,a
@@ -273,7 +290,7 @@ public class WindowFrame {
 			@Override
 			protected void OnMouseReleased() {
 				SetButtonTexture(false);
-				Application.app.GetWindow().SetFullScreen(!Application.app.GetWindow().IsFullScreen());
+				Application.GetWindow().SetFullScreen(!Application.GetWindow().IsFullScreen());
 			}
 			@Override
 			public void OnDeselect() {
@@ -298,9 +315,9 @@ public class WindowFrame {
 		
 		tbar.AddChild(new GUIButton(
 		"CloseButton",new Transform( 
-			new Vector3f(.975f,0,.1f), // Position x,y, Z-Order higher is on top
+			new Vector3f(.975f,left,.1f), // Position x,y, Z-Order higher is on top
 			new Vector3f(0f, 0f,0f),  // Rotation
-			new Vector3f(.025f,height,1f)), // Scale x,y,z
+			new Vector3f(.025f,top,1f)), // Scale x,y,z
 			"Images/blankTexture.png",  // Button texture
 			"Images/blankTexture.png", // Button pressed texture
 			new Vector4f(.55f,.6f,.075f,0f) // Quad Color r,g,b,a
@@ -317,7 +334,7 @@ public class WindowFrame {
 			@Override
 			protected void OnMouseReleased() {
 				SetButtonTexture(false);
-				Application.app.CloseApplication();
+				Application.CloseApplication();
 			}
 			@Override
 			public void OnDeselect() {
@@ -348,11 +365,11 @@ public class WindowFrame {
 		
 		resizeTab = new GUIQuad_Draggable(
 				"resizeTab", new Transform( 
-						new Vector3f(.975f,-.965f, 1e6f), // Position x,y, Z-Order higher is on top
+						new Vector3f(0,0, 1e5f), // Position x,y, Z-Order higher is on top
 						new Vector3f(0f, 0f,0f),  // Rotation
-						new Vector3f(.025f,height,1f)), 
-				"Images/resizeIcon.png", 
-				new Vector4f(1,1,1,.25f)
+						new Vector3f(1f,1f,1f)), 
+				"Images/blankTexture.png", 
+				borderColor
 		) {
 			@Override
 			protected void OnMouseEnter() {
@@ -361,8 +378,9 @@ public class WindowFrame {
 			
 			@Override
 			protected void OnSelect() {
-				
+				Application.GetWindow().SetCursor(Window.CursorType.VResizeCursor);
 			}
+			
 			
 			
 			@Override
@@ -372,24 +390,43 @@ public class WindowFrame {
 			
 			@Override
 			protected void _Drag(float x, float y) {
-				int[] w_pos = Application.app.GetWindow().GetWindowSize();
-				if (!Application.app.GetWindow().IsFullScreen()) { 
-				Application.app.GetWindow().SetWindowSize( 
+				int[] w_pos = Application.GetWindow().GetWindowSize();
+				if (!Application.GetWindow().IsFullScreen()) { 
+				Application.GetWindow().SetWindowSize( 
 						(int)(w_pos[0] + (x-dragPos.x)),
 						(int)(w_pos[1] + (y-dragPos.y)) );
 				dragPos.x = x;
 				dragPos.y = y;
 				} else {
-					Application.app.GetWindow().SetFullScreen(false);
+					Application.GetWindow().SetFullScreen(false);
 				}
 			}
 			
 			@Override
 			public void OnDeselect() {
 				StopDragging();
+				Application.GetWindow().SetCursor(Window.CursorType.ArrowCursor);
 			}
 			
+			@Override
+			public void SelectedOnEvent(Event e) {
+				super.SelectedOnEvent(e);
+				/*
+				if (e instanceof Events.MouseMovedEvent) {
+					if (((Events.MouseMovedEvent) e).GetMouseY() >= top*Application.GetWindow().GetFrameBuffers()[1]) {
+						Application.GetWindow().SetCursor(Window.CursorType.VResizeCursor);
+					} else if (((Events.MouseMovedEvent) e).GetMouseY() <= 
+							Application.GetWindow().GetFrameBuffers()[1] - top*Application.GetWindow().GetFrameBuffers()[1]) {
+						Application.GetWindow().SetCursor(Window.CursorType.VResizeCursor);
+					}
+				}
+				*/
+			}
+			
+			
 		};
+		resizeTab.SetWindowElement(true);
+		resizeTab.SetCollision(false);
 	}
 
 	

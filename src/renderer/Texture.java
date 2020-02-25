@@ -134,6 +134,8 @@ public class Texture {
 	
 	public void LoadImageData(ByteBuffer data, int width, int height, int format) {
 		Bind();
+		setParameter(GL30.GL_TEXTURE_WRAP_S, GL30.GL_CLAMP_TO_EDGE);
+	    setParameter(GL30.GL_TEXTURE_WRAP_T, GL30.GL_CLAMP_TO_EDGE);
 		setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR);
 		setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
 		uploadData(format, width, height, format, data);

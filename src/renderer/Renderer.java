@@ -69,6 +69,7 @@ public class Renderer {
 	}
 	
 	public static void Render() {
+		Prepare();
 		RenderMesh();
 		RenderGUI();
 		RenderWindow();
@@ -82,7 +83,6 @@ public class Renderer {
 	}
 	
 	private static void RenderGUI() {
-		
 		GUIFrameBuffer.Bind();
 		Prepare();
 		WindowRenderer.RenderMeshScreen();

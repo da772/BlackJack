@@ -28,11 +28,11 @@ import renderer.Renderer;
 
 public class Application {
 	
-	public static Application app;
+	protected static Application app;
 	protected Window window;
 	protected int width = 1280, height = 720;
 	protected String title = "Application";
-	protected boolean running = true;
+	protected boolean running = true, paused = false;
 	private float lastFrameTime = 0;
 	protected long lastTime = 0;
 	protected int fps = 0, frames = 0;
@@ -85,6 +85,8 @@ public class Application {
 		OnInit();
 	}
 	
+
+	
 	protected void OnInit() {};
 	
 	
@@ -126,6 +128,7 @@ public class Application {
 		Debugger.OnEvent(event);
 		OnEvent(event);
 		SceneManager.OnEvent(event);
+		
 	}
 	
 	protected void OnEvent(Event event) {};
@@ -229,7 +232,7 @@ public class Application {
 			float deltaTime = time - lastFrameTime;
 			lastFrameTime = time;
 			OnUpdate(deltaTime);
-			SceneManager.OnUpdate(deltaTime);
+			SceneManager.OnUpdate(deltaTime, paused);
 			Debugger.Update();
 			Renderer.Render();
 			window.Update();
@@ -272,16 +275,17 @@ public class Application {
 	}
 	
 	
-	public void CloseApplication() {
-		running = false;
+	
+	public static void CloseApplication() {
+		app.running = false;
 	}
 	
 	/**
 	 * 	GetWindow() - returns window object
 	 * 		
 	 **/
-	public Window GetWindow() {
-		return window;
+	public static Window GetWindow() {
+		return app.window;
 	}
 	/**
 	 * To be overridden by child class
@@ -294,8 +298,25 @@ public class Application {
 	 **/
 	protected void OnShutdown() {};
 	
+	/**
+	 * Checks if we are on the main thread
+	 *   - needed for modifying the graphics context since it is created on the main thread
+	 * @return
+	 */
 	public static boolean ThreadSafe() {
 		return threadId == Thread.currentThread().getId();
+	}
+	
+	public static Application GetApp() {
+		return app;
+	}
+	
+	public static boolean IsPaused() {
+		return GetApp().paused;
+	}
+	
+	public void SetPaused(boolean b) {
+		this.paused = b;
 	}
 
 }

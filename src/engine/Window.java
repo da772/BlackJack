@@ -22,12 +22,22 @@ public class Window {
 	int width, height;
 	long window;
 	long monitor;
+	long cursor;
 	boolean fullScreen = false;
 	int vsync = 0;
 	float xpos = 0, ypos;
 	float contentScaleX, contentScaleY;
 	EventFunction OnEventCallback;
 	
+	//Event category bits
+	public static enum CursorType {
+			ArrowCursor(0x36001), IBeamCursor(0x36002), CrosshairCursor(0x36003), HandCursor(0x36004),
+			HResizeCursor(0x36005), VResizeCursor(0x36006);
+			private final int bit;
+			CursorType(int bit) { this.bit = bit; }
+			public int getValue() { return bit; }
+			
+		}
 	
 	public static Window window_context;
 	
@@ -92,6 +102,7 @@ public class Window {
 	    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	    glfwWindowHint(GLFW_DECORATED, GL_FALSE); // Remove default title bar
 		glfwWindowHint(GLFW_SAMPLES, 4); // MSAA x4
+		glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE);
 	 
 	    
 		monitor = glfwGetPrimaryMonitor();
@@ -100,6 +111,12 @@ public class Window {
 		window = glfwCreateWindow(width, height, title, NULL, NULL);
 		if ( window == NULL )
 			throw new RuntimeException("Failed to create the GLFW window");
+		
+		cursor = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
+		if (cursor == NULL)
+			throw new RuntimeException("Failed to create the GLFW cursor");
+		
+		glfwSetCursor(window, cursor);
 		
 		// Print success
 		System.out.println("GLFW Initialized: " + this.title + " ( " + width + ", " + height + " )");
@@ -221,6 +238,14 @@ public class Window {
 		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 		
 		window_context = this;
+		
+	}
+	
+	public void SetCursor(CursorType cursorType) {
+
+		glfwDestroyCursor(cursor);
+		cursor = glfwCreateStandardCursor(cursorType.getValue());
+		glfwSetCursor(window, cursor);
 		
 	}
 	
@@ -355,6 +380,10 @@ public class Window {
 		
 	}
 	
+	/**
+	 * 
+	 * @return int[0] = gpu total usage, int[2] = gpu usage 
+	 */
 	public int[] GetGpuUsage() {
 		int[] gpu = new int[3];
 		gpu[2] = 0;
@@ -407,6 +436,7 @@ public class Window {
 	public void Shutdown() {
 		// Clean up
 		OnEventCallback = null;
+		glfwDestroyCursor(cursor);
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
 		glfwTerminate();

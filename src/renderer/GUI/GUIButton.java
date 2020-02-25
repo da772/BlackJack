@@ -2,6 +2,7 @@ package renderer.GUI;
 
 import org.joml.Vector4f;
 
+import engine.Application;
 import engine.Events;
 import engine.KeyCodes;
 import engine.Events.Event;
@@ -43,9 +44,6 @@ public abstract class GUIButton extends GUIQuad {
 	
 	private Texture texture1;
 	private Texture texture2;
-
-	
-
 	
 	public void SetTexture(String texturePath) {
 		if (textureString2 == null && !this.texturePath.equals(texturePath)) {
@@ -73,11 +71,21 @@ public abstract class GUIButton extends GUIQuad {
 	}
 	
 	
+	
 	@Override
 	protected void OnMouseEnter() {
 		leftClicked = false;
+		//Application.GetWindow().SetCursor(engine.Window.CursorType.HandCursor);
 		SelectGUI();
 	}
+	
+	@Override
+	protected void OnMouseExit() {
+		leftClicked = false;
+		//Application.GetWindow().SetCursor(engine.Window.CursorType.ArrowCursor);
+		DeselectGUI();
+	}
+	
 	
 	@Override
 	protected abstract void OnSelect();
@@ -90,12 +98,7 @@ public abstract class GUIButton extends GUIQuad {
 		SetTexture(pressed ? textureString2 : textureString1);
 	}
 	
-	@Override
-	protected void OnMouseExit() {
-		leftClicked = false;
-		DeselectGUI();
-	}
-	
+
 	@Override
 	public abstract void OnDeselect();
 	

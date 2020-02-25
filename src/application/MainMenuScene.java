@@ -135,7 +135,7 @@ public class MainMenuScene extends Scene {
 							@Override
 							protected void OnMouseReleased() {
 								SetButtonTexture(false);
-								Application.app.CloseApplication();
+								Application.CloseApplication();
 							}
 							@Override
 							public void OnDeselect() {

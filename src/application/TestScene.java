@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import engine.Actor;
+import engine.Application;
 import engine.CameraController;
 import engine.Events;
 import engine.KeyCodes;
@@ -103,9 +104,9 @@ public class TestScene extends Scene {
 				new Vector2f(1f), // UV Scale
 				this.cam.GetCamera() // Camera
 				));
-
-	 
-	 
+	
+		
+		
 		Actor.Create("blackJackText", this).AddComponent(new GUIQuad_Draggable(
 				"quad",
 				new Transform(
@@ -217,13 +218,16 @@ public class TestScene extends Scene {
 			
 			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_Z) {
 				if (!scanLines) {
-					WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad_ScanLines);
+					WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad_VHS);
 					scanLines = true;
 				} else {
 					WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad);
 					scanLines = false;
 				}
-				
+			}
+			
+			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_ESCAPE) { 
+				Application.GetApp().SetPaused(!Application.IsPaused());
 			}
 		}
 		

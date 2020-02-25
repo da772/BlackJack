@@ -49,7 +49,7 @@ public class Debugger {
 	public static void Update() {
 		// If we are shown
 		if (DisplayMenu) {
-		int[] gpu = Application.app.GetWindow().GetGpuUsage();
+		int[] gpu = Application.GetWindow().GetGpuUsage();
 		((GUIText)debugMenu.GetChild("DebugText")).SetText(
 			    "Debug Menu: (Press ~ to toggle) \n \n" +
 				"App Info       " + "Title: "+ Application.app.title +" | " + Application.app.fps + " FPS"+
@@ -130,7 +130,7 @@ public class Debugger {
 		
 		// Create draggable GUI Text Quad
 		debugMenu = (GUIQuad_Draggable) new GUIQuad_Draggable("DraggableQuad",new Transform( 
-				new Vector3f(xPos,yPos-WindowFrame.GetHeight(), 10000.f), // Position x,y, Z-Order higher is on top
+				new Vector3f(xPos,yPos-WindowFrame.GetTop(), 10000.f), // Position x,y, Z-Order higher is on top
 				new Vector3f(0f, 0f,0f),  // Rotation
 				new Vector3f(.225f,.45f,1f)), // Scale x,y,z
 				"Images/blankTexture.png",  // Quad Texture path

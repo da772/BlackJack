@@ -76,15 +76,15 @@ public class GUIRenderer {
 	}
 
 	public static int GetWidth() {
-		return Application.app.GetWindow().GetWidth();
+		return Application.GetWindow().GetWidth();
 	}
 	
 	public static int GetHeight() {
-		return  Application.app.GetWindow().GetHeight();
+		return  Application.GetWindow().GetHeight();
 	}
 	
 	public static int GetMinHeight() {
-		return (int) (WindowFrame.GetHeight()*GetHeight());
+		return (int) (WindowFrame.GetTop()*GetHeight());
 	}
 
 	

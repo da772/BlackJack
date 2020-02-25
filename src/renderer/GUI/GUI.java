@@ -167,6 +167,7 @@ public abstract class GUI extends Collider2D {
 	 * Add Gui to GUI render pipeline
 	 */
 	public void Add() {
+		if (added) return;
 		for (GUI c : children) {
 			c.Add();
 		}
@@ -440,7 +441,7 @@ public abstract class GUI extends Collider2D {
 		OnDeselect();
 	}
 	
-	public void OnDeselect() {
+	protected void OnDeselect() {
 	}
 
 	public abstract void SelectedOnEvent(Event e);
