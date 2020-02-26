@@ -226,6 +226,19 @@ public class Shader {
 		return loc;
 	}
 	
+	public int UploadUniformFloat3Array(String name, float[] data) {
+		int loc = GL30.glGetUniformLocation(rendererId, name);
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			FloatBuffer fb = stack.mallocFloat(data.length);
+			fb.put(data);
+			fb.flip();
+			GL30.glUniform3fv(loc, fb);
+			fb.clear();
+		}
+		return loc;
+	}
+	
 	public int UploadUniformInt(String name, int data) {
 		int loc = GL30.glGetUniformLocation(rendererId, name);
 		GL30.glUniform1i(loc, data);

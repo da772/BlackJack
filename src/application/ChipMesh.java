@@ -19,7 +19,6 @@ import renderer.mesh.Mesh2DQuad;
  */
 public class ChipMesh extends Mesh2DQuad {
 
-	
 	TextureAtlas textureAtlas;
 	TextureCoords textureCoord;
 	
@@ -36,7 +35,8 @@ public class ChipMesh extends Mesh2DQuad {
 	public ChipMesh(String name, Transform transform, String chipType, Camera cam) {
 		super(name, transform, ShaderLib.Shader_2DQuad, "Atlas/cardAtlas.png", new Vector4f(1f), cam);
 		textureAtlas = TextureAtlas.Create("Atlas/cardAtlas");
-		this.generateMipMap = false;
+		this.generateMipMap = true;
+		this.SetCollision(false);
 		this.cardFront = chipType;
 		this.SetScale(transform.GetScale().x * .25f, transform.GetScale().y * .25f, transform.GetScale().z);
 		this.SetRotation(transform.GetRotation().x,transform.GetRotation().y,transform.GetRotation().z+180f);

@@ -6,6 +6,7 @@ import java.util.List;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL31;
 
 import engine.TextureAtlas;
 import renderer.Buffer.FrameBuffer;
@@ -172,6 +173,10 @@ public class Renderer {
 	 */
 	public static void DrawIndexed(int indexCount) {
 		GL30.glDrawElements(GL11.GL_TRIANGLES, indexCount, GL11.GL_UNSIGNED_INT, 0);
+	}
+	
+	public static void DrawIndexedInstanced(int indexCount, int amount) {
+		GL31.glDrawElementsInstanced(GL11.GL_TRIANGLES, indexCount, GL11.GL_UNSIGNED_INT, 0, amount);
 	}
 		
 	/**

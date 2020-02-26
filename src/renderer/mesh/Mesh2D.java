@@ -74,7 +74,6 @@ public abstract class  Mesh2D extends Collider2D {
 		shader = Shader.Create(shaderString);
 		texture = Texture.Create(textureString, false, generateMipMap);
 		OnInit();
-		
 	}
 	
 	protected abstract void OnInit();

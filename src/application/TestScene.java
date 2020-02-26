@@ -65,85 +65,50 @@ public class TestScene extends Scene {
 				"card_back_red", // Card back Suit
 				this.cam.GetCamera()));// Camera))
 		
-		for (int i = 0; i < 25; i++ ) {
-			Actor.Create("chip1"+i, this).AddComponent(new ChipMesh("Mesh", 
-					new Transform( // Card Transform
-							new Vector3f(.75f, .55f+i/100.f, i/100f), // Position
-							new Vector3f(0f, 180f, 0), // Rotation
-							new Vector3f(1f, 1f, 1f) ), // Scale
-					"Chip1", // Chip type
-					this.cam.GetCamera()));// Camera))
-		}
 		
-		for (int i = 0; i < 25; i++ ) {
-			Actor.Create("chip5"+i, this).AddComponent(new ChipMesh("Mesh", 
-					new Transform( // Card Transform
-							new Vector3f(.45f, .55f+i/100.f, i/100f), // Position
-							new Vector3f(0f, 180f, 0), // Rotation
-							new Vector3f(1f, 1f, 1f) ), // Scale
-					"Chip5", // Chip type
-					this.cam.GetCamera()));// Camera))
-		}
+		int amt = 25;
 		
-		for (int i = 0; i < 25; i++ ) {
-			Actor.Create("chip10"+i, this).AddComponent(new ChipMesh("Mesh", 
-					new Transform( // Card Transform
-							new Vector3f(.15f, .55f+i/100.f, i/100f), // Position
-							new Vector3f(0f, 180f, 0), // Rotation
-							new Vector3f(1f, 1f, 1f) ), // Scale
-					"Chip10", // Chip type
-					this.cam.GetCamera()));// Camera))
-		}
+		Actor.Create("chipStack1", this).AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(.75f, .55f, .1f) ),
+				"Chip1", 10, new Vector3f(-.4f, .0f,.01f), this.cam.GetCamera()
+				));
 		
-		for (int i = 0; i < 25; i++ ) {
-			Actor.Create("chip25"+i, this).AddComponent(new ChipMesh("Mesh", 
-					new Transform( // Card Transform
-							new Vector3f(-.15f, .55f+i/100.f, i/100f), // Position
-							new Vector3f(0f, 180f, 0), // Rotation
-							new Vector3f(1f, 1f, 1f) ), // Scale
-					"Chip25", // Chip type
-					this.cam.GetCamera()));// Camera))
-		}
+		Actor.Create("chipStack5", this).AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(.45f, .55f, .1f) ),
+				"Chip5", amt,new Vector3f(0,.1f,.01f),  this.cam.GetCamera()
+				));
+	
+		Actor.Create("chipStack10", this).AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(.15f, .55f, .1f) ),
+				"Chip10", amt,new Vector3f(0,.1f,.01f),  this.cam.GetCamera()
+				));
 		
-		for (int i = 0; i < 25; i++ ) {
-			Actor.Create("chip50"+i, this).AddComponent(new ChipMesh("Mesh", 
-					new Transform( // Card Transform
-							new Vector3f(-.45f, .55f+i/100.f, i/100f), // Position
-							new Vector3f(0f, 180f, 0), // Rotation
-							new Vector3f(1f, 1f, 1f) ), // Scale
-					"Chip50", // Chip type
-					this.cam.GetCamera()));// Camera))
-		}
+		Actor.Create("chipStack25", this).AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(-.15f, .55f, .1f) ),
+				"Chip25", amt,new Vector3f(0,.1f,.01f),  this.cam.GetCamera()
+				));
 		
-		for (int i = 0; i < 25; i++ ) {
-			Actor.Create("chip100"+i, this).AddComponent(new ChipMesh("Mesh", 
-					new Transform( // Card Transform
-							new Vector3f(-.75f, .55f+i/100.f, i/100f), // Position
-							new Vector3f(0f, 180f, 0), // Rotation
-							new Vector3f(1f, 1f, 1f) ), // Scale
-					"Chip100", // Chip type
-					this.cam.GetCamera()));// Camera))
-		}
 		
-		for (int i = 0; i < 25; i++ ) {
-			Actor.Create("chip500"+i, this).AddComponent(new ChipMesh("Mesh", 
-					new Transform( // Card Transform
-							new Vector3f(-1.05f, .55f+i/100.f, i/100f), // Position
-							new Vector3f(0f, 180f, 0), // Rotation
-							new Vector3f(1f, 1f, 1f) ), // Scale
-					"Chip500", // Chip type
-					this.cam.GetCamera()));// Camera))
-		}
+		Actor.Create("chipStack50", this).AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(-.45f, .55f, .1f) ),
+				"Chip50", amt,new Vector3f(0,.1f,.01f),  this.cam.GetCamera()
+				));
 		
-		for (int i = 0; i < 25; i++ ) {
-			Actor.Create("chip1000"+i, this).AddComponent(new ChipMesh("Mesh", 
-					new Transform( // Card Transform
-							new Vector3f(-1.35f, .55f+i/100.f, i/100f), // Position
-							new Vector3f(0f, 180f, 0), // Rotation
-							new Vector3f(1f, 1f, 1f) ), // Scale
-					"Chip1000", // Chip type
-					this.cam.GetCamera()));// Camera))
-		}
+		Actor.Create("chipStack100", this).AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(-.75f, .55f, .1f) ),
+				"Chip100", amt,new Vector3f(0,.1f,.01f),  this.cam.GetCamera()
+				));
+		
+		Actor.Create("chipStack500", this).AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(-1.05f, .55f, .1f) ),
+				"Chip500", amt,new Vector3f(0,.1f,.01f),  this.cam.GetCamera()
+				));
+	
+		Actor.Create("chipStack1000", this).AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(-1.35f, .55f, .1f) ),
+				"Chip1000", amt,new Vector3f(.0f,.1f,.01f),  this.cam.GetCamera()
+				));
+		
 		
 		
 		/*
@@ -163,7 +128,7 @@ public class TestScene extends Scene {
 						new Vector3f(0f), // Rotation
 						new Vector3f(10000, 10000, 1f)), // Scale
 				"Images/blankTexture.png", // Texture
-				new Vector4f(0f,.5f,.15f,1f) , // Color
+				new Vector4f(.1f,.4f,.1f,1f) , // Color
 				new Vector2f(1f), // UV Scale
 				this.cam.GetCamera() // Camera
 				));
