@@ -68,15 +68,13 @@ public class GUIText extends GUI {
 	
 	public GUIText(String name, Transform transform,  String font, String text,  Vector4f color, float maxLineLength,float fontSize,
 			boolean centered) {
-		super(name);
+		super(name, transform, color);
 		shader_strings = ShaderLib.Shader_Font;
 		this.textString = text;
 		this.fontSize = fontSize;
 		this.fontString = font;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-		this.transform = transform;
-		this.color = color;
 		this.UVScale = new Vector2f(1.f,1.f);
 		SetGUICollision(false);
 	}
@@ -237,7 +235,6 @@ public class GUIText extends GUI {
 	@Override
 	protected void _Init() {
 		SetUp();
-		UpdateTransform();
 	}
 	
 

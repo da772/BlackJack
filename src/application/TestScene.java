@@ -10,7 +10,6 @@ import engine.CameraController;
 import engine.Events;
 import engine.KeyCodes;
 import engine.Events.Event;
-import renderer.Renderer;
 import renderer.Transform;
 import renderer.GUI.GUI;
 import renderer.GUI.GUIButton;
@@ -45,9 +44,7 @@ public class TestScene extends Scene {
 	@Override
 	public void OnBegin() {
 		
-		Renderer.SetClearColor(1f,0f,1f,1f);
-		
-		Actor.Create("card", this).AddComponent(new CardMesh("Mesh", 
+		new Actor("card").AddComponent(new CardMesh("Mesh", 
 				new Transform( // Card Transform
 						new Vector3f(0, -.35f, 1f), // Position
 						new Vector3f(0f, 0, 0), // Rotation
@@ -56,7 +53,7 @@ public class TestScene extends Scene {
 				"card_back_red", // Card back Suit
 				this.cam.GetCamera()));// Camera))
 		
-		Actor.Create("card3", this).AddComponent(new CardMesh("Mesh", 
+		new Actor("card3").AddComponent(new CardMesh("Mesh", 
 				new Transform( // Card Transform
 						new Vector3f(-.75f, -.35f, 0), // Position
 						new Vector3f(0f, 0, 0), // Rotation
@@ -68,43 +65,43 @@ public class TestScene extends Scene {
 		
 		int amt = 25;
 		
-		Actor.Create("chipStack1", this).AddComponent(new ChipStackMesh("chipStack",
+		new Actor("chipStack1").AddComponent(new ChipStackMesh("chipStack",
 				new Transform(new Vector3f(.75f, .55f, .1f) ),
 				"Chip1", 10, new Vector3f(-.4f, .0f,.01f), this.cam.GetCamera()
 				));
 		
-		Actor.Create("chipStack5", this).AddComponent(new ChipStackMesh("chipStack",
+		new Actor("chipStack5").AddComponent(new ChipStackMesh("chipStack",
 				new Transform(new Vector3f(.45f, .55f, .1f) ),
 				"Chip5", amt,new Vector3f(0,.1f,.01f),  this.cam.GetCamera()
 				));
 	
-		Actor.Create("chipStack10", this).AddComponent(new ChipStackMesh("chipStack",
+		new Actor("chipStack10").AddComponent(new ChipStackMesh("chipStack",
 				new Transform(new Vector3f(.15f, .55f, .1f) ),
 				"Chip10", amt,new Vector3f(0,.1f,.01f),  this.cam.GetCamera()
 				));
 		
-		Actor.Create("chipStack25", this).AddComponent(new ChipStackMesh("chipStack",
+		new Actor("chipStack25").AddComponent(new ChipStackMesh("chipStack",
 				new Transform(new Vector3f(-.15f, .55f, .1f) ),
 				"Chip25", amt,new Vector3f(0,.1f,.01f),  this.cam.GetCamera()
 				));
 		
 		
-		Actor.Create("chipStack50", this).AddComponent(new ChipStackMesh("chipStack",
+		new Actor("chipStack50").AddComponent(new ChipStackMesh("chipStack",
 				new Transform(new Vector3f(-.45f, .55f, .1f) ),
 				"Chip50", amt,new Vector3f(0,.1f,.01f),  this.cam.GetCamera()
 				));
 		
-		Actor.Create("chipStack100", this).AddComponent(new ChipStackMesh("chipStack",
+		new Actor("chipStack100").AddComponent(new ChipStackMesh("chipStack",
 				new Transform(new Vector3f(-.75f, .55f, .1f) ),
 				"Chip100", amt,new Vector3f(0,.1f,.01f),  this.cam.GetCamera()
 				));
 		
-		Actor.Create("chipStack500", this).AddComponent(new ChipStackMesh("chipStack",
+		new Actor("chipStack500").AddComponent(new ChipStackMesh("chipStack",
 				new Transform(new Vector3f(-1.05f, .55f, .1f) ),
 				"Chip500", amt,new Vector3f(0,.1f,.01f),  this.cam.GetCamera()
 				));
 	
-		Actor.Create("chipStack1000", this).AddComponent(new ChipStackMesh("chipStack",
+		new Actor("chipStack1000").AddComponent(new ChipStackMesh("chipStack",
 				new Transform(new Vector3f(-1.35f, .55f, .1f) ),
 				"Chip1000", amt,new Vector3f(.0f,.1f,.01f),  this.cam.GetCamera()
 				));
@@ -122,7 +119,7 @@ public class TestScene extends Scene {
 				this.cam.GetCamera())
 				);
 		*/
-		Actor.Create("background", this).AddComponent(new Mesh2DBackground("background",
+		new Actor("background").AddComponent(new Mesh2DBackground("background",
 				new Transform(
 						new Vector3f(0f,0,-1f),  // Position
 						new Vector3f(0f), // Rotation
@@ -135,7 +132,7 @@ public class TestScene extends Scene {
 	
 		
 		
-		Actor.Create("blackJackText", this).AddComponent(new GUIQuad_Draggable(
+		new Actor("blackJackText").AddComponent(new GUIQuad_Draggable(
 				"quad",
 				new Transform(
 						new Vector3f(0f,0f,3f),
@@ -229,10 +226,13 @@ public class TestScene extends Scene {
 	public void OnEvent(Event e) {
 		if (e instanceof Events.KeyPressedEvent) {
 			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_T) {
-				Actor.Create("cardRunTime", this);
-				if (GetActor("cardRunTime") != null && GetActor("cardRunTime").GetComponent("Mesh") != null) {
+				if (GetActor("cardRunTime") == null) {
+					new Actor("cardRunTime");
+				}
+				else if (GetActor("cardRunTime") != null && GetActor("cardRunTime").GetComponent("Mesh") != null) {
 					Actor.Remove("cardRunTime", this);
-				} else if (GetActor("cardRunTime") != null) {
+				}
+				if (GetActor("cardRunTime") != null) {
 					GetActor("cardRunTime").AddComponent(new CardMesh("Mesh", 
 							new Transform( // Card Transform
 									new Vector3f(-.75f, .75f, 0f), // Position

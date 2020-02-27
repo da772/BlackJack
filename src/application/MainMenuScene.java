@@ -35,7 +35,7 @@ public class MainMenuScene extends Scene {
 	public void OnBegin() {
 		Renderer.SetClearColor(0f,0f,1f,1f);
 		// Create Start Button
-		Actor.Create("StartButton", this).AddComponent(new GUIButton(
+		new Actor("StartButton").AddComponent(new GUIButton(
 				"Button",new Transform( 
 						new Vector3f(0,0,1.f), // Position x,y, Z-Order higher is on top
 						new Vector3f(0f, 0f,0f),  // Rotation
@@ -76,7 +76,7 @@ public class MainMenuScene extends Scene {
 	
 		
 		// Create Settings button
-		Actor.Create("SettingButton", this).AddComponent(new GUIButton(
+		new Actor("SettingButton").AddComponent(new GUIButton(
 				"Button",new Transform( 
 						new Vector3f(0,-.25f,1.f), // Position x,y, Z-Order higher is on top
 						new Vector3f(0f, 0f,0f),  // Rotation
@@ -115,7 +115,7 @@ public class MainMenuScene extends Scene {
 								)));
 			
 		// Create Quit Button
-		Actor.Create("QuitButton", this).AddComponent(new GUIButton(
+		new Actor("QuitButton" ).AddComponent(new GUIButton(
 				"Button",new Transform( 
 						new Vector3f(0,-.5f,1.f), // Position x,y, Z-Order higher is on top
 						new Vector3f(0f, 0f,0f),  // Rotation
@@ -153,7 +153,7 @@ public class MainMenuScene extends Scene {
 								)));
 				
 		// Create background image
-		Actor.Create("background").AddComponent(new GUIQuad(
+		new Actor("background").AddComponent(new GUIQuad(
 				"quad",
 				new Transform(),
 				"Images/mainMenuBackgroundImage.png",
@@ -162,7 +162,7 @@ public class MainMenuScene extends Scene {
 				));
 		
 		// Create Text
-		Actor.Create("blackJackText", this).AddComponent(new GUIQuad("textQuad",new Transform(
+		new Actor("blackJackText").AddComponent(new GUIQuad("textQuad",new Transform(
 				new Vector3f(0, .75f, .1f), // Position
 				new Vector3f(0f), // Rotation (buggy keep at 0)
 				new Vector3f(1f,.25f, 1f) // Quad Scale

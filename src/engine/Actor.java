@@ -14,47 +14,6 @@ public class Actor {
 	protected Scene scene;
 	protected boolean begin;
 	
-	/**
-	 * @param name
-	 *            - the unique identifier of actor
-	 * @return Actor
-	 * 			  - return created actor or null if identifier already used
-	**/
-	public static Actor Create(String name) {
-		Scene s = SceneManager.GetCurrentScene();
-		
-		if (s != null) {
-			Actor a = new Actor(name);
-			s.AddActor(a);
-			a.scene = s;
-			return a;
-		}
-
-		return null;
-	}
-	
-	
-	
-	/**
-	 * @param name (String)
-	 *            - the unique identifier of actor
-	 * @param scene (Scene)
-	 *            - the scene to add the actor to
-	 *            
-	 * @return Actor
-	 * 			  - return created actor or null if identifier already used
-	**/
-	public static Actor Create(String name, Scene scene) {
-		if (scene != null) {
-			Actor a = new Actor(name);
-			a.scene = scene;
-			if (scene.AddActor(a)) {
-				return a;	
-			}
-		}
-
-		return null;
-	}
 	
 	
 	/**
@@ -67,6 +26,7 @@ public class Actor {
 		if (s!= null) {
 			return s.RemoveActor(name);
 		}
+		
 		return false;
 	}
 	
@@ -77,8 +37,16 @@ public class Actor {
 	 * @return Actor
 	 * 			  - return actor this call is made on
 	**/
-	protected Actor(String name) {
+	public Actor(String name) {
 		this._name = name;
+		Scene s = SceneManager.GetCurrentScene();
+		
+		if (s != null) {
+			
+			s.AddActor(this);
+			this.scene = s;
+		}
+
 	}
 	
 
