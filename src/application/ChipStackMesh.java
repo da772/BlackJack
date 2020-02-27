@@ -4,7 +4,6 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import engine.Camera;
-import engine.ShaderLib;
 import engine.TextureAtlas;
 import renderer.TextureCoords;
 import renderer.Transform;

@@ -18,8 +18,8 @@ import util.Timing;
 public class WindowFrame {
 
 	static GUI tbar, resizeTab, text, screen, meshScreen;
-	static final float top = .035f;
-	static final float left = .0175f/2f;
+	static final float top = 0f;//.035f;
+	static final float left = 0f;//.0175f/2f;
 	static final float barButtonSize = .9f;
 	static boolean fullScreen = false;
 	static boolean resizeTabHidden = false;
@@ -39,12 +39,12 @@ public class WindowFrame {
 	
 	public static void Init() {
 		fullScreen = Application.GetWindow().IsFullScreen();
-		CreateTitleBar();
+		//CreateTitleBar();
 		CreateResizeTab();
 		CreateScreen();
 		
 		resizeTab.Add();
-		tbar.Add();
+		//tbar.Add();
 		screen.Add();
 		meshScreen.Add();
 	}
@@ -60,20 +60,20 @@ public class WindowFrame {
 	
 	public static void OnEvent(Event e) {
 		if (e instanceof Events.WindowSetTitleEvent) {
-			((GUIText)text).SetText(((Events.WindowSetTitleEvent)e).GetTitle());
+			//((GUIText)text).SetText(((Events.WindowSetTitleEvent)e).GetTitle());
 		}
 		
 		if (e instanceof Events.WindowFullScreenEvent) {
 			Events.WindowFullScreenEvent _e = ((Events.WindowFullScreenEvent)e);
 			fullScreen = _e.IsFullScreen();
 			if (fullScreen) {
-				resizeTab.Remove();
-				tbar.Remove();
-				screen.SetTransform(fullScreenTransform);
+			//	resizeTab.Remove();
+			//	tbar.Remove();
+			//	screen.SetTransform(fullScreenTransform);
 			} else {
-				resizeTab.Add();
-				tbar.Add();
-				screen.SetTransform(minScreenTransform);
+			//	resizeTab.Add();
+			//	tbar.Add();
+			//	screen.SetTransform(minScreenTransform);
 			}
 		}
 		
@@ -81,8 +81,8 @@ public class WindowFrame {
 	}
 	
 	public static void Shutdown() {
-		tbar.Remove();
-		resizeTab.Remove();
+		//tbar.Remove();
+		//resizeTab.Remove();
 	}
 	
 	

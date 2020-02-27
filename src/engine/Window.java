@@ -100,11 +100,15 @@ public class Window {
 	    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 	    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	    glfwWindowHint(GLFW_DECORATED, GL_FALSE); // Remove default title bar
 		glfwWindowHint(GLFW_SAMPLES, 4); // MSAA x4
 		glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE);
 	 
-	    
+	    CreateWindow();
+
+		
+	}
+	
+	private void CreateWindow() {
 		monitor = glfwGetPrimaryMonitor();
 		
 		// Create the window
@@ -232,13 +236,10 @@ public class Window {
 		glfwShowWindow(window);
 		// Setup OpenGL
 		GL.createCapabilities();
+		
 		// Print GL hardware
 		System.out.println("OpenGL Initialized: " + glGetString(GL_VENDOR) + ", " + glGetString(GL_RENDERER) + ", " +  glGetString(GL_VERSION));
-		// Set the clear color
-		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-		
 		window_context = this;
-		
 	}
 	
 	public void SetCursor(CursorType cursorType) {
@@ -332,12 +333,16 @@ public class Window {
 		fullScreen = b;
 		if (b) {
 			if (System.getProperty("os.name").contains("Windows")) {
+				glfwSetWindowAttrib(window, GLFW_DECORATED, GL_FALSE);
 				glfwSetWindowMonitor( window, 0, 0, 0, vidmode.width(), vidmode.height(), 0 );
 			} else {
 				glfwSetWindowMonitor( window, glfwGetPrimaryMonitor(), 0, 0, vidmode.width(), vidmode.height(), 0 );
 			}
 		
 		} else {
+			if (System.getProperty("os.name").contains("Windows")) {
+				glfwSetWindowAttrib(window, GLFW_DECORATED, GL_FALSE);
+			}
 			glfwSetWindowMonitor( window, 0,  0, 0, 1280, 720, 0 );
 			glfwSetWindowPos(
 					window,
@@ -433,12 +438,17 @@ public class Window {
 		return contentScaleY;
 	}
 	
-	public void Shutdown() {
-		// Clean up
-		OnEventCallback = null;
+	
+	private void CleanupWindow() {
 		glfwDestroyCursor(cursor);
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
+	}
+	
+	public void Shutdown() {
+		// Clean up
+		OnEventCallback = null;
+		CleanupWindow();
 		glfwTerminate();
 		glfwSetErrorCallback(null).free();
 	}

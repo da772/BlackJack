@@ -22,14 +22,14 @@ public class TestingApp extends Application {
 	public TestingApp() {
 		// Call super - Set window Title to "Blackjack" set width to 1280 set height to 720
 		super("Testing", 1280, 720);
-		this.fpsCap = 5000;
+		this.fpsCap = 255;
 		
 	}
 	
 	@Override
 	protected void OnInit() {
 		System.out.println(title+" Init!");
-		
+		window.SetFullScreen(true);
 		// Enable/Disable vsync
 		window.SetVSync(vsync);
 		
@@ -100,6 +100,7 @@ public class TestingApp extends Application {
 	
 	// Camera OnEvent
 	protected void OnEvent(Event event) {
+		if (cam != null)
 		cam.OnEvent(event);
 	};
 	

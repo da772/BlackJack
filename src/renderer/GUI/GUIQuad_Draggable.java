@@ -44,11 +44,11 @@ public class GUIQuad_Draggable extends GUIQuad {
 	
 	@Override
 	protected void OnSelect() {
-		SetColor(new Vector4f(.125f, .125f,.45f,.9f));
 	}
 	
 	protected void StartDragging() {
 		isDragging = true;
+		isLocked = true;
 		BeginDrag(Input.GetMouseX(), Input.GetMouseY());
 		OnDragStart();
 	}
@@ -64,6 +64,7 @@ public class GUIQuad_Draggable extends GUIQuad {
 	
 	protected void StopDragging() {
 		isDragging = false;
+		isLocked = false;
 		OnDragEnd();
 	}
 	
@@ -75,8 +76,8 @@ public class GUIQuad_Draggable extends GUIQuad {
 	
 	@Override
 	public void OnDeselect() {
-		SetColor(new Vector4f(.125f, .125f,.25f,.9f));
 		isDragging = false;
+		isLocked = false;
 	}
 	
 	protected void OnDrag() {

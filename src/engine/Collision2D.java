@@ -96,7 +96,8 @@ public class Collision2D extends Thread {
 				if (!hit) {
 					// Check if we are inside GUI's rect
 					if (mouseX >= h.GetRect().x && mouseX <= h.GetRect().y
-						&& mouseY >= h.GetRect().z && mouseY <= h.GetRect().w) 
+						&& mouseY >= h.GetRect().z && mouseY <= h.GetRect().w && 
+						(selectedCollider == null || (selectedCollider != null && !selectedCollider.isLocked)) ) 
 					{
 						// If we arent already inside the GUI run MouseEnter()
 						if (!h.IsMouseOver()) {
@@ -107,7 +108,7 @@ public class Collision2D extends Thread {
 
 					} else {
 						// We aren't inside the GUI's rect, make sure we call exit if we were in it last frame
-						if (h.IsMouseOver()) {
+						if (h.IsMouseOver() && !h.isLocked) {
 							h.SetMouseExit();
 						}
 					}

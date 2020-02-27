@@ -198,6 +198,7 @@ public class GUIText extends GUI {
 	
 	public void SetText(String text) {
 		this.textString = text;
+		if (varray == null && vbuffer == null) return;
 		varray.CleanUp();
 		vbuffer.CleanUp();
 		UpdateMeshInfo();

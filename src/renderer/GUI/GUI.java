@@ -294,6 +294,9 @@ public abstract class GUI extends Collider2D {
 	
 	public void SetRelativePosition(Vector3f pos) {
 		RelativePosition = pos;
+		if (this.parent != null) {
+			SetPosition(this.parent.GetPosition());
+		}
 	}
 	
 	public void SetScale(Vector3f scale) {

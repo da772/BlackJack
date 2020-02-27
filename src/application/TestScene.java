@@ -15,6 +15,8 @@ import renderer.GUI.GUI;
 import renderer.GUI.GUIButton;
 import renderer.GUI.GUIText;
 import renderer.GUI.GUIQuad_Draggable;
+import renderer.GUI.GUISlider;
+import renderer.GUI.GUISliderBar;
 import renderer.mesh.Mesh2DBackground;
 import engine.Scene;
 import engine.ShaderLib;
@@ -106,19 +108,6 @@ public class TestScene extends Scene {
 				"Chip1000", amt,new Vector3f(.0f,.1f,.01f),  this.cam.GetCamera()
 				));
 		
-		
-		
-		/*
-		Actor.Create("example", this).AddComponent(new Mesh2DQuad("quad", //Name
-				new Transform( // Card Transform
-				new Vector3f(2, 0, 0), // Position
-				new Vector3f(0f, 0, 0f), // Rotation
-				new Vector3f(3f, 3f, 1f) ),// Scale)
-				"Atlas/cardAtlas.png",// Texture
-				new Vector4f(1f), // Color
-				this.cam.GetCamera())
-				);
-		*/
 		new Actor("background").AddComponent(new Mesh2DBackground("background",
 				new Transform(
 						new Vector3f(0f,0,-1f),  // Position
@@ -140,20 +129,46 @@ public class TestScene extends Scene {
 						new Vector3f(.25f,.25f,1f)
 						),
 				"Images/blankTexture.png", // Texture of the hud
-				new Vector4f(.125f, .125f,.25f,.9f)).AddChild(new GUIText(
-						"text",
+				new Vector4f(.125f, .125f,.25f,.9f))
+				
+				.AddChild(new GUISlider(
+				"quad",
+				new Transform(
+						new Vector3f(0f,0f,.01f),
+						new Vector3f(0f),
+						new Vector3f(.20f,.02f,1f)
+						),
+				"Images/blankTexture.png", // Texture of the hud
+				new Vector4f(.85f, .85f,.85f,.9f),0f,50f){
+
+					@Override
+					protected void OnValueChanged(float value) {
+						((GUIText)this.parent.GetChild("sliderValueText")).SetText(""+Math.round(value));
+					}
+			
+					
+					}.AddChild(new GUISliderBar(
+						"quad",
 						new Transform(
-								new Vector3f(0f,0f,.1f),
+								new Vector3f(0f,0f,.01f),
 								new Vector3f(0f),
-								new Vector3f(1f)
+								new Vector3f(.035f,.0175f,1f)
 								),
+						"Images/blankTexture.png", // Texture of the hud
+						new Vector4f(.35f, .35f,.35f,1f),.5f,false))
+						
+						
+				).AddChild(new GUIText(
+						"sliderValueText",
+						new Transform(new Vector3f(0f,-.05f,.01f)),
 						"Fonts/BebasNeue",
-						"Drag Me!",
+						"0.00",
 						new Vector4f(1f),
 						.2f,
 						1f,
 						true
-						)).AddChild(new GUIButton(
+						))
+				.AddChild(new GUIButton(
 								"AttachButton",new Transform( 
 						new Vector3f(0,-.25f,.1f), // Position x,y, Z-Order higher is on top
 						new Vector3f(0f, 0f,0f),  // Rotation
