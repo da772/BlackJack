@@ -22,7 +22,7 @@ public class TestingApp extends Application {
 	public TestingApp() {
 		// Call super - Set window Title to "Blackjack" set width to 1280 set height to 720
 		super("Testing", 1280, 720);
-		this.fpsCap = 255;
+		this.fpsCap = 5000;
 		
 	}
 	
@@ -37,6 +37,8 @@ public class TestingApp extends Application {
 		cam = new CameraController.Orthographic(16.f/9.f);
 		// Move camera backwards 5 units
 		cam.SetPosition(new Vector3f(0,0,5f));
+		cam.SetTargetAspectRatio(16/9f);
+
 		// Initalize Scene Manager
 		new MainMenuScene("mainMenu",cam);
 		new TestScene("testScene",cam);
@@ -73,6 +75,7 @@ public class TestingApp extends Application {
 		if (Input.IsKeyPressed(KeyCodes.KEY_E)) {
 			cam.rotation -= 10 * deltaTime;
 		}
+
 		
 		int[] w_pos = window.GetWindowPosition();
 		Vector2f w_pos_ = new Vector2f(w_pos[0], w_pos[1]);

@@ -28,7 +28,7 @@ public abstract class  Mesh2D extends Collider2D {
 	protected String textureString;
 	protected float zOrder = 0;
 	protected Transform _transform;
-	protected boolean generateMipMap = true;
+	protected boolean generateMipMap = true, lodBias = false;
 
 	
 	/**
@@ -72,7 +72,7 @@ public abstract class  Mesh2D extends Collider2D {
 	
 	public void Init() {
 		shader = Shader.Create(shaderString);
-		texture = Texture.Create(textureString, false, generateMipMap);
+		texture = Texture.Create(textureString, lodBias, generateMipMap);
 		OnInit();
 	}
 	

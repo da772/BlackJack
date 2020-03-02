@@ -5,6 +5,7 @@ import org.joml.Vector4f;
 import engine.Camera;
 import engine.ShaderLib;
 import engine.TextureAtlas;
+import renderer.Texture;
 import renderer.TextureCoords;
 import renderer.Transform;
 import renderer.mesh.Mesh2DQuad;
@@ -25,6 +26,9 @@ public class CardMesh extends Mesh2DQuad {
 	
 	String cardFront, cardBack;
 	
+	static Texture _texture = Texture.Create("Atlas/cardAtlas.png", false, true);
+	
+	
 	/**
 	 * 
 	 * @param name - unique identifier for component
@@ -37,10 +41,11 @@ public class CardMesh extends Mesh2DQuad {
 		super(name, transform, ShaderLib.Shader_2DQuad, "Atlas/cardAtlas.png", new Vector4f(1f), cam);
 		textureAtlas = TextureAtlas.Create("Atlas/cardAtlas");
 		this.generateMipMap = true;
+		this.lodBias = true;
 		this.SetCollision(false);
 		this.cardFront = cardFront;
 		this.cardBack = cardBack;
-		this.SetScale(transform.GetScale().x * .75f, transform.GetScale().y, transform.GetScale().z);
+		this.SetScale(transform.GetScale().x * .75f * 1.25f, transform.GetScale().y* 1.25f, transform.GetScale().z);
 		this.SetRotation(transform.GetRotation().x,transform.GetRotation().y,transform.GetRotation().z+180f);
 		SetupTextureCoords();
 		

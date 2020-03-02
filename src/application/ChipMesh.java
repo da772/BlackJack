@@ -36,9 +36,10 @@ public class ChipMesh extends Mesh2DQuad {
 		super(name, transform, ShaderLib.Shader_2DQuad, "Atlas/cardAtlas.png", new Vector4f(1f), cam);
 		textureAtlas = TextureAtlas.Create("Atlas/cardAtlas");
 		this.generateMipMap = true;
+		this.lodBias = true;
 		this.SetCollision(false);
 		this.cardFront = chipType;
-		this.SetScale(transform.GetScale().x * .25f, transform.GetScale().y * .25f, transform.GetScale().z);
+		this.SetScale(transform.GetScale().x * .45f* 1.25f, transform.GetScale().y * .45f* 1.25f, transform.GetScale().z);
 		this.SetRotation(transform.GetRotation().x,transform.GetRotation().y,transform.GetRotation().z+180f);
 		SetupTextureCoords();
 		

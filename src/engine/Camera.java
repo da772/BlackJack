@@ -56,7 +56,7 @@ public abstract class Camera {
 		@Override
 		protected void RecalculateViewMatrix() {
 			ViewMatrix = new Matrix4f();
-			ViewMatrix.identity().translate(Position).rotate((float)Math.toRadians(rotation), new Vector3f(0,0,1f)).invert(ViewMatrix);
+			ViewMatrix.identity().translate(Position).rotate((float)Math.toRadians(rotation), new Vector3f(1f,0f,0f)).invert(ViewMatrix);
 			ProjectionMatrix.mul(ViewMatrix, ViewProjectionMatrix);
 		}
 
@@ -95,7 +95,7 @@ public abstract class Camera {
 		@Override
 		protected void RecalculateViewMatrix() {
 			ViewMatrix = new Matrix4f();
-			ViewMatrix.identity().translate(Position).rotate((float)Math.toRadians(rotation), new Vector3f(0,1,0f)).invert(ViewMatrix);
+			ViewMatrix.identity().translate(Position).rotate((float)Math.toRadians(rotation), new Vector3f(1f,0f,0f)).invert(ViewMatrix);
 			ProjectionMatrix.mul(ViewMatrix, ViewProjectionMatrix);
 		}
 		

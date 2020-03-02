@@ -21,7 +21,7 @@ public class Debugger {
 	private static boolean DisplayMenu = true;
 	public static final int MenuKeyCode = KeyCodes.KEY_GRAVE_ACCENT; // ~
 	
-	private static float xPos = .775f, yPos = .55f;
+	private static float xPos = .775f, yPos = .525f;
 	
 	private static int keyPressed = -1;
 	private static int mousePressed = -1;
@@ -67,12 +67,21 @@ public class Debugger {
 				"\n                    Scene: " + ( SceneManager.GetCurrentScene() != null ? SceneManager.GetCurrentScene().GetName() : "NULL") + 
 				"\n                    Actor Count: " + (SceneManager.GetCurrentScene() != null ? SceneManager.GetCurrentScene().GetActorCount() : "0") +
 				
-				"\n\nHardware      Logical VM Processors: " + Runtime.getRuntime().availableProcessors() +
-				"\n                    GPU Memory: " + gpu[2] + "mb/" + gpu[0] + "mb" +
+				"\n\nCamera Info   Position: " + (float) (Math.round(SceneManager.GetCurrentScene().GetCameraController().Position.x  * 100.0) / 100.0)+ "," + 
+				(Math.round(SceneManager.GetCurrentScene().GetCameraController().Position.y  * 100.0) / 100.0)+
+				 "," +(Math.round(SceneManager.GetCurrentScene().GetCameraController().Position.z  * 100.0) / 100.0) +
+				
+				"\n                     Zoom: " + (float) (Math.round(( (CameraController.Orthographic)SceneManager.GetCurrentScene().GetCameraController()).GetZoomLevel()  * 100.0) / 100.0)  + 
+				"\n                     Rotation: " + (float) (Math.round(( (CameraController.Orthographic)SceneManager.GetCurrentScene().GetCameraController()).rotation * 100.0) / 100.0)  +
+				
+				"\n\nHardware       Logical VM Processors: " + Runtime.getRuntime().availableProcessors() +
+				"\n                     GPU Memory: " + gpu[2] + "mb/" + gpu[0] + "mb" +
 				
 				
-				"\n\nMemory Info  Usage: " + Math.round( (Runtime.getRuntime().totalMemory()- Runtime.getRuntime().freeMemory())/1e6 ) +"mb"  +
-				"\n                    Alloc: "+Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/"+(Math.round(Runtime.getRuntime().totalMemory()/1e6)) + "mb "  
+				"\n\nMemory Info   Usage: " + Math.round( (Runtime.getRuntime().totalMemory()- Runtime.getRuntime().freeMemory())/1e6 ) +"mb"  +
+				"\n                     Alloc: "+Math.round(Runtime.getRuntime().freeMemory()/1e6) +"mb/"+(Math.round(Runtime.getRuntime().totalMemory()/1e6)) + "mb "
+				
+
 				
 				);
 		
@@ -132,7 +141,7 @@ public class Debugger {
 		debugMenu = (GUIQuad_Draggable) new GUIQuad_Draggable("DraggableQuad",new Transform( 
 				new Vector3f(xPos,yPos-WindowFrame.GetTop(), 10000.f), // Position x,y, Z-Order higher is on top
 				new Vector3f(0f, 0f,0f),  // Rotation
-				new Vector3f(.225f,.45f,1f)), // Scale x,y,z
+				new Vector3f(.225f,.475f,1f)), // Scale x,y,z
 				"Images/blankTexture.png",  // Quad Texture path
 				quadColor // Quad Color r,g,b,a
 		) {

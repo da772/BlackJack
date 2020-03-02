@@ -12,6 +12,7 @@ public abstract class CameraController {
 	protected float aspectRatio;
 	public Vector3f Position;
 	public float rotation;
+	float targetAspectRatio = 0;
 	
 	public CameraController() {
 		Position = new Vector3f();
@@ -48,6 +49,14 @@ public abstract class CameraController {
 		this.Position = pos;
 	}
 	
+	public void SetRotation(float rot) {
+		this.rotation = rot;
+	}
+	
+	public void SetTargetAspectRatio(float r) {
+		this.targetAspectRatio = r;
+	}
+	
 	/**
 	 * 
 	 * @param x - x zoom
@@ -58,6 +67,7 @@ public abstract class CameraController {
 	public boolean OnZoom(float x, float y, float amt) {
 		return false;
 	}
+	
 	
 	/**
 	 * 
@@ -78,10 +88,16 @@ public abstract class CameraController {
 			super();
 			this.aspectRatio = aspectRatio;
 			camera = new Camera.OrthographicCamera(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
+			OnZoom(0,0,0);
 		}
 
 		public float GetZoomLevel() {
 			return this.zoomLevel;
+		}
+		
+		public void SetZoomLevel(float z) {
+			this.zoomLevel = z;
+			OnZoom(0,0,0);
 		}
 		
 		@Override
@@ -93,8 +109,8 @@ public abstract class CameraController {
 		
 		@Override
 		public boolean OnWindowResized(WindowResizedEvent e) {
-			aspectRatio = (float)e.GetWidth()/(float)e.GetHeight();
-			camera.SetProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
+			aspectRatio = this.targetAspectRatio != 0 ? this.targetAspectRatio : (float)e.GetWidth()/(float)e.GetHeight();
+			camera.SetProjection(-aspectRatio * zoomLevel, aspectRatio* zoomLevel, -zoomLevel, zoomLevel);
 			return false;
 		}
 	}

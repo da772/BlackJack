@@ -191,13 +191,14 @@ public class Texture {
 	    if (!fontTexture && generateMipMap) {
 		    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
 		    setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
+		    setParameter(GL30.GL_TEXTURE_LOD_BIAS, -.6f);
 		    GL30.glGenerateMipmap(GL30.GL_TEXTURE_2D);
 	    } else if (fontTexture && generateMipMap) {
 			setParameter(GL30.GL_TEXTURE_WRAP_S, GL30.GL_CLAMP_TO_EDGE);
 		    setParameter(GL30.GL_TEXTURE_WRAP_T, GL30.GL_CLAMP_TO_EDGE);
 		    setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
 		    setParameter(GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR_MIPMAP_LINEAR);
-		    setParameter(GL30.GL_TEXTURE_LOD_BIAS, -.6f);   
+		    setParameter(GL30.GL_TEXTURE_LOD_BIAS, -.6f);
 		   
 		} else {
 	    	setParameter(GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);

@@ -70,7 +70,15 @@ public abstract class Scene {
 				actor.Begin();
 			}
 			return true;
-		} else if (actor != null)
+		} else if (actors.containsKey(actor.GetName())) {
+			System.out.println("HELLLO");
+			try {
+				throw new Exception("Actor with: "+actor.GetName() + " already exists!" );
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		else if (actor != null)
 			actor.End();
 		return false;
 	}

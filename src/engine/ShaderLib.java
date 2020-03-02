@@ -365,7 +365,7 @@ public class ShaderLib {
 					};
 	
 	
-	public final static String[] Shader_GUIQuad_VHS = new String[] {
+	public final static String[] Shader_GUIQuad_CRT_Outline = new String[] {
 			"#version 330\r\n" + 
 					" \r\n" + 
 					"layout(location = 0) in vec3 a_Position;\r\n" + 
@@ -398,87 +398,161 @@ public class ShaderLib {
 							"uniform sampler2D u_Texture;\r\n" + 
 							"uniform float time;\r\n" + 
 							"\r\n" + 
-							"#define PI 3.14159265\r\n" + 
-							"#define WAVEPOWER1 .005\r\n" + 
-							"#define WAVEPOWER2 .5\r\n" + 
-							"#define BLOOMPOWER .6\r\n" + 
+							"void main() {\r\n" + 
+							"	float dispersion = .01;\r\n" + 
+							"	float distortion = .04;\r\n" + 
+							"	float noisestrength = .2;\r\n" + 
+							"	float bendscale = 1.5f;\r\n" + 
+							"	\r\n" + 
+							"	vec2 uv = v_TexCoord.xy;\r\n" + 
+							"	vec2 disp = uv - vec2(.5, .5);\r\n" + 
+							"	disp *= sqrt(length(disp));\r\n" + 
+							"	//uv += disp * bendscale;\r\n" + 
+							"	//uv = (uv + .5)/2.0;\r\n" + 
+							"	vec2 uvr = uv * (1.0 - dispersion) + vec2(dispersion, dispersion)/2.0;\r\n" + 
+							"	vec2 uvg = uv * 1.0;\r\n" + 
+							"	vec2 uvb = uv * (1.0 + dispersion) - vec2(dispersion, dispersion)/2.0;\r\n" + 
 							"\r\n" + 
-							"\r\n" + 
-							"vec3 tex2D( sampler2D _tex, vec2 _p ){\r\n" + 
-							"  vec3 col = texture( _tex, _p ).xyz;\r\n" + 
-							"  if ( 0.5 < abs( _p.x - 0.5 ) ) {\r\n" + 
-							"    col = vec3( 0.1 );\r\n" + 
-							"  }\r\n" + 
-							"  return col;\r\n" + 
-							"}\r\n" + 
-							"\r\n" + 
-							"float hash( vec2 _v ){\r\n" + 
-							"  return fract( sin( dot( _v, vec2( 89.44, 19.36 ) ) ) * 22189.22 );\r\n" + 
-							"}\r\n" + 
-							"\r\n" + 
-							"float iHash( vec2 _v, vec2 _r ){\r\n" + 
-							"  float h00 = hash( vec2( floor( _v * _r + vec2( 0.0, 0.0 ) ) / _r ) );\r\n" + 
-							"  float h10 = hash( vec2( floor( _v * _r + vec2( 1.0, 0.0 ) ) / _r ) );\r\n" + 
-							"  float h01 = hash( vec2( floor( _v * _r + vec2( 0.0, 1.0 ) ) / _r ) );\r\n" + 
-							"  float h11 = hash( vec2( floor( _v * _r + vec2( 1.0, 1.0 ) ) / _r ) );\r\n" + 
-							"  vec2 ip = vec2( smoothstep( vec2( 0.0, 0.0 ), vec2( 1.0, 1.0 ), mod( _v*_r, 1. ) ) );\r\n" + 
-							"  return ( h00 * ( 1. - ip.x ) + h10 * ip.x ) * ( 1. - ip.y ) + ( h01 * ( 1. - ip.x ) + h11 * ip.x ) * ip.y;\r\n" + 
-							"}\r\n" + 
-							"\r\n" + 
-							"float noise( vec2 _v ){\r\n" + 
-							"  float sum = 0.;\r\n" + 
-							"  for( int i=1; i<9; i++ )\r\n" + 
-							"  {\r\n" + 
-							"    sum += iHash( _v + vec2( i ), vec2( 2. * pow( 2., float( i ) ) ) ) / pow( 2., float( i ) );\r\n" + 
-							"  }\r\n" + 
-							"  return sum;\r\n" + 
-							"}\r\n" + 
-							"\r\n" + 
-							"void main(){\r\n" + 
-							"  vec2 uv = v_TexCoord.xy;\r\n" + 
-							"  vec2 uvn = uv;\r\n" + 
-							"  vec3 col = vec3( 0.0 );\r\n" + 
-							"\r\n" + 
-							"  // tape wave\r\n" + 
-							"  uvn.x += ( noise( vec2( uvn.y, time ) ) - 0.5 )* WAVEPOWER1;\r\n" + 
-							"  uvn.x += ( noise( vec2( uvn.y * 100.0, time * 10.0 ) ) - 0.5 ) * 0.01;\r\n" + 
-							"\r\n" + 
-							"  // tape crease\r\n" + 
-							"  float tcPhase = clamp( ( sin( uvn.y * 8.0 - time * PI * 1.2 ) - 0.92 ) * noise( vec2( time ) ), 0.0, 0.01 ) * 1.0;\r\n" + 
-							"  float tcNoise = max( noise( vec2( uvn.y * 100.0, time * 10.0 ) ) - WAVEPOWER2, 0.0 );\r\n" + 
-							"  uvn.x = uvn.x - tcNoise * tcPhase;\r\n" + 
-							"\r\n" + 
-							"  // switching noise\r\n" + 
-							"  float snPhase = smoothstep( 0.005, 0.0, uvn.y );\r\n" + 
-							"  uvn.y += snPhase * 0.3;\r\n" + 
-							"  uvn.x += snPhase * ( ( noise( vec2( uv.y * 100.0, time * 10.0 ) ) - 0.5 ) * 0.2 );\r\n" + 
-							"    \r\n" + 
-							"  col = tex2D( u_Texture, uvn );\r\n" + 
-							"  col *= 1.0 - tcPhase;\r\n" + 
-							"  col = mix(\r\n" + 
-							"    col,\r\n" + 
-							"    col.yzx,\r\n" + 
-							"    snPhase\r\n" + 
-							"  );\r\n" + 
-							"\r\n" + 
-							"  // bloom\r\n" + 
-							"  for( float x = -4.0; x < 2.5; x += 1.0 ){\r\n" + 
-							"    col.xyz += vec3(\r\n" + 
-							"      tex2D( u_Texture, uvn + vec2( x - 0.0, 0.0 ) * 7E-3 ).x,\r\n" + 
-							"      tex2D( u_Texture, uvn + vec2( x - 2.0, 0.0 ) * 7E-3 ).y,\r\n" + 
-							"      tex2D( u_Texture, uvn + vec2( x - 4.0, 0.0 ) * 7E-3 ).z\r\n" + 
-							"    ) * 0.05;\r\n" + 
-							"  }\r\n" + 
-							"  col *= BLOOMPOWER;\r\n" + 
-							"\r\n" + 
-							"  // ac beat\r\n" + 
-							"  col *= 1.0 + clamp( noise( vec2( 0.0, uv.y + time * 0.2 ) ) * 0.6 - 0.25, 0.0, 0.1 );\r\n" + 
-							"\r\n" + 
-							"  color = vec4( col, 1.0 );\r\n" + 
-							"}\r\n" 
-						
+							"	vec3 offset = texture(u_Texture, vec2(0, uv.y + time * 255.0)).xyz;\r\n" + 
+							"	\r\n" + 
+							"	float r = mix(texture(u_Texture, vec2(uvr.x, uvr.y) + offset.x * distortion).xyz,\r\n" + 
+							"				   offset, noisestrength).x;\r\n" + 
+							"	float g = mix(texture(u_Texture, vec2(uvg.x, uvg.y) + offset.x * distortion).xyz,\r\n" + 
+							"				   offset, noisestrength).y;\r\n" + 
+							"	float b = mix(texture(u_Texture, vec2(uvb.x, uvb.y) + offset.x * distortion).xyz,\r\n" + 
+							"				   offset, noisestrength).z;\r\n" + 
+							"	\r\n" + 
+							"	vec2 _uv = v_TexCoord.xy;\r\n" + 
+							"	_uv = _uv + disp * bendscale;\r\n" + 
+							"	_uv = (_uv + .5)/2.0;\r\n" + 
+							"	if (_uv.x > 0.0 && _uv.x < 1.0 && _uv.y > 0.0 && _uv.y < 1.0) {\r\n" + 
+							"		float stripes = sin(uv.y * 300.0 + time * 10.0);\r\n" + 
+							"		vec3 col = vec3(r, g, b);\r\n" + 
+							"		col = mix(col, vec3(.8), stripes / 20.0);\r\n" + 
+							"		color = vec4(col, 1.0);\r\n" + 
+							"	} else {\r\n" + 
+							"		color = vec4(0, 0, 0, 1);	\r\n" + 
+							"	}"+
+							"}"
 					};
 	
+	public final static String[] Shader_GUIQuad_CRT_FishEye = new String[] {
+			"#version 330\r\n" + 
+					" \r\n" + 
+					"layout(location = 0) in vec3 a_Position;\r\n" + 
+					"layout(location = 1) in vec2 a_TexCoord;\r\n" + 
+					" \r\n" + 
+					"uniform mat4 u_Transform;\r\n" + 
+					"uniform vec4 u_Color;\r\n" + 
+					"uniform vec2 u_UVScale;\r\n" + 
+					"out vec2 v_TexCoord;\r\n" + 
+					"out vec4 v_color;\r\n" + 
+					"out vec2 v_uvScale;\r\n" + 
+					" \r\n" + 
+					"void main() \r\n" + 
+					"{\r\n" + 
+					"	v_uvScale = u_UVScale;\r\n" + 
+					"	v_TexCoord = a_TexCoord;\r\n" + 
+					"	v_color = u_Color;\r\n" + 
+					"    gl_Position = u_Transform * vec4(a_Position,1.f);\r\n" + 
+					"}",
+					
+					
+					"#version 330 core\r\n" + 
+							"\r\n" + 
+							"layout(location = 0) out vec4 color;\r\n" + 
+							"\r\n" + 
+							"in vec2 v_TexCoord;\r\n" + 
+							"in vec4 v_color;\r\n" + 
+							"in vec2 v_uvScale;\r\n" + 
+							"\r\n" + 
+							"uniform sampler2D u_Texture;\r\n" + 
+							"uniform float time;\r\n" + 
+							"\r\n" + 
+							"void main() {\r\n" + 
+							"	float bendscale = 1.5f;\r\n" + 
+							"	\r\n" + 
+							"	vec2 uv = v_TexCoord.xy;\r\n" + 
+							"	vec2 disp = uv - vec2(.5, .5);\r\n" + 
+							"	disp *= sqrt(length(disp));\r\n" + 
+							"	uv += disp * bendscale;\r\n" + 
+							"	uv = (uv + .5)/2.0;\r\n" + 
+							"	vec4 col = texture(u_Texture, uv);\r\n" + 
+							"	color = col;\r\n" + 
+							"}"
+					};
+	
+	
+	public final static String[] Shader_GUIQuad_CRT_Full = new String[] {
+			"#version 330\r\n" + 
+					" \r\n" + 
+					"layout(location = 0) in vec3 a_Position;\r\n" + 
+					"layout(location = 1) in vec2 a_TexCoord;\r\n" + 
+					" \r\n" + 
+					"uniform mat4 u_Transform;\r\n" + 
+					"uniform vec4 u_Color;\r\n" + 
+					"uniform vec2 u_UVScale;\r\n" + 
+					"out vec2 v_TexCoord;\r\n" + 
+					"out vec4 v_color;\r\n" + 
+					"out vec2 v_uvScale;\r\n" + 
+					" \r\n" + 
+					"void main() \r\n" + 
+					"{\r\n" + 
+					"	v_uvScale = u_UVScale;\r\n" + 
+					"	v_TexCoord = a_TexCoord;\r\n" + 
+					"	v_color = u_Color;\r\n" + 
+					"    gl_Position = u_Transform * vec4(a_Position,1.f);\r\n" + 
+					"}",
+					
+					
+					"#version 330 core\r\n" + 
+							"\r\n" + 
+							"layout(location = 0) out vec4 color;\r\n" + 
+							"\r\n" + 
+							"in vec2 v_TexCoord;\r\n" + 
+							"in vec4 v_color;\r\n" + 
+							"in vec2 v_uvScale;\r\n" + 
+							"\r\n" + 
+							"uniform sampler2D u_Texture;\r\n" + 
+							"uniform float time;\r\n" + 
+							"\r\n" + 
+							"void main() {\r\n" + 
+							"	float dispersion = .01;\r\n" + 
+							"	float distortion = .04;\r\n" + 
+							"	float noisestrength = .2;\r\n" + 
+							"	float bendscale = 1.5;\r\n" + 
+							"	\r\n" + 
+							"	vec2 uv = v_TexCoord.xy;\r\n" + 
+							"	vec2 disp = uv - vec2(.5, .5);\r\n" + 
+							"	disp *= sqrt(length(disp));\r\n" + 
+							"	uv += disp * bendscale;\r\n" + 
+							"	uv = (uv + .5)/2.0;\r\n" + 
+							"	vec2 uvr = uv * (1.0 - dispersion) + vec2(dispersion, dispersion)/2.0;\r\n" + 
+							"	vec2 uvg = uv * 1.0;\r\n" + 
+							"	vec2 uvb = uv * (1.0 + dispersion) - vec2(dispersion, dispersion)/2.0;\r\n" + 
+							"\r\n" + 
+							"	vec3 offset = texture(u_Texture, vec2(0, uv.y + time * 255.0)).xyz;\r\n" + 
+							"	\r\n" + 
+							"	float r = mix(texture(u_Texture, vec2( uvr.x, uvr.y) + offset.x * distortion).xyz,\r\n" + 
+							"				   offset, noisestrength).x;\r\n" + 
+							"	float g = mix(texture(u_Texture, vec2(uvg.x, uvg.y) + offset.x * distortion).xyz,\r\n" + 
+							"				   offset, noisestrength).y;\r\n" + 
+							"	float b = mix(texture(u_Texture, vec2(uvb.x, uvb.y) + offset.x * distortion).xyz,\r\n" + 
+							"				   offset, noisestrength).z;\r\n" + 
+							"	\r\n" + 
+							"	if (uv.x > 0.0 && uv.x < 1.0 && uv.y > 0.0 && uv.y < 1.0) {\r\n" + 
+							"		float stripes = sin(uv.y * 300.0 + time * 10.0);\r\n" + 
+							"		vec3 col = vec3(r, g, b);\r\n" + 
+							"		col = mix(col, vec3(.8), stripes / 20.0);\r\n" + 
+							"		color = vec4(col, 1.0);\r\n" + 
+							"	} else {\r\n" + 
+							"		color = vec4(0, 0, 0, 1);	\r\n" + 
+							"	}\r\n" + 
+							"}"
+					};
+	
+	
+
 	
 	public final static String[] Shader_GUIQuad_CRTTV = new String[] {
 			"#version 330\r\n" + 
@@ -514,12 +588,12 @@ public class ShaderLib {
 							"uniform float time;\r\n" + 
 							"\r\n" + 
 							"// change these values to 0.0 to turn off individual effects\r\n" + 
-							"float vertJerkOpt = 2.0;\r\n" + 
+							"float vertJerkOpt = 5;\r\n" + 
 							"float vertMovementOpt = 0.0;\r\n" + 
 							"float bottomStaticOpt = .5;\r\n" + 
-							"float scalinesOpt = 1.0;\r\n" + 
-							"float rgbOffsetOpt = .75;\r\n" + 
-							"float horzFuzzOpt = 1.5;\r\n" + 
+							"float scalinesOpt = .5;\r\n" + 
+							"float rgbOffsetOpt = .2;\r\n" + 
+							"float horzFuzzOpt = .5;\r\n" + 
 							"\r\n" + 
 							"// Noise generation functions borrowed from: \r\n" + 
 							"// https://github.com/ashima/webgl-noise/blob/master/src/noise2D.glsl\r\n" + 
@@ -590,8 +664,8 @@ public class ShaderLib {
 							"}\r\n" + 
 							"\r\n" + 
 							"float staticV(vec2 uv) {\r\n" + 
-							"    float staticHeight = fnoise(vec2(9.0,time*1.2+3.0))*0.3+5.0;\r\n" + 
-							"    float staticAmount = fnoise(vec2(1.0,time*1.2-6.0))*0.1+0.3;\r\n" + 
+							"    float staticHeight = fnoise(vec2(9.0,time*1.2+3.0))*0.3+0.0;\r\n" + 
+							"    float staticAmount = fnoise(vec2(1.0,time*1.2-6.0))*0.1+0.1;\r\n" + 
 							"    float staticStrength = fnoise(vec2(-9.75,time*0.6-3.0))*2.0+2.0;\r\n" + 
 							"	return (1.0-step(fnoise(vec2(5.0*pow(time,2.0)+pow(uv.x*7.0,1.2),pow((mod(time,100.0)+100.0)*uv.y*0.3+3.0,staticHeight))),staticAmount))*staticStrength;\r\n" + 
 							"}\r\n" + 

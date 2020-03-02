@@ -32,7 +32,7 @@ public class ChipStackMesh extends Mesh2DInstancedQuad {
 		this.generateMipMap = true;
 		this.SetCollision(false);
 		this.cardFront = chipType;
-		this.SetScale(transform.GetScale().x * .25f, transform.GetScale().y * .25f, transform.GetScale().z);
+		this.SetScale(transform.GetScale().x * .4f* 1.25f, transform.GetScale().y * .4f* 1.25f, transform.GetScale().z);
 		this.SetRotation(transform.GetRotation().x,transform.GetRotation().y,transform.GetRotation().z+180f);
 		SetupTextureCoords();
 	}
@@ -43,7 +43,7 @@ public class ChipStackMesh extends Mesh2DInstancedQuad {
 		this.generateMipMap = true;
 		this.SetCollision(false);
 		this.cardFront = chipType;
-		this.SetScale(transform.GetScale().x * .25f, transform.GetScale().y * .25f, transform.GetScale().z);
+		this.SetScale(transform.GetScale().x * .4f* 1.25f, transform.GetScale().y * .4f* 1.25f, transform.GetScale().z);
 		this.SetRotation(transform.GetRotation().x,transform.GetRotation().y,transform.GetRotation().z+180f);
 		SetupTextureCoords();
 	}
