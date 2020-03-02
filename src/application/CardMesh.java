@@ -45,7 +45,7 @@ public class CardMesh extends Mesh2DQuad {
 		this.SetCollision(false);
 		this.cardFront = cardFront;
 		this.cardBack = cardBack;
-		this.SetScale(transform.GetScale().x * .75f * 1.25f, transform.GetScale().y* 1.25f, transform.GetScale().z);
+		this.SetScale(transform.GetScale().x * .75f * 1.25f, transform.GetScale().y*1.5f, transform.GetScale().z);
 		this.SetRotation(transform.GetRotation().x,transform.GetRotation().y,transform.GetRotation().z+180f);
 		SetupTextureCoords();
 		
@@ -58,6 +58,7 @@ public class CardMesh extends Mesh2DQuad {
 		
 		textureCoord = new TextureCoords(
 				// Front
+				
 				new Vector4f(
 				(textureAtlas.GetObject(cardFront).GetInt("x")+textureAtlas.GetObject(cardFront).GetInt("width") )/width,
 				(textureAtlas.GetObject(cardFront).GetInt("x")+textureAtlas.GetObject(cardFront).GetInt("width") )/width,

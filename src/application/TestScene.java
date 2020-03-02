@@ -51,75 +51,141 @@ public class TestScene extends Scene {
 		cam.SetRotation(51f);
 		((CameraController.Orthographic)this.cam).SetZoomLevel(4.f);
 		
+		Deck myDeck = new Deck(1);
+		myDeck.shuffle();
 		
 		// Player Cards
 		new Actor("cardPlayer_1").AddComponent(new CardMesh("Mesh", 
 				new Transform( // Card Transform
-						new Vector3f(.125f, -.5f, .99f), // Position
+						new Vector3f(.125f, -.75f, 1f), // Position
 						new Vector3f(0f, 0, 0), // Rotation
-						new Vector3f(1.25f, 1.25f, 1f) ), // Scale
-				"AS", // Card front Suit
+						new Vector3f(1f, 1f, 1f) ), // Scale
+				myDeck.drawCard().getCardTextureID(), // Card front Suit
 				"card_back_red", // Card back Suit
 				this.cam.GetCamera()));// Camera))
 		
 		new Actor("cardPlayer_2").AddComponent(new CardMesh("Mesh", 
 				new Transform( // Card Transform
-						new Vector3f(-.125f, -.5f, 1f), // Position
+						new Vector3f(-.125f, -.75f, .99f), // Position
 						new Vector3f(0f, 0, 0), // Rotation
-						new Vector3f(1.25f, 1.25f, 1f) ), // Scale
-				"JH", // Card front Suit
+						new Vector3f(1f, 1f, 1f) ), // Scale
+				myDeck.drawCard().getCardTextureID(), // Card front Suit
 				"card_back_red", // Card back Suit
 				this.cam.GetCamera()));// Camera))
+		
+		
+		new Actor("chipStack25_p1").AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(0.f, 0f, 1.25f) ),
+				"Chip25", 2,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
+				));
+		
+		new Actor("chipStack10_p1").AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(0.525f, 0f, 1.25f) ),
+				"Chip10", 7,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
+				));
+		
+		new Actor("chipStack5_p1").AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(-0.525f, 0f, 1.25f) ),
+				"Chip5", 8,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
+				));
 		
 
 		// Player 2 Cards
 		new Actor("cardPlayer2_1").AddComponent(new CardMesh("Mesh", 
 				new Transform( // Card Transform
-						new Vector3f(-3.5f, -0f, .99f), // Position
-						new Vector3f(0f, 0, -40f), // Rotation
+						new Vector3f(-5.5f, 0f, .99f), // Position
+						new Vector3f(0, 180f, 40f), // Rotation
 						new Vector3f(1.f, 1.f, 1f) ), // Scale
-				"AS", // Card front Suit
+				myDeck.drawCard().getCardTextureID(), // Card front Suit
 				"card_back_red", // Card back Suit
 				this.cam.GetCamera()));// Camera))
 		
 		new Actor("cardPlayer2_2").AddComponent(new CardMesh("Mesh", 
 				new Transform( // Card Transform
-						new Vector3f(-3.25f, -0f, 1f), // Position
-						new Vector3f(0, 180f, 40f), // Rotation
+						new Vector3f(-5.25f, -.2f, 1f), // Position
+						new Vector3f(0, 0, -40f), // Rotation
 						new Vector3f(1.f, 1.f, 1f) ), // Scale
-				"JH", // Card front Suit
+				myDeck.drawCard().getCardTextureID(), // Card front Suit
 				"card_back_red", // Card back Suit
 				this.cam.GetCamera()));// Camera))
 		
+		new Actor("cardPlayer2_3").AddComponent(new CardMesh("Mesh", 
+				new Transform( // Card Transform
+						new Vector3f(-5f, -.4f, 1.01f), // Position
+						new Vector3f(0, 0, -40f), // Rotation
+						new Vector3f(1.f, 1.f, 1f) ), // Scale
+				myDeck.drawCard().getCardTextureID(), // Card front Suit
+				"card_back_red", // Card back Suit
+				this.cam.GetCamera()));// Camera))
+		
+		
+		new Actor("cardPlayer2_4").AddComponent(new CardMesh("Mesh", 
+				new Transform( // Card Transform
+						new Vector3f(-4.75f, -.6f, 1.02f), // Position
+						new Vector3f(0, 0, -40f), // Rotation
+						new Vector3f(1.f, 1.f, 1f) ), // Scale
+				myDeck.drawCard().getCardTextureID(), // Card front Suit
+				"card_back_red", // Card back Suit
+				this.cam.GetCamera()));// Camera))
+		
+		float o_set = -5f;
+		new Actor("chipStack2_p2").AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(0.f+o_set, 1f, 1.25f) ),
+				"Chip5", 6,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
+				));
+		
+		new Actor("chipStack50_p2").AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(0.525f+o_set, .75f, 1.25f) ),
+				"Chip50", 3,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
+				));
+		
+		new Actor("chipStack1_p2").AddComponent(new ChipStackMesh("chipStack",
+				new Transform(new Vector3f(o_set + 1f, .25f, 1.25f), new Vector3f(0,0,34f), new Vector3f(1,1,1) ),
+				"Chip100", 2,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
+				));
+		
+		
+		Hand player3Hand = new Hand();
+		player3Hand.addCard(myDeck.drawCard());
+		player3Hand.addCard(myDeck.drawCard());
 
 		// Player 3 Cards
 		new Actor("cardPlayer3_1").AddComponent(new CardMesh("Mesh", 
 				new Transform( // Card Transform
-						new Vector3f(3.5f, -0f, .99f), // Position
+						new Vector3f(5.5f, -0f, .99f), // Position
 						new Vector3f(0f, 0, 40f), // Rotation
 						new Vector3f(1.f, 1.f, 1f) ), // Scale
-				"AS", // Card front Suit
+				player3Hand.getCard(0).getCardTextureID(), // Card front Suit
 				"card_back_red", // Card back Suit
 				this.cam.GetCamera()));// Camera))
 		
 		new Actor("cardPlayer3_2").AddComponent(new CardMesh("Mesh", 
 				new Transform( // Card Transform
-						new Vector3f(3.75f, -0f, 1f), // Position
-						new Vector3f(0f, 180f, -40f), // Rotation
+						new Vector3f(5.75f, -0f, 1f), // Position
+						new Vector3f(0f, 0, 40f), // Rotation
 						new Vector3f(1.f, 1.f, 1f) ), // Scale
-				"JH", // Card front Suit
+				player3Hand.getCard(1).getCardTextureID(), // Card front Suit
 				"card_back_red", // Card back Suit
 				this.cam.GetCamera()));// Camera))
 		
-		
-		
+		/*
+		new Actor("player3Count").AddComponent(new GUIText("text",
+				new Transform(new Vector3f(.55f,0f,0f)),
+				"Fonts/verdana",
+				"Total: " + player3Hand.getTotal(),
+				new Vector4f(1f,0,0,1),
+				.25f,
+				1f,
+				true
+				));
+		*/
 		// Dealer Cards
 				new Actor("cardDealer").AddComponent(new CardMesh("Mesh", 
 						new Transform( // Card Transform
 								new Vector3f(0, 5f, .99f), // Position
 								new Vector3f(0f, 0f, 180f), // Rotation
 								new Vector3f(1.f, 1.f, 1f) ), // Scale
-						"AS", // Card front Suit
+						myDeck.drawCard().getCardTextureID(), // Card front Suit
 						"card_back_red", // Card back Suit
 						this.cam.GetCamera()));// Camera))
 				
@@ -128,7 +194,7 @@ public class TestScene extends Scene {
 								new Vector3f(.25f, 5f, 1f), // Position
 								new Vector3f(0f, 180f, 180f), // Rotation
 								new Vector3f(1.f, 1.f, 1f) ), // Scale
-						"2H", // Card front Suit
+						myDeck.drawCard().getCardTextureID(), // Card front Suit
 						"card_back_red", // Card back Suit
 						this.cam.GetCamera()));// Camera))
 		
@@ -151,7 +217,7 @@ public class TestScene extends Scene {
 				new Vector4f(.125f, .125f,.25f,.9f))
 				
 				.AddChild(new GUISlider(
-				"quad",
+				"slider",
 				new Transform(
 						new Vector3f(0f,0f,.01f),
 						new Vector3f(0f),
@@ -167,7 +233,7 @@ public class TestScene extends Scene {
 			
 					
 					}.AddChild(new GUISliderBar(
-						"quad",
+						"sliderBar",
 						new Transform(
 								new Vector3f(0f,0f,.01f),
 								new Vector3f(0f),
@@ -281,11 +347,11 @@ public class TestScene extends Scene {
 			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_Z) {
 				if (!scanLines) {
 					WindowFrame.SetScreenShader(ShaderLib.Shader_GUIQuad);
-					WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad_CRT_FishEye);
+					//WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad_CRT_FishEye);
 					scanLines = true;
 				} else {
 					WindowFrame.SetScreenShader(ShaderLib.Shader_GUIQuad_CRT_Outline);
-					WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad_CRT_FishEye);
+					//WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad_CRT_FishEye);
 					scanLines = false;
 				}
 			}
@@ -311,7 +377,30 @@ public class TestScene extends Scene {
 				new Vector4f(1f),
 				this.cam.GetCamera()
 				));
+
+		new Actor("cardBorder1").AddComponent(new Mesh2DQuad("blackJackTitle",
+				new Transform(new Vector3f(0,.5f,0f), new Vector3f(0,0f,0f), new Vector3f(1.25f,1.75f,1f)),
+				"Images/cardBorder.png",
+				new Vector4f(1f),
+				this.cam.GetCamera()
+				));
 		
+		
+
+		new Actor("cardBorder2").AddComponent(new Mesh2DQuad("blackJackTitle",
+				new Transform(new Vector3f(-5.5f,1.25f,0f), new Vector3f(0,0f,-40f), new Vector3f(1.25f,1.75f,1f)),
+				"Images/cardBorder.png",
+				new Vector4f(1f),
+				this.cam.GetCamera()
+				));
+		
+		new Actor("cardBorder3").AddComponent(new Mesh2DQuad("blackJackTitle",
+				new Transform(new Vector3f(5.5f,1.25f,0f), new Vector3f(0,0f, 40f), new Vector3f(1.25f,1.75f,1f)),
+				"Images/cardBorder.png",
+				new Vector4f(1f),
+				this.cam.GetCamera()
+				));
+
 		new Actor("headerInfoText").AddComponent(new Mesh2DQuad("blackJackTitle",
 				new Transform(new Vector3f(0,5.25f,-1f), new Vector3f(-15f,0f,0f), new Vector3f(5.5f,2.5f,1f)),
 				"Images/blackJackInfoHeader.png",
@@ -387,16 +476,16 @@ public class TestScene extends Scene {
 
 		}
 		
-		stackPosX = 3f;
+		stackPosX = 6f;
 		float offset = 0;
 		float row = 0;
-		for (int i=0; i < 6; i++) {
+		for (int i=0; i < 1; i++) {
 			offset += 1f;
 			offset = i == 3 ? 1f : offset;
 			row = i >= 3? -1.5f : 0f;
 			new Actor("cardStack1_"+i).AddComponent(new CardStackMesh("cardStack",
 					new Transform(new Vector3f(stackPosX+offset, stackPosY.y+row, .1f) ),
-					"card_back_red", "card_back_red", 52, new Vector3f(0,0f,.005f),  this.cam.GetCamera()
+					"card_back_red", "card_back_red", 52, new Vector3f(.05f,-0.0025f,.005f),  this.cam.GetCamera()
 					));
 		
 		

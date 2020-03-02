@@ -93,7 +93,7 @@ public class GUISliderBar extends GUIQuad_Draggable {
 	public void Drag(float x, float y) {
 		Vector3f newPos = new Vector3f( this.GetRelativePosition().x + (( ((x-dragPos.x)/GUIRenderer.GetWidth())*2f )*this.slideDir.x),
 				this.GetRelativePosition().y - (( ((y-dragPos.y)/GUIRenderer.GetHeight()*2f) *this.slideDir.y) ),
-				this.transform.GetPosition().z);
+				this.GetRelativePosition().z);
 		if (this.parent != null) {
 			 if (this.slideDir.x > 0 && newPos.x-.001f <= (this.parent.GetScale().x-this.GetScale().x) && 
 					 newPos.x+.001f >= -(this.parent.GetScale().x-this.GetScale().x)

@@ -18,6 +18,8 @@ import java.util.List;
         this.handValues = new ArrayList<ArrayList<Integer>>();
     }
     
+ 
+    
     public void addCard(Card card) {
     	this.hand.add(card);
     	ArrayList<Integer> curValues = new ArrayList<Integer>();
@@ -37,6 +39,10 @@ import java.util.List;
     public void clearHand() {
         this.hand = new ArrayList<Card>();
         this.handValues = new ArrayList<ArrayList<Integer>>();
+    }
+    
+    public Card getCard(int index) {
+    	return hand.get(index);
     }
     
     public void printHand() {

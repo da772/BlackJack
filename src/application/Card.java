@@ -24,6 +24,23 @@ public class Card {
     	return new String(this.getValue() + " " + this.getSuit()); 
     }
     
+    public String getCardTextureID() {
+    	String c = Integer.toString(this.getValue());
+    	if (this.getValue() == 13) {
+    		c = "K";
+    	} else if (this.getValue() == 12) {
+    		c = "Q";
+    	} else if (this.getValue() == 11) {
+    		c = "J";
+    	} else if (this.getValue() == 1) {
+    		c = "A";
+    	}
+    	
+    	
+    	return new String(c+this.suit.charAt(0));
+    	
+    }
+    
     public static void main(String args[]) {
     	//test
     }

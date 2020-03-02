@@ -399,8 +399,8 @@ public class ShaderLib {
 							"uniform float time;\r\n" + 
 							"\r\n" + 
 							"void main() {\r\n" + 
-							"	float dispersion = .01;\r\n" + 
-							"	float distortion = .04;\r\n" + 
+							"	float dispersion = .0066;\r\n" + 
+							"	float distortion = .02;\r\n" + 
 							"	float noisestrength = .2;\r\n" + 
 							"	float bendscale = 1.5f;\r\n" + 
 							"	\r\n" + 
