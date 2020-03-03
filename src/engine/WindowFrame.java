@@ -5,15 +5,15 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import engine.Events.Event;
-import renderer.Renderer;
-import renderer.Shader;
-import renderer.Transform;
-import renderer.GUI.GUI;
-import renderer.GUI.GUIButton;
-import renderer.GUI.GUIQuad;
-import renderer.GUI.GUIQuad_Draggable;
-import renderer.GUI.GUIText;
-import util.Timing;
+import engine.renderer.Renderer;
+import engine.renderer.Shader;
+import engine.renderer.Transform;
+import engine.renderer.GUI.GUI;
+import engine.renderer.GUI.GUIButton;
+import engine.renderer.GUI.GUIQuad;
+import engine.renderer.GUI.GUIQuad_Draggable;
+import engine.renderer.GUI.GUIText;
+import engine.util.Timing;
 
 public class WindowFrame {
 

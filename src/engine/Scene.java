@@ -8,6 +8,7 @@ public abstract class Scene {
 	private String name;
 	
 	protected Map<String, Actor> actors = new HashMap<String, Actor>(0);
+	protected Map<String, Actor> actors_update = new HashMap<String, Actor>(0);
 	protected CameraController cam;
 	boolean init = false;
 	
@@ -52,6 +53,9 @@ public abstract class Scene {
 	public boolean AddActor(String name, Actor actor) {
 		if (!actors.containsKey(name)) {
 			actors.put(name, actor);
+			if (actor.CanUpdate()) {
+				actors_update.put(name, actor);
+			}
 			return true;
 		}
 		actor.End();
@@ -71,7 +75,6 @@ public abstract class Scene {
 			}
 			return true;
 		} else if (actors.containsKey(actor.GetName())) {
-			System.out.println("HELLLO");
 			try {
 				throw new Exception("Actor with: "+actor.GetName() + " already exists!" );
 			} catch (Exception e) {
@@ -105,7 +108,10 @@ public abstract class Scene {
 	 */
 	public boolean RemoveActor(String name) {
 		if (actors.containsKey(name)){
-			actors.remove(name).End();;
+			actors.remove(name).End();
+			if (actors_update.containsKey(name)) {
+				actors_update.remove(name);
+			}
 			return true;
 		}
 		return false;
@@ -118,8 +124,8 @@ public abstract class Scene {
 	public void Update(float deltaTime) {
 		if (init) {
 			OnUpdate(deltaTime);
-			for (Object key : actors.keySet()) {
-				actors.get(key).Update(deltaTime);
+			for (Object key : actors_update.keySet()) {
+				actors_update.get(key).Update(deltaTime);
 			}
 		}
 	};
@@ -146,6 +152,7 @@ public abstract class Scene {
 		for (Object key : actors.keySet()) {
 			actors.get(key).End();
 		}
+		actors_update.clear();
 		actors.clear();
 		init = false;
 	};

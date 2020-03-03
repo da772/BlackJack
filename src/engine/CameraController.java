@@ -4,7 +4,7 @@ import org.joml.Vector3f;
 
 import engine.Events.Event;
 import engine.Events.WindowResizedEvent;
-import util.MathLib;
+import engine.util.MathLib;
 
 public abstract class CameraController {
 

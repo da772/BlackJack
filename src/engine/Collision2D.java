@@ -5,9 +5,9 @@ import java.util.List;
 
 import engine.Collider2D.CollisionObjectType;
 import engine.Events.Event;
-import renderer.GUIRenderer;
-import util.MathLib;
-import util.Timing;
+import engine.renderer.GUIRenderer;
+import engine.util.MathLib;
+import engine.util.Timing;
 
 public class Collision2D extends Thread {
 

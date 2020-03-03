@@ -6,13 +6,13 @@ import org.joml.Vector4f;
 import engine.Events.Event;
 import engine.Events.KeyEvent;
 import engine.Events.MouseButtonEvent;
-import renderer.Renderer;
-import renderer.Shader;
-import renderer.Texture;
-import renderer.Transform;
-import renderer.GUI.GUIQuad_Draggable;
-import renderer.GUI.GUIText;
-import renderer.text.FontType;
+import engine.renderer.Renderer;
+import engine.renderer.Shader;
+import engine.renderer.Texture;
+import engine.renderer.Transform;
+import engine.renderer.GUI.GUIQuad_Draggable;
+import engine.renderer.GUI.GUIText;
+import engine.renderer.text.FontType;
 
 public class Debugger {
 

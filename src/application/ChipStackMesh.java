@@ -5,9 +5,9 @@ import org.joml.Vector4f;
 
 import engine.Camera;
 import engine.TextureAtlas;
-import renderer.TextureCoords;
-import renderer.Transform;
-import renderer.mesh.Mesh2DInstancedQuad;
+import engine.renderer.TextureCoords;
+import engine.renderer.Transform;
+import engine.renderer.mesh.Mesh2DInstancedQuad;
 
 /**
  * 

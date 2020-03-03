@@ -1,12 +1,11 @@
 package application;
 
 import engine.Events.Event;
-import renderer.Renderer;
-import renderer.Transform;
-import renderer.GUI.GUIButton;
-import renderer.GUI.GUIQuad;
-import renderer.GUI.GUIText;
-
+import engine.renderer.Renderer;
+import engine.renderer.Transform;
+import engine.renderer.GUI.GUIButton;
+import engine.renderer.GUI.GUIQuad;
+import engine.renderer.GUI.GUIText;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;

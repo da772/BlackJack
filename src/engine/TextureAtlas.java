@@ -7,8 +7,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import renderer.Renderer;
-import util.FileLoader; 
+import engine.renderer.Renderer;
+import engine.util.FileLoader; 
 
 public class TextureAtlas {
 

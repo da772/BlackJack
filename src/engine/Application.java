@@ -11,8 +11,9 @@ import engine.Events.MouseMovedEvent;
 import engine.Events.MouseScrolledEvent;
 import engine.Events.WindowClosedEvent;
 import engine.Events.WindowResizedEvent;
-import util.Timing;
-import renderer.Renderer;
+import engine.audio.AudioManager;
+import engine.renderer.Renderer;
+import engine.util.Timing;
 
 
 
@@ -81,6 +82,7 @@ public class Application {
 		Renderer.Init(window.GetFrameBuffers()[0], window.GetFrameBuffers()[1]);
 		Debugger.Init();
 		Collision2D.Begin();
+		AudioManager.Init();
 		WindowFrame.Init();
 		OnInit();
 	}
@@ -234,6 +236,7 @@ public class Application {
 			OnUpdate(deltaTime);
 			SceneManager.OnUpdate(deltaTime, paused);
 			Debugger.Update();
+			AudioManager.Update();
 			Renderer.Render();
 			window.Update();
 			Timing.sync(fpsCap, window.Vsync());
@@ -267,17 +270,23 @@ public class Application {
 		WindowFrame.Shutdown();
 		Debugger.ShutDown();
 		Collision2D.CleanUp();
-
+		AudioManager.Shutdown();
 		Renderer.ShutDown();
 		if (window != null) {
 			window.Shutdown();
 		}
 	}
 	
-	
+	public static boolean IsRunning() {
+		return app.running;
+	}
 	
 	public static void CloseApplication() {
 		app.running = false;
+	}
+	
+	public static int GetFPSCap() {
+		return app.fpsCap;
 	}
 	
 	/**

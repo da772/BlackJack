@@ -13,6 +13,7 @@ public class Actor {
 	protected String _name;
 	protected Scene scene;
 	protected boolean begin;
+	protected boolean update = false;
 	
 	
 	
@@ -144,6 +145,10 @@ public class Actor {
 			components.get(key).OnBegin();
 		}
 		begin = true;
+	}
+	
+	public boolean CanUpdate() {
+		return this.update;
 	}
 	
 	protected void End() {

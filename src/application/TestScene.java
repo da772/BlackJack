@@ -10,18 +10,19 @@ import engine.CameraController;
 import engine.Events;
 import engine.KeyCodes;
 import engine.Events.Event;
-import renderer.Transform;
-import renderer.GUI.GUI;
-import renderer.GUI.GUIButton;
-import renderer.GUI.GUIText;
-import renderer.GUI.GUIQuad_Draggable;
-import renderer.GUI.GUISlider;
-import renderer.GUI.GUISliderBar;
-import renderer.mesh.Mesh2DBackground;
-import renderer.mesh.Mesh2DQuad;
+import engine.renderer.Transform;
+import engine.renderer.GUI.GUI;
+import engine.renderer.GUI.GUIButton;
+import engine.renderer.GUI.GUIQuad_Draggable;
+import engine.renderer.GUI.GUISlider;
+import engine.renderer.GUI.GUISliderBar;
+import engine.renderer.GUI.GUIText;
+import engine.renderer.mesh.Mesh2DBackground;
+import engine.renderer.mesh.Mesh2DQuad;
 import engine.Scene;
 import engine.ShaderLib;
 import engine.WindowFrame;
+import engine.audio.AudioManager;
 
 public class TestScene extends Scene {
 
@@ -277,6 +278,8 @@ public class TestScene extends Scene {
 							@Override
 							protected void OnMouseReleased() {
 								SetButtonTexture(false);
+								AudioManager.CreateAudioSource("yeet", "Audio/yeet-sound-effect.wav", .15f, 1f, false, true);
+								AudioManager.PlaySource("yeet");
 								if (this.parent != null) {
 									lastParent = this.parent;
 									this.parent.DetachChild(this.parent.GetChild(this.GetName()));
