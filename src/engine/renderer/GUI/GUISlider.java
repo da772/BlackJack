@@ -18,10 +18,19 @@ public abstract class GUISlider extends GUIQuad {
 	
 	public void ValueChanged(float value) {
 		this._value = value;
-		OnValueChanged(MathLib.GetMappedRangeValueUnclamped(0,1,minValue, maxValue, value));
+		OnValueChanged(MathLib.GetMappedRangeValueUnclamped(0,1,minValue, maxValue, (float) (Math.round(value * 100.0) / 100.0)));
+		
+		OnValueChangedRaw(MathLib.GetMappedRangeValueUnclamped(0,1,minValue, maxValue, value));
 	}
 	
+	public void OnDragComplete() {
+		
+	}
+	
+	
 	protected abstract void OnValueChanged(float value);
+	protected void OnValueChangedRaw(float value) {};
+
 	
 	
 	

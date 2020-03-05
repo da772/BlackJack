@@ -46,24 +46,6 @@ public abstract class Scene {
 	
 	/**
 	 * 
-	 * @param name - unique name for actor
-	 * @param actor - actor to add
-	 * @return - returns true actor id does already not exist
-	 */
-	public boolean AddActor(String name, Actor actor) {
-		if (!actors.containsKey(name)) {
-			actors.put(name, actor);
-			if (actor.CanUpdate()) {
-				actors_update.put(name, actor);
-			}
-			return true;
-		}
-		actor.End();
-		return false;
-	}
-	
-	/**
-	 * 
 	 * @param actor - actor to add to scene
 	 * @return
 	 */
@@ -72,6 +54,10 @@ public abstract class Scene {
 			actors.put(actor.GetName(), actor);
 			if (HasBegin()) {
 				actor.Begin();
+			}
+			if (actor.CanUpdate()) {
+				System.out.println("Update");
+				actors_update.put(name, actor);
 			}
 			return true;
 		} else if (actors.containsKey(actor.GetName())) {
@@ -168,6 +154,20 @@ public abstract class Scene {
 	
 	public int GetActorCount() {
 		return actors.size();
+	}
+	
+	public void SetUpdate(Actor a, boolean b) {
+		if (b) {
+			if (!actors_update.containsKey(a.GetName())) {
+				actors_update.put(a.GetName(), a);
+			}
+		} else {
+			if (actors_update.containsKey(a.GetName())) {
+				actors_update.remove(a.GetName());
+			}
+		}
+		
+		
 	}
 	
 	

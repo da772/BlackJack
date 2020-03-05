@@ -26,7 +26,6 @@ public class FileLoader {
 			buffer.flip();
 			return buffer;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

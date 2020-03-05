@@ -5,13 +5,12 @@ import org.lwjgl.openal.AL10;
 public class AudioSource {
 
 	private int sourceId;
-	String name, fileName;
+	String name, fileName, category = "global";
 	float volume,pitch, length;
 	int bufferId, loop;
 	private boolean setup = false, autoDelete = false;
 	
-
-	public AudioSource(String name, String fileName, float volume, float pitch, boolean loop, boolean autoDelete)
+	public AudioSource(String name, String fileName, float volume, float pitch, boolean loop, boolean autoDelete, String category)
 	{
 		this.name = name;
 		this.fileName = fileName;
@@ -19,6 +18,7 @@ public class AudioSource {
 		this.pitch = pitch;
 		this.loop = loop ? 1 : 0;
 		this.autoDelete = autoDelete;
+		this.category = category;
 	}
 	
 	public boolean ShouldAutoDelete() {

@@ -139,7 +139,7 @@ public class Debugger {
 		
 		// Create draggable GUI Text Quad
 		debugMenu = (GUIQuad_Draggable) new GUIQuad_Draggable("DraggableQuad",new Transform( 
-				new Vector3f(xPos,yPos-WindowFrame.GetTop(), 10000.f), // Position x,y, Z-Order higher is on top
+				new Vector3f(xPos,yPos-WindowFrame.GetTop(), 1e6f), // Position x,y, Z-Order higher is on top
 				new Vector3f(0f, 0f,0f),  // Rotation
 				new Vector3f(.225f,.475f,1f)), // Scale x,y,z
 				"Images/blankTexture.png",  // Quad Texture path
@@ -184,7 +184,7 @@ public class Debugger {
 		}.AddChild(new GUIText( 
 				"DebugText",
 				new Transform(
-					new Vector3f(0f,0f,10001f)
+					new Vector3f(0f,0f,1f)
 				), // Font Offset (used to center text if needed) 
 				"Fonts/verdana",  // Font path
 				"", // Font String

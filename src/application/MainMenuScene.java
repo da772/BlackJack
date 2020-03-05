@@ -41,7 +41,7 @@ public class MainMenuScene extends Scene {
 						new Vector3f(.2f,.1f,1f)), // Scale x,y,z
 						"Images/Buttons/mainMenuButtonUp.png",  // Button texture
 						"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-						new Vector4f(0f,.6f,.075f,1f) // Quad Color r,g,b,a
+						new Vector4f(0, 225/255f, 100/255f,1.0f) // Quad Color r,g,b,a
 						
 						) {
 							@Override
@@ -82,7 +82,7 @@ public class MainMenuScene extends Scene {
 						new Vector3f(.2f,.1f,1f)), // Scale x,y,z
 						"Images/Buttons/mainMenuButtonUp.png",  // Button texture
 						"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-						new Vector4f(0f,.6f,.075f,1f) // Quad Color r,g,b,a
+						new Vector4f(0, 225/255f, 100/255f,1.0f) // Quad Color r,g,b,a
 						
 						) {
 							@Override
@@ -96,6 +96,7 @@ public class MainMenuScene extends Scene {
 							@Override
 							protected void OnMouseReleased() {
 								SetButtonTexture(false);
+								GameSettingsMenu.Show();
 								//SceneManager.SetCurrentScene("testScene");
 							}
 							@Override
@@ -121,7 +122,7 @@ public class MainMenuScene extends Scene {
 						new Vector3f(.2f,.1f,1f)), // Scale x,y,z
 						"Images/Buttons/mainMenuButtonUp.png",  // Button texture
 						"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-						new Vector4f(0f,.6f,.075f,1f) // Quad Color r,g,b,a
+						new Vector4f(0, 225/255f, 100/255f,1.0f) // Quad Color r,g,b,a
 						) {
 							@Override
 							protected void OnSelect() {
@@ -156,7 +157,7 @@ public class MainMenuScene extends Scene {
 				"quad",
 				new Transform(),
 				"Images/mainMenuBackgroundImage.png",
-				new Vector4f(.75f, .07f,0f,1f),
+				new Vector4f(214/255f, 48/255f, 49/255f,1.0f),
 				new Vector2f(1)
 				));
 		

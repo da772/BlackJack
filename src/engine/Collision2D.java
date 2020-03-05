@@ -31,6 +31,11 @@ public class Collision2D extends Thread {
 		collision = null;
 	}
 	
+	public static void Reset() {
+		End();
+		Begin();
+	}
+	
 	private Collision2D() {};
 	
 	@Override

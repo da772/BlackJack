@@ -261,7 +261,7 @@ public abstract class GUI extends Collider2D {
 	public void Drag(float x, float y) {
 		SetPosition( this.transform.GetPosition().x + ( ((x-dragPos.x)/GUIRenderer.GetWidth())*2f ),
 				this.transform.GetPosition().y - ( ((y-dragPos.y)/GUIRenderer.GetHeight()*2f)),
-				this.transform.GetPosition().z
+				this.GetZOrder()
 				);
 		dragPos.x = x;
 		dragPos.y = y;

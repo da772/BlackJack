@@ -316,12 +316,26 @@ public class Application {
 		return threadId == Thread.currentThread().getId();
 	}
 	
+	
+	public static boolean IsVsync() {
+		return app.vsync;
+	}
+	
+	public static void SetVSync(boolean b) {
+		app.vsync = b;
+	}
+	
 	public static Application GetApp() {
 		return app;
 	}
 	
 	public static boolean IsPaused() {
 		return GetApp().paused;
+	}
+	
+	public static void SetFPSCap(int cap) {
+		app.fpsCap = cap;
+		Collision2D.Reset();
 	}
 	
 	public void SetPaused(boolean b) {

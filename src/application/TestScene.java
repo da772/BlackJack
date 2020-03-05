@@ -238,7 +238,7 @@ public class TestScene extends Scene {
 						new Transform(
 								new Vector3f(0f,0f,.01f),
 								new Vector3f(0f),
-								new Vector3f(.035f,.0175f,1f)
+								new Vector3f(.021f,.0175f,1f)
 								),
 						"Images/blankTexture.png", // Texture of the hud
 						new Vector4f(.35f, .35f,.35f,1f),.5f,false))
@@ -278,7 +278,7 @@ public class TestScene extends Scene {
 							@Override
 							protected void OnMouseReleased() {
 								SetButtonTexture(false);
-								AudioManager.CreateAudioSource("yeet", "Audio/yeet-sound-effect.wav", .15f, 1f, false, true);
+								AudioManager.CreateAudioSource("yeet", "Audio/yeet-sound-effect.wav", "sfx",.15f, 1f, false, true);
 								AudioManager.PlaySource("yeet");
 								if (this.parent != null) {
 									lastParent = this.parent;
@@ -360,6 +360,7 @@ public class TestScene extends Scene {
 			}
 			
 			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_ESCAPE) { 
+				if (!GameSettingsMenu.IsActive()) GameSettingsMenu.Show(); else GameSettingsMenu.Hide();
 				Application.GetApp().SetPaused(!Application.IsPaused());
 			}
 		}

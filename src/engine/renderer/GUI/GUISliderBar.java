@@ -64,6 +64,26 @@ public class GUISliderBar extends GUIQuad_Draggable {
 		}
 	}
 	
+	public void SetSliderLocation(float location) {
+		if (this.parent != null) {
+			start = location;
+			float _start = MathLib.GetMappedRangeValueUnclamped(0,1, -1, 1, start);
+			Vector3f pos = new Vector3f(((this.parent.GetScale().x-this.GetScale().x)*_start)*this.slideDir.x,
+					((this.parent.GetScale().y-this.GetScale().y)*_start)*this.slideDir.y, this.GetZOrder() );
+			SetRelativePosition(pos);
+			SetValue();
+		}
+	}
+	
+	@Override
+	protected void OnMouseUp() {
+		if (parent != null) {
+			if (parent instanceof GUISlider) {
+				((GUISlider)parent).OnDragComplete();
+			}
+		}
+	}
+	
 	protected void SetValue() {
 		if (parent != null) {
 			if (this.slideDir.x > 0) {
@@ -84,10 +104,11 @@ public class GUISliderBar extends GUIQuad_Draggable {
 	protected void OnValueChange() {
 		if (this.parent != null) {
 			if (this.parent instanceof GUISlider) {
-				((GUISlider)this.parent).ValueChanged(GetValue());
+				((GUISlider)this.parent).ValueChanged(this.value);
 			}
 		}
 	}
+	
 	
 	@Override
 	public void Drag(float x, float y) {
@@ -100,7 +121,7 @@ public class GUISliderBar extends GUIQuad_Draggable {
 					){
 				 SetRelativePosition(newPos);
 				 SetValue();
-			 } else if ( newPos.y-.001f <= (this.parent.GetScale().y-this.GetScale().x) && 
+			 } else if (this.slideDir.y > 0 && newPos.y-.001f <= (this.parent.GetScale().y-this.GetScale().x) && 
 						 newPos.y+.001f >= -(this.parent.GetScale().y-this.GetScale().x)) {
 				 SetRelativePosition(newPos);
 				 SetValue();

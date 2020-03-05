@@ -23,6 +23,8 @@ public class Renderer {
 	private static Vector4f clearColor = new Vector4f(1f,0f,1f,1f);
 	private static FrameBuffer MeshFrameBuffer, GUIFrameBuffer;
 	private static RenderBuffer MeshRenderBuffer, GUIRenderBuffer;
+	private static float renderScale = 1f;
+	private static int width, height;
 	
 	public static void Init(int width, int height) {
 		GL30.glEnable(GL11.GL_DEPTH_TEST);
@@ -71,8 +73,12 @@ public class Renderer {
 	
 	public static void Render() {
 		Prepare();
+		if (renderScale != 1f)
+			SetViewport(0,0,(int)(width*renderScale),(int)(height*renderScale));
 		RenderMesh();
 		RenderGUI();
+		if (renderScale != 1f)
+			SetViewport(0,0,width,height);
 		RenderWindow();
 	}
 	
@@ -137,8 +143,19 @@ public class Renderer {
 	}
 	
 	public static void Resize(int x, int y, int width, int height) {
+		Renderer.width = width;
+		Renderer.height = height;
 		SetViewport(x,y,width,height);
-		ResizeBuffer(width, height);
+		ResizeBuffer((int)(width*renderScale), (int)(height*renderScale));
+	}
+	
+	public static void SetRenderScale(float scale) {
+		Renderer.renderScale = scale;
+		ResizeBuffer((int)(width*renderScale), (int)(height*renderScale));
+	}
+	
+	public static float GetRenderScale() {
+		return Renderer.renderScale;
 	}
 	
 	private static void ResizeBuffer(int width, int height) {

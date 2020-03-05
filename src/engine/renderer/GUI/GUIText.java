@@ -265,7 +265,7 @@ public class GUIText extends GUI {
 	
 	@Override
 	public void UpdateTransform() {
-		this.zOrder = transform.GetPosition().z + (parent == null ? 0 : GetRelativePosition().z);
+		this.zOrder = transform.GetPosition().z + (parent == null ? 0 : parent.GetZOrder() + GetRelativePosition().z);
 		this.transform.SetPosition(transform.GetPosition().x + (parent == null ? 0 : GetRelativePosition().x)
 				, transform.GetPosition().y + (parent == null ? 0 : GetRelativePosition().y), 0f);
 		this._transform = new Transform(transform.GetPosition(), transform.GetRotation(), transform.GetScale());

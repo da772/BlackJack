@@ -40,14 +40,16 @@ public class Actor {
 	**/
 	public Actor(String name) {
 		this._name = name;
+		Init();
+	}
+	
+	protected void Init() {
 		Scene s = SceneManager.GetCurrentScene();
 		
 		if (s != null) {
-			
 			s.AddActor(this);
 			this.scene = s;
 		}
-
 	}
 	
 
@@ -136,7 +138,7 @@ public class Actor {
 	}
 	
 	protected void Update(float deltaTime) {
-		
+		OnUpdate(deltaTime);
 	};
 	
 	
@@ -145,10 +147,15 @@ public class Actor {
 			components.get(key).OnBegin();
 		}
 		begin = true;
+		OnBegin();
 	}
 	
 	public boolean CanUpdate() {
 		return this.update;
+	}
+	
+	public void SetUpdate(boolean b) {
+		this.scene.SetUpdate(this, b);
 	}
 	
 	protected void End() {
@@ -156,12 +163,13 @@ public class Actor {
 			components.get(key).OnEnd();
 		}
 		components.clear();
+		OnEnd();
 		begin = false;
 	}
 
 	
 	public void OnEnd() {};
-	public void OnUpdate() {};
+	public void OnUpdate(float deltaTime) {};
 	public void OnBegin() {};
 	
 }

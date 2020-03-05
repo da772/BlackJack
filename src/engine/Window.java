@@ -338,10 +338,11 @@ public class Window {
 			} else {
 				glfwSetWindowMonitor( window, glfwGetPrimaryMonitor(), 0, 0, vidmode.width(), vidmode.height(), 0 );
 			}
-		
+			Events.WindowResizedEvent e = new Events.WindowResizedEvent(vidmode.width(), vidmode.height());
+			OnEvent( (Events.Event) e );
 		} else {
 			if (System.getProperty("os.name").contains("Windows")) {
-				glfwSetWindowAttrib(window, GLFW_DECORATED, GL_FALSE);
+				glfwSetWindowAttrib(window, GLFW_DECORATED, GL_TRUE);
 			}
 			glfwSetWindowMonitor( window, 0,  0, 0, 1280, 720, 0 );
 			glfwSetWindowPos(
@@ -349,6 +350,8 @@ public class Window {
 					(vidmode.width() - width) / 2,
 					(vidmode.height() - height) / 2
 				);
+			Events.WindowResizedEvent e = new Events.WindowResizedEvent(1280, 720);
+			OnEvent( (Events.Event) e );
 		}
 		WindowFullScreenEvent e = new Events.WindowFullScreenEvent(fullScreen);
 		OnEvent( (Events.Event) e );
