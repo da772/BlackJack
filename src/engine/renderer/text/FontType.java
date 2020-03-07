@@ -94,5 +94,9 @@ public class FontType {
 	public TextMeshData loadText(GUIText text) {
 		return loader.createTextMesh(text);
 	}
+	
+	public String GetName() {
+		return this.fontFile;
+	}
 
 }

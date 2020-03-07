@@ -6,18 +6,24 @@ import org.joml.Vector4f;
 
 import engine.Actor;
 import engine.Application;
+import engine.Camera;
 import engine.CameraController;
 import engine.Events;
 import engine.KeyCodes;
 import engine.Events.Event;
+import engine.renderer.Buffer.IndexBuffer;
+import engine.renderer.Buffer.VertexBuffer;
 import engine.renderer.Transform;
+import engine.renderer.VertexArray;
 import engine.renderer.GUI.GUI;
 import engine.renderer.GUI.GUIButton;
 import engine.renderer.GUI.GUIQuad_Draggable;
 import engine.renderer.GUI.GUISlider;
 import engine.renderer.GUI.GUISliderBar;
 import engine.renderer.GUI.GUIText;
+import engine.renderer.mesh.Mesh2D;
 import engine.renderer.mesh.Mesh2DBackground;
+import engine.renderer.mesh.Mesh2DInstancedQuad;
 import engine.renderer.mesh.Mesh2DQuad;
 import engine.Scene;
 import engine.ShaderLib;
@@ -52,28 +58,23 @@ public class TestScene extends Scene {
 		cam.SetRotation(51f);
 		((CameraController.Orthographic)this.cam).SetZoomLevel(4.f);
 		
-		Deck myDeck = new Deck(1);
+		Deck myDeck = new Deck(8);
 		myDeck.shuffle();
 		
+		Hand player1Hand = new Hand();
+		player1Hand.addCards(3, myDeck);
+		
 		// Player Cards
-		new Actor("cardPlayer_1").AddComponent(new CardMesh("Mesh", 
-				new Transform( // Card Transform
-						new Vector3f(.125f, -.75f, 1f), // Position
-						new Vector3f(0f, 0, 0), // Rotation
-						new Vector3f(1f, 1f, 1f) ), // Scale
-				myDeck.drawCard().getCardTextureID(), // Card front Suit
-				"card_back_red", // Card back Suit
-				this.cam.GetCamera()));// Camera))
-		
-		new Actor("cardPlayer_2").AddComponent(new CardMesh("Mesh", 
-				new Transform( // Card Transform
-						new Vector3f(-.125f, -.75f, .99f), // Position
-						new Vector3f(0f, 0, 0), // Rotation
-						new Vector3f(1f, 1f, 1f) ), // Scale
-				myDeck.drawCard().getCardTextureID(), // Card front Suit
-				"card_back_red", // Card back Suit
-				this.cam.GetCamera()));// Camera))
-		
+		for (int i = 0; i < player1Hand.GetCardCount(); i ++) {
+			new Actor("cardPlayer_"+i).AddComponent(new CardMesh("Mesh", 
+					new Transform( // Card Transform
+							new Vector3f(-.125f+(i*.25f), -.75f-(i*.01f), 1.f+(i*.01f)), // Position
+							new Vector3f(0f, 0, 0), // Rotation
+							new Vector3f(1f, 1f, 1f) ), // Scale
+					player1Hand.getCard(i).getCardTextureID(), // Card front Suit
+					"card_back_red", // Card back Suit
+					this.cam.GetCamera()));// Camera))
+		}
 		
 		new Actor("chipStack25_p1").AddComponent(new ChipStackMesh("chipStack",
 				new Transform(new Vector3f(0.f, 0f, 1.25f) ),
@@ -91,43 +92,23 @@ public class TestScene extends Scene {
 				));
 		
 
+		
 		// Player 2 Cards
-		new Actor("cardPlayer2_1").AddComponent(new CardMesh("Mesh", 
-				new Transform( // Card Transform
-						new Vector3f(-5.5f, 0f, .99f), // Position
-						new Vector3f(0, 180f, 40f), // Rotation
-						new Vector3f(1.f, 1.f, 1f) ), // Scale
-				myDeck.drawCard().getCardTextureID(), // Card front Suit
-				"card_back_red", // Card back Suit
-				this.cam.GetCamera()));// Camera))
 		
-		new Actor("cardPlayer2_2").AddComponent(new CardMesh("Mesh", 
-				new Transform( // Card Transform
-						new Vector3f(-5.25f, -.2f, 1f), // Position
-						new Vector3f(0, 0, -40f), // Rotation
-						new Vector3f(1.f, 1.f, 1f) ), // Scale
-				myDeck.drawCard().getCardTextureID(), // Card front Suit
-				"card_back_red", // Card back Suit
-				this.cam.GetCamera()));// Camera))
+		Hand player2Hand = new Hand();
+		player2Hand.addCards(3, myDeck);
 		
-		new Actor("cardPlayer2_3").AddComponent(new CardMesh("Mesh", 
-				new Transform( // Card Transform
-						new Vector3f(-5f, -.4f, 1.01f), // Position
-						new Vector3f(0, 0, -40f), // Rotation
-						new Vector3f(1.f, 1.f, 1f) ), // Scale
-				myDeck.drawCard().getCardTextureID(), // Card front Suit
-				"card_back_red", // Card back Suit
-				this.cam.GetCamera()));// Camera))
-		
-		
-		new Actor("cardPlayer2_4").AddComponent(new CardMesh("Mesh", 
-				new Transform( // Card Transform
-						new Vector3f(-4.75f, -.6f, 1.02f), // Position
-						new Vector3f(0, 0, -40f), // Rotation
-						new Vector3f(1.f, 1.f, 1f) ), // Scale
-				myDeck.drawCard().getCardTextureID(), // Card front Suit
-				"card_back_red", // Card back Suit
-				this.cam.GetCamera()));// Camera))
+		for (int i = 0; i < player2Hand.GetCardCount(); i++) {
+			new Actor("cardPlayer2_"+i).AddComponent(new CardMesh("Mesh", 
+					new Transform( // Card Transform
+							new Vector3f(-5.5f+(.25f*i), 0f+(-.21f*i), .99f+(.01f*i)), // Position
+							new Vector3f(0, 0, -40f), // Rotation
+							new Vector3f(1.f, 1.f, 1f) ), // Scale
+					player2Hand.getCard(i).getCardTextureID(), // Card front Suit
+					"card_back_red", // Card back Suit
+					this.cam.GetCamera()));// Camera))
+			
+		}
 		
 		float o_set = -5f;
 		new Actor("chipStack2_p2").AddComponent(new ChipStackMesh("chipStack",
@@ -147,28 +128,24 @@ public class TestScene extends Scene {
 		
 		
 		Hand player3Hand = new Hand();
-		player3Hand.addCard(myDeck.drawCard());
-		player3Hand.addCard(myDeck.drawCard());
+		player3Hand.addCards(3,myDeck);
 
 		// Player 3 Cards
-		new Actor("cardPlayer3_1").AddComponent(new CardMesh("Mesh", 
+		
+		for (int i = 0; i < player3Hand.GetCardCount(); i++) {
+		
+		new Actor("cardPlayer3_"+i).AddComponent(new CardMesh("Mesh", 
 				new Transform( // Card Transform
-						new Vector3f(5.5f, -0f, .99f), // Position
+						new Vector3f(5.5f-(.25f*i), 0f-(.21f*i), 1f+(.01f*i)), // Position
 						new Vector3f(0f, 0, 40f), // Rotation
 						new Vector3f(1.f, 1.f, 1f) ), // Scale
-				player3Hand.getCard(0).getCardTextureID(), // Card front Suit
+				player3Hand.getCard(i).getCardTextureID(), // Card front Suit
 				"card_back_red", // Card back Suit
 				this.cam.GetCamera()));// Camera))
+		}
 		
-		new Actor("cardPlayer3_2").AddComponent(new CardMesh("Mesh", 
-				new Transform( // Card Transform
-						new Vector3f(5.75f, -0f, 1f), // Position
-						new Vector3f(0f, 0, 40f), // Rotation
-						new Vector3f(1.f, 1.f, 1f) ), // Scale
-				player3Hand.getCard(1).getCardTextureID(), // Card front Suit
-				"card_back_red", // Card back Suit
-				this.cam.GetCamera()));// Camera))
 		
+	
 		/*
 		new Actor("player3Count").AddComponent(new GUIText("text",
 				new Transform(new Vector3f(.55f,0f,0f)),
@@ -181,32 +158,23 @@ public class TestScene extends Scene {
 				));
 		*/
 		// Dealer Cards
-				new Actor("cardDealer").AddComponent(new CardMesh("Mesh", 
-						new Transform( // Card Transform
-								new Vector3f(0, 5f, .99f), // Position
-								new Vector3f(0f, 0f, 180f), // Rotation
-								new Vector3f(1.f, 1.f, 1f) ), // Scale
-						myDeck.drawCard().getCardTextureID(), // Card front Suit
-						"card_back_red", // Card back Suit
-						this.cam.GetCamera()));// Camera))
-				
-				new Actor("cardDealer2").AddComponent(new CardMesh("Mesh", 
-						new Transform( // Card Transform
-								new Vector3f(.25f, 5f, 1f), // Position
-								new Vector3f(0f, 180f, 180f), // Rotation
-								new Vector3f(1.f, 1.f, 1f) ), // Scale
-						myDeck.drawCard().getCardTextureID(), // Card front Suit
-						"card_back_red", // Card back Suit
-						this.cam.GetCamera()));// Camera))
 		
-	
+		Hand dealerHand = new Hand();
+		dealerHand.addCards(5, myDeck);
 		
-		
-		
+		for (int i = 0; i < dealerHand.GetCardCount(); i++) {
+			new Actor("cardDealer"+i).AddComponent(new CardMesh("Mesh", 
+					new Transform( // Card Transform
+							new Vector3f(.25f-(.25f*i), 5f-(.01f*i), 1f+(.01f*i)), // Position
+							new Vector3f(0f, 0f, 0f), // Rotation
+							new Vector3f(1.f, 1.f, 1f) ), // Scale
+					i == 0 ? "card_back_red" : dealerHand.getCard(i).getCardTextureID(), // Card front Suit
+					"card_back_red", // Card back Suit
+					this.cam.GetCamera()));// Camera))
+		}
+			
 		CreateBackground();
 
-		
-		
 		new Actor("blackJackText").AddComponent(new GUIQuad_Draggable(
 				"quad",
 				new Transform(
@@ -359,8 +327,18 @@ public class TestScene extends Scene {
 				}
 			}
 			
+			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_UP ) {
+				AudioManager.SetCategoryVolume("sfx", 1.5f);
+			}
+			
+			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_DOWN ) {
+				AudioManager.SetCategoryVolume("sfx", .5f);
+			}
+			
+			
+			
 			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_ESCAPE) { 
-				if (!GameSettingsMenu.IsActive()) GameSettingsMenu.Show(); else GameSettingsMenu.Hide();
+				if (!GamePauseMenu.IsActive()) GamePauseMenu.Show(); else GamePauseMenu.Hide();
 				Application.GetApp().SetPaused(!Application.IsPaused());
 			}
 		}
@@ -424,7 +402,6 @@ public class TestScene extends Scene {
 				this.cam.GetCamera() // Camera
 				));
 	
-		
 		
 		for (int i = 0; i < 2 ; i++) {
 			

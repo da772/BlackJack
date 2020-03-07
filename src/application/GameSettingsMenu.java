@@ -6,6 +6,7 @@ import org.joml.Vector4f;
 
 import engine.Actor;
 import engine.Application;
+import engine.audio.AudioManager;
 import engine.renderer.Renderer;
 import engine.renderer.Transform;
 import engine.renderer.GUI.GUIButton;
@@ -17,17 +18,10 @@ import engine.util.MathLib;
 
 public class GameSettingsMenu extends Actor {
 
-	// Color Palette
-	private static final Vector4f DraculaOrchid = new Vector4f(45/255f, 52/255f, 54/255f,1.0f);
-	private static final Vector4f AmericanRiver = new Vector4f(99/255f, 110/255f, 114/255f,1.0f);
-	private static final Vector4f SoothingBreeze = new Vector4f(178/255f, 190/255f, 195/255f,1.0f);
-	private static final Vector4f CityBreeze = new Vector4f(223/255f, 230/255f, 233/255f,1.0f);
 	
+	private static final Vector4f titleTextColor = ColorPalette.CityBreeze;
 	
-	
-	private static final Vector4f titleTextColor = CityBreeze;
-	
-	private static final Vector4f mainTitleTextColor = CityBreeze;
+	private static final Vector4f mainTitleTextColor = ColorPalette.CityBreeze;
 	
 	public static void Show() {
 		if (menu == null) {
@@ -37,7 +31,6 @@ public class GameSettingsMenu extends Actor {
 	
 	public static void Hide() {
 		if (menu != null) {
-		
 			Actor.Remove(menu._name, menu.scene);
 			menu = null;
 		}
@@ -60,9 +53,9 @@ public class GameSettingsMenu extends Actor {
 		// Create background quad to contain menu
 		GUIQuad backGround = new GUIQuad(
 				"Background",
-				new Transform(new Vector3f(0f,0f,1000f),new Vector3f(0f), new Vector3f(1f)),
+				new Transform(new Vector3f(0f,0f,2000f),new Vector3f(0f), new Vector3f(1f)),
 				"Images/blankTexture.png",
-				new Vector4f(0.176f,.203f,0.211f,.95f),
+				new Vector4f(0.176f,.203f,0.211f,1f),
 				new Vector2f(1f)
 				);
 		
@@ -109,7 +102,9 @@ public class GameSettingsMenu extends Actor {
 	};
 					
 	@Override
-	public void OnEnd() {};
+	public void OnEnd() {
+		menu = null;
+	};
 	
 	
 	private static GUIQuad CreateBackButton() {
@@ -118,12 +113,14 @@ public class GameSettingsMenu extends Actor {
 				"Images/blankTexture.png",
 				new Vector4f(1f,0f,0f,0f),
 				new Vector2f(1f)).AddChild(new GUIButton("backButton", new Transform(new Vector3f(0f,0f, .1f), new Vector3f(0f), new Vector3f(.15f, .08f, 1f)),
-						"Images/blankTexture.png", "Images/blankTexture.png", DraculaOrchid) {
+						"Images/blankTexture.png", "Images/blankTexture.png", ColorPalette.DraculaOrchid) {
 
 			@Override
 			protected void OnSelect() {
 				// TODO Auto-generated method stub
-				SetColor(AmericanRiver);
+				SetColor(ColorPalette.AmericanRiver);
+				AudioManager.CreateAudioSource("gameSettingsBack", "Audio/buttonMouseOver.wav", "sfx", 1f, 1f, false, true);
+				AudioManager.PlaySource("gameSettingsBack");
 			}
 
 			@Override
@@ -140,7 +137,7 @@ public class GameSettingsMenu extends Actor {
 			@Override
 			public void OnDeselect() {
 				// TODO Auto-generated method stub
-				SetColor(DraculaOrchid);
+				SetColor(ColorPalette.DraculaOrchid);
 			}
 			
 			}.AddChild(new GUIText("backButtonText",new Transform(new Vector3f(0f,0f,.1f)),"Fonts/BebasNeue","Back",
@@ -334,6 +331,7 @@ public class GameSettingsMenu extends Actor {
 							protected void OnValueChanged(float value) {
 								if (_value != value) {
 									_value = value;
+									AudioManager.SetCategoryVolume("sfx", Math.round(_value)/100f);
 									if (this.parent != null) {
 										((GUIText)this.parent.GetChild("soundVolumeValue")).SetText(Math.round(_value) + "%");
 									}
@@ -348,12 +346,12 @@ public class GameSettingsMenu extends Actor {
 										new Vector3f(.02f,.018f,1f)
 										),
 								"Images/blankTexture.png", // Texture of the hud
-								new Vector4f(99/255f, 110/255f, 114/255f,1.0f),.5f,false)).
+								new Vector4f(99/255f, 110/255f, 114/255f,1.0f), AudioManager.GetCategoryVolume("sfx"),false)).
 								AddChild(new GUIText("musicVolumeSlider",new Transform(new Vector3f(-.5f,0f,.1f)),"Fonts/BebasNeue","Sfx Volume",
 										titleTextColor,1f,2.5f,true
 										))
 					// Create text
-					).AddChild(new GUIText("soundVolumeValue",new Transform(new Vector3f(.55f,0f,.1f)),"Fonts/BebasNeue","",
+					).AddChild(new GUIText("soundVolumeValue",new Transform(new Vector3f(.55f,0f,.1f)),"Fonts/BebasNeue",  Integer.toString(Math.round(AudioManager.GetCategoryVolume("sfx")*100f)) + "%",
 					titleTextColor,1f,2.5f,true
 					));
 	}
@@ -379,6 +377,7 @@ public class GameSettingsMenu extends Actor {
 							protected void OnValueChanged(float value) {
 								if (_value != value) {
 									_value = value;
+									AudioManager.SetCategoryVolume("music", Math.round(_value)/100f);
 									if (this.parent != null) {
 										((GUIText)this.parent.GetChild("musicVolumeValue")).SetText(Math.round(_value) + "%");
 									}
@@ -393,7 +392,7 @@ public class GameSettingsMenu extends Actor {
 										new Vector3f(.02f,.018f,1f)
 										),
 								"Images/blankTexture.png", // Texture of the hud
-								new Vector4f(99/255f, 110/255f, 114/255f,1.0f),.5f,false)).
+								new Vector4f(99/255f, 110/255f, 114/255f,1.0f),AudioManager.GetCategoryVolume("music"),false)).
 								AddChild(new GUIText("musicVolumeSlider",new Transform(new Vector3f(-.5f,0f,.1f)),"Fonts/BebasNeue","Music Volume",
 										titleTextColor,1f,2.5f,true
 										))

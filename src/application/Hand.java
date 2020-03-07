@@ -4,7 +4,6 @@
  */
 package application;
 import java.util.ArrayList;
-import java.util.List;
  
  public class Hand {
 	//Store cards into a hand. Adding a card updates a list of cards in the hand, and their corresponding values. 
@@ -34,6 +33,12 @@ import java.util.List;
 			curValues.add(card.getValue());
 		}
     	this.handValues.add(curValues);
+    }
+    
+    public void addCards(int amount, Deck deck) {
+    	for (int i = 0; i < amount; i++) {
+    		addCard(deck.drawCard());
+    	}
     }
     
     public void clearHand() {
@@ -94,6 +99,10 @@ import java.util.List;
     		return Math.max(maximum, minimum); //return largest value under 21
     	}
     	return 0;//never reached
+    }
+    
+    public int GetCardCount() {
+    	return this.hand.size();
     }
     
     public static void main(String[] args) {

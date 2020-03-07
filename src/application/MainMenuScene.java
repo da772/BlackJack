@@ -38,39 +38,45 @@ public class MainMenuScene extends Scene {
 				"Button",new Transform( 
 						new Vector3f(0,0,1.f), // Position x,y, Z-Order higher is on top
 						new Vector3f(0f, 0f,0f),  // Rotation
-						new Vector3f(.2f,.1f,1f)), // Scale x,y,z
-						"Images/Buttons/mainMenuButtonUp.png",  // Button texture
-						"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-						new Vector4f(0, 225/255f, 100/255f,1.0f) // Quad Color r,g,b,a
+						new Vector3f(.2f,.08f,1f)), // Scale x,y,z
+						"Images/blankTexture.png",  // Button texture
+						"Images/blankTexture.png", // Button pressed texture
+						new Vector4f(0f) // Quad Color r,g,b,a
 						
 						) {
 							@Override
 							protected void OnSelect() {
 								// TODO Auto-generated method stub
+								SetColor(ColorPalette.LightGreenBlue);
 							}
 							@Override
 							protected void OnMousePressed() {
-								SetButtonTexture(true);
 							}
 							@Override
 							protected void OnMouseReleased() {
-								SetButtonTexture(false);
 								SceneManager.SetCurrentScene("testScene");
 							}
 							@Override
 							public void OnDeselect() {
-								SetButtonTexture(false);
+								SetColor(new Vector4f(0f));
 							}
 						}.AddChild(new GUIText(
 								"StartText",
 								new Transform(new Vector3f(0f,0f,1f)),
-								"Fonts/BebasNeue",
+								"Fonts/morningStar",
 								"Start Game",
-								new Vector4f(1f),
+								ColorPalette.HotPink,
 								.19f,
 								2f,
 								true
-								)));
+								)).AddChild(new GUIText("StartText2",
+										new Transform(new Vector3f(.0025f,-.005f,.1f)),
+										"Fonts/morningStar",
+										"Start Game",
+										new Vector4f(1f),
+										.19f,
+										2f,
+										true)));
 		
 	
 		
@@ -79,58 +85,64 @@ public class MainMenuScene extends Scene {
 				"Button",new Transform( 
 						new Vector3f(0,-.25f,1.f), // Position x,y, Z-Order higher is on top
 						new Vector3f(0f, 0f,0f),  // Rotation
-						new Vector3f(.2f,.1f,1f)), // Scale x,y,z
-						"Images/Buttons/mainMenuButtonUp.png",  // Button texture
-						"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-						new Vector4f(0, 225/255f, 100/255f,1.0f) // Quad Color r,g,b,a
+						new Vector3f(.2f,.08f,1f)), // Scale x,y,z
+						"Images/blankTexture.png",  // Button texture
+						"Images/blankTexture.png", // Button pressed texture
+						new Vector4f(0.0f) // Quad Color r,g,b,a
 						
 						) {
 							@Override
 							protected void OnSelect() {
 								// TODO Auto-generated method stub
+								SetColor(ColorPalette.LightGreenBlue);
 							}
 							@Override
 							protected void OnMousePressed() {
-								SetButtonTexture(true);
 							}
 							@Override
 							protected void OnMouseReleased() {
-								SetButtonTexture(false);
 								GameSettingsMenu.Show();
 								//SceneManager.SetCurrentScene("testScene");
 							}
 							@Override
 							public void OnDeselect() {
-								SetButtonTexture(false);
+								SetColor(new Vector4f(0f));
 							}
 						}.AddChild(new GUIText(
 								"SettingText",
 								new Transform(new Vector3f(0f,0f,1f)),
-								"Fonts/BebasNeue",
+								"Fonts/morningStar",
 								"Settings",
-								new Vector4f(1f),
+								ColorPalette.HotPink,
 								.19f,
 								2f,
 								true
-								)));
+								)).AddChild(new GUIText("SettingText2",
+										new Transform(new Vector3f(.0025f,-.005f,.1f)),
+										"Fonts/morningStar",
+										"Settings",
+										new Vector4f(1f),
+										.19f,
+										2f,
+										true)));
 			
 		// Create Quit Button
 		new Actor("QuitButton" ).AddComponent(new GUIButton(
 				"Button",new Transform( 
 						new Vector3f(0,-.5f,1.f), // Position x,y, Z-Order higher is on top
 						new Vector3f(0f, 0f,0f),  // Rotation
-						new Vector3f(.2f,.1f,1f)), // Scale x,y,z
-						"Images/Buttons/mainMenuButtonUp.png",  // Button texture
-						"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-						new Vector4f(0, 225/255f, 100/255f,1.0f) // Quad Color r,g,b,a
+						new Vector3f(.2f,.08f,1f)), // Scale x,y,z
+						"Images/blankTexture.png",  // Button texture
+						"Images/blankTexture.png", // Button pressed texture
+						new Vector4f(0f) // Quad Color r,g,b,a
 						) {
 							@Override
 							protected void OnSelect() {
-								// TODO Auto-generated method stub
+								SetColor(ColorPalette.LightGreenBlue);
 							}
 							@Override
 							protected void OnMousePressed() {
-								SetButtonTexture(true);
+								
 							}
 							@Override
 							protected void OnMouseReleased() {
@@ -139,46 +151,63 @@ public class MainMenuScene extends Scene {
 							}
 							@Override
 							public void OnDeselect() {
-								SetButtonTexture(false);
+								SetColor(new Vector4f(0f));
 							}
 						}.AddChild(new GUIText(
 								"QuitText",
 								new Transform(new Vector3f(0f,0f,1f)),
-								"Fonts/BebasNeue",
+								"Fonts/morningStar",
+								"Quit",
+								ColorPalette.HotPink,
+								.19f,
+								2f,
+								true
+								)).AddChild(new GUIText("QuitText2",
+								new Transform(new Vector3f(.0025f,-.005f,.1f)),
+								"Fonts/morningStar",
 								"Quit",
 								new Vector4f(1f),
 								.19f,
 								2f,
-								true
-								)));
+								true)));
 				
 		// Create background image
 		new Actor("background").AddComponent(new GUIQuad(
 				"quad",
 				new Transform(),
-				"Images/mainMenuBackgroundImage.png",
-				new Vector4f(214/255f, 48/255f, 49/255f,1.0f),
+				"Images/testBack.png",
+				new Vector4f(.5f, .5f, .5f,1.0f),
 				new Vector2f(1)
 				));
 		
 		// Create Text
 		new Actor("blackJackText").AddComponent(new GUIQuad("textQuad",new Transform(
-				new Vector3f(0, .75f, .1f), // Position
+				new Vector3f(0, .5f, .1f), // Position
 				new Vector3f(0f), // Rotation (buggy keep at 0)
-				new Vector3f(1f,.25f, 1f) // Quad Scale
+				new Vector3f(.5f,.35f, 1f) // Quad Scale
 				),
-				"Images/blankTexture.png", // Texture
-				new Vector4f(.125f, .125f,.25f,0f)// Quad Color
-				).SetGUICollision(false).AddChild(new GUIText(
+				"Images/menuLogo3.png", // Texture
+				new Vector4f(1f, 1f,1f,1f)// Quad Color
+				).SetGUICollision(false));/*.AddChild(new GUIText(
 						"text",
-						new Transform(),
-						"Fonts/poker1",
-						"Black Jack!",
+						new Transform(new Vector3f(0f, 0f, .2f)),
+						"Fonts/morningStar",
+						"Black Jack",
+						ColorPalette.HotPink,
+						1f,
+						5f,
+						true
+						)).AddChild(new GUIText(
+						"text",
+						new Transform(new Vector3f(.01f,-.01f,.1f)),
+						"Fonts/morningStar",
+						"Black Jack",
 						new Vector4f(1f),
 						1f,
 						5f,
 						true
 						)));
+						*/
 	}
 
 	@Override

@@ -30,6 +30,7 @@ public class AudioManager {
 	private long context = -1;
 	static AudioManager manager;
 	private List<Integer> buffers = new ArrayList<Integer>();
+	private Map<String, Float> sourceCategoryVolume = new HashMap<String, Float>();
 	private Map<String, List<String>> sourceCategory = new HashMap<String, List<String>>();
 	private Map<String, AudioSource> sources = new HashMap<String, AudioSource>();
 	private Stack<AudioSource> delete = new Stack<AudioSource>();
@@ -76,13 +77,21 @@ public class AudioManager {
 	}
 	
 	public static void SetCategoryVolume(String category, float volume) {
-		if (manager.sourceCategory.containsKey(category)) { 
-			
+		if (manager.sourceCategory.containsKey(category)) {
+			manager.sourceCategoryVolume.put(category, volume);
 			for (String s : manager.sourceCategory.get(category)) {
-				SetVolume(s, volume);
+				ResetVolume(s);
 			}
-			
+		} else {
+			manager.sourceCategoryVolume.put(category, volume);
 		}
+	}
+	
+	public static float GetCategoryVolume(String category) {
+		if (manager.sourceCategoryVolume.containsKey(category)) {
+			return manager.sourceCategoryVolume.get(category);
+		}
+		return 1f;
 	}
 	
 	public static void Update() {
@@ -93,6 +102,7 @@ public class AudioManager {
 		if (!play.isEmpty()) {
 			AudioSource s = play.pop();
 			s.SetUp();
+			SetVolume(s.name, s.volume);
 			manager.loadAudio(s);
 			s.Play();
 			if (s.ShouldAutoDelete()) {
@@ -122,6 +132,7 @@ public class AudioManager {
 	public static String CreateAudioSource(String name, String fileName, String category, float volume, float pitch, boolean loop, boolean autoDelete) {
 		if (!manager.sources.containsKey(name)) {
 			AddSource(new AudioSource(name, fileName, volume, pitch, loop, autoDelete, category));
+			manager.sources.get(name).SetVolume(volume);
 		}
 		return name;
 	}
@@ -133,9 +144,23 @@ public class AudioManager {
 	 */
 	public static void SetVolume(String name, float volume) {
 		if (manager.sources.containsKey(name)) {
-			manager.sources.get(name).SetVolume(volume);
+			manager.sources.get(name).SetVolume(volume*manager.sourceCategoryVolume.get(manager.sources.get(name).category));
 		}
 	}
+	
+
+	/****
+	 * 
+	 * @param name - unique identifier
+	 * @param volume - new volume
+	 */
+	public static void ResetVolume(String name) {
+		if (manager.sources.containsKey(name)) {
+			manager.sources.get(name).SetVolume(manager.sources.get(name).volume*
+			manager.sourceCategoryVolume.get(manager.sources.get(name).category));
+		}
+	}
+	
 	
 	/**
 	 * 
@@ -165,9 +190,13 @@ public class AudioManager {
 		if (manager.sourceCategory.containsKey(s.category)) {
 			if (manager.sourceCategory.get(s.category) != null) {
 				manager.sourceCategory.get(s.category).add(s.name);
+				
 			} 
 		} else {
 			manager.sourceCategory.put(s.category, new ArrayList<String>());
+			if (!manager.sourceCategoryVolume.containsKey(s.category)) {
+				manager.sourceCategoryVolume.put(s.category, 1f);	
+			}
 			manager.sourceCategory.get(s.category).add(s.name);
 		}
 	}
@@ -187,8 +216,14 @@ public class AudioManager {
 	 * @param s - unique identifier
 	 */
 	public static void RemoveSource(AudioSource s) {
+		if (s == null) return;
 		manager.sources.remove(s.name);
-		manager.sourceCategory.get(s.category).remove(s.name);
+		if (manager.sourceCategory.containsKey(s.category)) {
+			manager.sourceCategory.get(s.category).remove(s.name);
+			if (manager.sourceCategory.get(s.category).size() <= 0) {
+				manager.sourceCategory.remove(s.category);
+			}
+		}
 		s.Cleanup();
 	}
 	

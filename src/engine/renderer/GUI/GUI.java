@@ -380,7 +380,7 @@ public abstract class GUI extends Collider2D {
 				transform.GetScale());
 		this._transform.SetPosition(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2,_transform.GetPosition().x)/2f, 
 				-MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -_transform.GetPosition().y)/2f,_transform.GetPosition().z ));
-		for (GUI c : children) c.SetPosition(this.GetPosition().x, this.GetPosition().y, this.zOrder);
+		for (GUI c : children) c.SetPosition(this.GetPosition().x, this.GetPosition().y, 0f);
 	
 	}
 	

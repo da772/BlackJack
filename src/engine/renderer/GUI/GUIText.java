@@ -199,8 +199,6 @@ public class GUIText extends GUI {
 	public void SetText(String text) {
 		this.textString = text;
 		if (varray == null && vbuffer == null) return;
-		varray.CleanUp();
-		vbuffer.CleanUp();
 		UpdateMeshInfo();
 		if (this.parent != null && this.RelativePosition.x == 0 && this.RelativePosition.y == 0)
 		UpdateTransform();
@@ -220,7 +218,10 @@ public class GUIText extends GUI {
 	protected void UpdateMeshInfo() {
 		varray.CleanUp();
 		vbuffer.CleanUp();
-		FontType.Remove(font);
+		if (!font.GetName().equals(fontString)) {
+			FontType.Remove(font);
+			this.font = FontType.Create(fontString);
+		}
 		TextMeshData data = font.loadText(this);
 		setMeshInfo(data.getVertices());
 	}
@@ -276,7 +277,7 @@ public class GUIText extends GUI {
 		this.transform.SetPosition(transform.GetPosition().x, transform.GetPosition().y, transform.GetPosition().z);
 	
 		for (GUI c : children) {
-			c.SetRelativePosition(this.GetPosition().x, -this.GetPosition().y, this.zOrder);
+			c.SetRelativePosition(this.GetPosition().x, -this.GetPosition().y, 0f);
 		}
 	}
 

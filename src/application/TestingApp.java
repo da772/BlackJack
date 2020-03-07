@@ -1,7 +1,6 @@
 package application;
 
 
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import engine.Application;
@@ -10,6 +9,8 @@ import engine.Events;
 import engine.Input;
 import engine.KeyCodes;
 import engine.SceneManager;
+import engine.ShaderLib;
+import engine.WindowFrame;
 import engine.Events.Event;
 
 
@@ -32,7 +33,7 @@ public class TestingApp extends Application {
 		window.SetFullScreen(true);
 		// Enable/Disable vsync
 		window.SetVSync(vsync);
-		
+		WindowFrame.SetScreenShader(ShaderLib.Shader_GUIQuad_CRT_Outline);
 		// Create Camera 
 		cam = new CameraController.Orthographic(16.f/9.f);
 		// Move camera backwards 5 units
@@ -77,25 +78,10 @@ public class TestingApp extends Application {
 		}
 
 		
-		int[] w_pos = window.GetWindowPosition();
-		Vector2f w_pos_ = new Vector2f(w_pos[0], w_pos[1]);
-		
-		if (Input.IsKeyPressed(KeyCodes.KEY_RIGHT)) {
-			w_pos_.x +=  1f;
-		}
-		if (Input.IsKeyPressed(KeyCodes.KEY_LEFT)) {
-			w_pos_.x += -1f;
-		}
-		if (Input.IsKeyPressed(KeyCodes.KEY_UP)) {
-			w_pos_.y += -1f;
-		}
-		if (Input.IsKeyPressed(KeyCodes.KEY_DOWN)) {
-			w_pos_.y += 1f;
-		}
+	
 		// Camera Update
 		cam.OnUpdate(deltaTime);
 		// Title Update
-		window.SetWindowLocation((int)w_pos_.x,(int) w_pos_.y);
 		window.SetTitle(title+" - " + fps + " FPS - OpenGL" + window.GetGLInfo() );
 		
 		
