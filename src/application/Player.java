@@ -1,4 +1,6 @@
-package application; 
+package application;
+
+import java.util.ArrayList;
 
 public class Player {
 	
@@ -9,6 +11,8 @@ public class Player {
 	private int id;
 	private int balance; 
 	private Hand hand;
+	private ArrayList<Hand> splitHands; 
+
 	
 
     // new simple constructor
@@ -16,6 +20,11 @@ public class Player {
 	    this.id = CURRENT_ID++;
 	    this.balance = startingBalance;
 	    this.hand = new Hand();
+	    this.splitHands = new ArrayList<Hand>();
+	}
+	
+	public Hand getHand() {
+		return this.hand;
 	}
 	
 	public int getBalance() {

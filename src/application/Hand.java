@@ -4,6 +4,7 @@
  */
 package application;
 import java.util.ArrayList;
+import java.util.List;
  
  public class Hand {
 	//Store cards into a hand. Adding a card updates a list of cards in the hand, and their corresponding values. 
@@ -11,13 +12,13 @@ import java.util.ArrayList;
 	 
     private ArrayList<Card> hand;
     private ArrayList<ArrayList<Integer>> handValues;
+    private int bet;
     
     public Hand() {
         this.hand = new ArrayList<Card>();
         this.handValues = new ArrayList<ArrayList<Integer>>();
+        this.bet = 0;
     }
-    
- 
     
     public void addCard(Card card) {
     	this.hand.add(card);
@@ -35,23 +36,40 @@ import java.util.ArrayList;
     	this.handValues.add(curValues);
     }
     
-    public void addCards(int amount, Deck deck) {
-    	for (int i = 0; i < amount; i++) {
-    		addCard(deck.drawCard());
-    	}
-    }
-    
     public void clearHand() {
         this.hand = new ArrayList<Card>();
         this.handValues = new ArrayList<ArrayList<Integer>>();
     }
     
     public Card getCard(int index) {
-    	return hand.get(index);
+    	return this.hand.get(index);
     }
     
     public void printHand() {
     	System.out.print(this.handValues);
+    }
+    
+    public void printHandInfo() {
+    	System.out.print("Current Hand: " + this.handValues + " /// Total: "+getTotal()+" /// Current bet: " + getBet() + "\n");
+    }
+    
+    public void setBet(int bet) {
+    	this.bet = bet;
+    }
+    
+    public void doubleBet() {
+    	this.bet *= 2;
+    }
+    
+    public int getBet() {
+    	return this.bet;
+    }
+    
+    public boolean isSameCard() {
+    	if(this.hand.size() == 2) {
+    		return getCard(0).getValue() == getCard(1).getValue(); //possible split
+    	}
+    	return false;
     }
     
     public int getTotal() { //calculate total of current hand
@@ -99,10 +117,6 @@ import java.util.ArrayList;
     		return Math.max(maximum, minimum); //return largest value under 21
     	}
     	return 0;//never reached
-    }
-    
-    public int GetCardCount() {
-    	return this.hand.size();
     }
     
     public static void main(String[] args) {

@@ -1,6 +1,6 @@
 package application;
 
-public class Dealer {
+public class Dealer{
 	
     // dealer just needs some generic name and a balance
 	private int balance; 
@@ -15,6 +15,14 @@ public class Dealer {
 	    this.hand = new Hand();
 	}
 	*/
+	public Dealer() {
+		this.balance = 500000;
+		this.hand = new Hand();
+	}
+	
+	public Hand getHand() {
+		return this.hand;
+	}
 	
 	public int getBalance() {
 		return this.balance;

@@ -14,13 +14,15 @@ public class Table {
 	private Deck deck;
 	// gonna need a dealer at the table
 	private Dealer dealer;
+	private int roundsPlayed;
 
 
     // constructor
 	public Table() {
-		int TOTAL_PLAYERS = 8; //change this later to get a user input
+		int TOTAL_PLAYERS = 3; //change this later to get a user input
 		int STARTING_BALANCE = 100; // this too
 		int NUM_DECKS = 8; // this too
+		this.roundsPlayed = 0;
 		
 		// initialize all private fields
 		this.players = new ArrayList<Player>();
@@ -41,6 +43,9 @@ public class Table {
 	    // ORRRR we can just track the number of rounds in this class and then
 	    // just perform all the ufnctionality in this class since all of our
 	    // data is here anyways
+		
+		//Round(this.dealer, this.players);
+		this.roundsPlayed += 1;
 	}
 	
 	
@@ -64,6 +69,17 @@ public class Table {
 		//return this.players.get(this.playerID);
 	}
 	
+	public Dealer getDealer() {
+		return this.dealer;
+	}
+	
+	public Deck getDeck() {
+		return this.deck;
+	}
+	
+	public ArrayList<Player> getPlayers() {
+		return this.players;
+	}
 	
 	
 	public int getRealPlayerID() {
