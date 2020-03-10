@@ -7,6 +7,7 @@ public class Deck {
 	// need two stack which act as Decks and will store Card objects
 	private Stack<Card> deck;
 	private Stack<Card> usedCards;
+	private int INITIAL_COUNT;
 	
 	
 	
@@ -27,6 +28,7 @@ public class Deck {
 	public Deck(int decksCount) {
 		this.deck = new Stack<Card>();
 		this.usedCards = new Stack<Card>();
+		this.INITIAL_COUNT = 52 * decksCount;
 		
 		// Loop over to create the number of decks we want into one big ass deck
 		for(int i = 0; i < decksCount; i++) {
@@ -79,6 +81,13 @@ public class Deck {
 		for(int i = 0; i < usedCardsCount; i++) {
 			this.deck.add(this.usedCards.pop());
 		}
+	}
+	
+	public void checkDeckCount() { //re-add used cards if 80% of the deck has been dealt
+		if(this.deck.size() <= 0.80 * INITIAL_COUNT) {
+			addUsedCardsBack();
+		}
+		shuffle();
 	}
 	
 	

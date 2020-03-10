@@ -36,6 +36,16 @@ import java.util.List;
     	this.handValues.add(curValues);
     }
     
+    public void addCards(int amount, Deck deck) {
+    	for (int i = 0; i < amount; i++) {
+    		addCard(deck.drawCard());
+    	}
+    }
+    
+    public int GetCardCount() {
+    	return this.hand.size();
+    }
+    
     public void clearHand() {
         this.hand = new ArrayList<Card>();
         this.handValues = new ArrayList<ArrayList<Integer>>();
