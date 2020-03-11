@@ -1,6 +1,7 @@
 package application;
 
 import engine.Events.Event;
+import engine.audio.AudioManager;
 import engine.renderer.Renderer;
 import engine.renderer.Transform;
 import engine.renderer.GUI.GUIButton;
@@ -46,7 +47,9 @@ public class MainMenuScene extends Scene {
 						) {
 							@Override
 							protected void OnSelect() {
-								// TODO Auto-generated method stub
+								// TODO Auto-generated method stub\
+								AudioManager.CreateAudioSource("gamePauseQuit", "Audio/buttonMouseOver.wav", "sfx", 1f, 1f, false, true);
+								AudioManager.PlaySource("gamePauseQuit");
 								SetColor(ColorPalette.LightGreenBlue);
 							}
 							@Override
@@ -94,6 +97,8 @@ public class MainMenuScene extends Scene {
 							@Override
 							protected void OnSelect() {
 								// TODO Auto-generated method stub
+								AudioManager.CreateAudioSource("gamePauseQuit", "Audio/buttonMouseOver.wav", "sfx", 1f, 1f, false, true);
+								AudioManager.PlaySource("gamePauseQuit");
 								SetColor(ColorPalette.LightGreenBlue);
 							}
 							@Override
@@ -138,6 +143,8 @@ public class MainMenuScene extends Scene {
 						) {
 							@Override
 							protected void OnSelect() {
+								AudioManager.CreateAudioSource("gamePauseQuit", "Audio/buttonMouseOver.wav", "sfx", 1f, 1f, false, true);
+								AudioManager.PlaySource("gamePauseQuit");
 								SetColor(ColorPalette.LightGreenBlue);
 							}
 							@Override
@@ -176,7 +183,7 @@ public class MainMenuScene extends Scene {
 				"quad",
 				new Transform(),
 				"Images/testBack.png",
-				new Vector4f(.5f, .5f, .5f,1.0f),
+				new Vector4f(.75f, .75f, .75f,1.0f),
 				new Vector2f(1)
 				));
 		

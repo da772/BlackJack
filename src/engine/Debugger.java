@@ -21,7 +21,7 @@ public class Debugger {
 	private static boolean DisplayMenu = true;
 	public static final int MenuKeyCode = KeyCodes.KEY_GRAVE_ACCENT; // ~
 	
-	private static float xPos = .775f, yPos = .525f;
+	private static float xPos = .70f, yPos = .4f;
 	
 	private static int keyPressed = -1;
 	private static int mousePressed = -1;
@@ -51,7 +51,7 @@ public class Debugger {
 		if (DisplayMenu) {
 		int[] gpu = Application.GetWindow().GetGpuUsage();
 		((GUIText)debugMenu.GetChild("DebugText")).SetText(
-			    "Debug Menu: (Press ~ to toggle) \n \n" +
+			    "Debug Menu: (Drag to move or Press ~ to toggle) \n \n" +
 				"App Info       " + "Title: "+ Application.app.title +" | " + Application.app.fps + " FPS"+
 				"\n                   VSync: " + Application.app.vsync +" | Width: " + Application.app.window.GetWidth() +
 				"\n                   Height: " +Application.app.window.GetHeight() +
@@ -141,7 +141,7 @@ public class Debugger {
 		debugMenu = (GUIQuad_Draggable) new GUIQuad_Draggable("DraggableQuad",new Transform( 
 				new Vector3f(xPos,yPos-WindowFrame.GetTop(), 1e6f), // Position x,y, Z-Order higher is on top
 				new Vector3f(0f, 0f,0f),  // Rotation
-				new Vector3f(.225f,.475f,1f)), // Scale x,y,z
+				new Vector3f(.225f,.525f,1f)), // Scale x,y,z
 				"Images/blankTexture.png",  // Quad Texture path
 				quadColor // Quad Color r,g,b,a
 		) {

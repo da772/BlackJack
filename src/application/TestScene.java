@@ -6,24 +6,19 @@ import org.joml.Vector4f;
 
 import engine.Actor;
 import engine.Application;
-import engine.Camera;
 import engine.CameraController;
 import engine.Events;
 import engine.KeyCodes;
 import engine.Events.Event;
-import engine.renderer.Buffer.IndexBuffer;
-import engine.renderer.Buffer.VertexBuffer;
 import engine.renderer.Transform;
-import engine.renderer.VertexArray;
 import engine.renderer.GUI.GUI;
 import engine.renderer.GUI.GUIButton;
+import engine.renderer.GUI.GUIQuad;
 import engine.renderer.GUI.GUIQuad_Draggable;
 import engine.renderer.GUI.GUISlider;
 import engine.renderer.GUI.GUISliderBar;
 import engine.renderer.GUI.GUIText;
-import engine.renderer.mesh.Mesh2D;
 import engine.renderer.mesh.Mesh2DBackground;
-import engine.renderer.mesh.Mesh2DInstancedQuad;
 import engine.renderer.mesh.Mesh2DQuad;
 import engine.Scene;
 import engine.ShaderLib;
@@ -41,13 +36,9 @@ public class TestScene extends Scene {
 
 	@Override
 	public void OnUpdate(float deltaTime) {
-		if (GetActor("cssard") != null) {
-		((CardMesh)GetActor("card").GetComponent("Mesh")).SetRotation(((CardMesh)GetActor("card").GetComponent("Mesh")).GetRotation().x,
-				((CardMesh)GetActor("card").GetComponent("Mesh")).GetRotation().y-rotationSpeed*deltaTime, ((CardMesh)GetActor("card").GetComponent("Mesh")).GetRotation().z+rotationSpeed*deltaTime );
-		}
-		if (GetActor("cassrd3") != null) {
-			((CardMesh)GetActor("card3").GetComponent("Mesh")).SetRotation(((CardMesh)GetActor("card3").GetComponent("Mesh")).GetRotation().x+rotationSpeed*deltaTime,
-					((CardMesh)GetActor("card3").GetComponent("Mesh")).GetRotation().y, ((CardMesh)GetActor("card3").GetComponent("Mesh")).GetRotation().z );
+		if (GetActor("cardPlayer_0") != null) {
+			((CardMesh)GetActor("cardPlayer_0").GetComponent("Mesh")).SetRotation(((CardMesh)GetActor("cardPlayer_0").GetComponent("Mesh")).GetRotation().x,
+					((CardMesh)GetActor("cardPlayer_0").GetComponent("Mesh")).GetRotation().y, ((CardMesh)GetActor("cardPlayer_0").GetComponent("Mesh")).GetRotation().z+rotationSpeed*deltaTime );
 		}
 	}
 
@@ -110,6 +101,31 @@ public class TestScene extends Scene {
 			
 		}
 		
+		
+		
+		new Actor("cpu1").AddComponent(
+				new GUIQuad("quad", new Transform(new Vector3f(-.825f,.15f,1f), new Vector3f(0f), new Vector3f(.125f,.15f, 1f)), "Images/roundedTexture.png", 
+						new Vector4f(0f,0f,0f,.5f))
+				.AddChild(new GUIText(
+						"name",
+						new Transform(new Vector3f(0f,.085f,.01f)),
+						"Fonts/morningStar",
+						"Computer One",
+						new Vector4f(1f),
+						.125f,
+						1f,
+						true)).AddChild(
+						new GUIText(
+						"text",
+						new Transform(new Vector3f(0f,-.04f,.01f)),
+						"Fonts/BebasNeue",
+						"Bet: $200\nHand Total: "+ player2Hand.getTotal() + (player2Hand.getTotal()>21 ? "\nBust..." : player2Hand.getTotal() == 21 ? "\nBlack Jack!" : "\nWaiting..."),
+						new Vector4f(1f),
+						.125f,
+						1f,
+						true))
+				);
+		
 		float o_set = -5f;
 		new Actor("chipStack2_p2").AddComponent(new ChipStackMesh("chipStack",
 				new Transform(new Vector3f(0.f+o_set, 1f, 1.25f) ),
@@ -144,6 +160,29 @@ public class TestScene extends Scene {
 				this.cam.GetCamera()));// Camera))
 		}
 		
+		new Actor("cpu2").AddComponent(
+				new GUIQuad("quad", new Transform(new Vector3f(.825f,.15f,1f), new Vector3f(0f), new Vector3f(.125f,.15f, 1f)), "Images/roundedTexture.png", 
+						new Vector4f(0f,0f,0f,.5f))
+				.AddChild(new GUIText(
+						"name",
+						new Transform(new Vector3f(0f,.085f,.01f)),
+						"Fonts/morningStar",
+						"Computer One",
+						new Vector4f(1f),
+						.125f,
+						1f,
+						true)).AddChild(
+						new GUIText(
+						"text",
+						new Transform(new Vector3f(0f,-.04f,.01f)),
+						"Fonts/BebasNeue",
+						"Bet: $200\nHand Total: "+ player3Hand.getTotal() + (player3Hand.getTotal()>21 ? "\nBust..." : player3Hand.getTotal() == 21 ? "\nBlack Jack!" : "\nWaiting..."),
+						new Vector4f(1f),
+						.125f,
+						1f,
+						true)));
+	
+		
 		
 	
 		/*
@@ -172,7 +211,32 @@ public class TestScene extends Scene {
 					"card_back_red", // Card back Suit
 					this.cam.GetCamera()));// Camera))
 		}
-			
+		
+		new Actor("dealerUI").AddComponent(
+				new GUIQuad("quad", new Transform(new Vector3f(0,.8f,1f), new Vector3f(0f), new Vector3f(.125f,.125f, 1f)), "Images/roundedTexture.png", 
+						new Vector4f(0f,0f,0f,.5f))
+				.AddChild(new GUIText(
+						"name",
+						new Transform(new Vector3f(0f,.075f,.01f)),
+						"Fonts/morningStar",
+						"Dealer",
+						new Vector4f(1f),
+						.125f,
+						1f,
+						true)).AddChild(
+						new GUIText(
+						"text",
+						new Transform(new Vector3f(0f,-.035f,.01f)),
+						"Fonts/BebasNeue",
+						"Hand Total: "+ dealerHand.getTotalDealer() + (dealerHand.getTotalDealer() >21 ? "\nBust..." : dealerHand.getTotal() == 21 ? "\nBlack Jack!" : "\nWaiting..."),
+						new Vector4f(1f),
+						.125f,
+						1f,
+						true))
+				);
+		
+		
+		
 		CreateBackground();
 
 		new Actor("blackJackText").AddComponent(new GUIQuad_Draggable(
@@ -353,12 +417,7 @@ public class TestScene extends Scene {
 		int amt = 30;
 		
 		
-		new Actor("headerText").AddComponent(new Mesh2DQuad("blackJackTitle",
-				new Transform(new Vector3f(0,6.75f,-1.5f), new Vector3f(-15f,0f,0f), new Vector3f(6f,3,1f)),
-				"Images/blackJackHeader.png",
-				new Vector4f(1f),
-				this.cam.GetCamera()
-				));
+	
 
 		new Actor("cardBorder1").AddComponent(new Mesh2DQuad("blackJackTitle",
 				new Transform(new Vector3f(0,.5f,0f), new Vector3f(0,0f,0f), new Vector3f(1.25f,1.75f,1f)),
@@ -383,73 +442,115 @@ public class TestScene extends Scene {
 				this.cam.GetCamera()
 				));
 
+		new Actor("headerText").AddComponent(new Mesh2DQuad("blackJackTitle",
+				new Transform(new Vector3f(0,6.25f,-1.5f), new Vector3f(-15f,0f,0f), new Vector3f(6f,3,1f)),
+				"Images/blackJackHeader.png",
+				new Vector4f(1f),
+				this.cam.GetCamera()
+				));
+		
 		new Actor("headerInfoText").AddComponent(new Mesh2DQuad("blackJackTitle",
-				new Transform(new Vector3f(0,5.25f,-1f), new Vector3f(-15f,0f,0f), new Vector3f(5.5f,2.5f,1f)),
+				new Transform(new Vector3f(0,4.75f,-1f), new Vector3f(-15f,0f,0f), new Vector3f(5.5f,2.5f,1f)),
 				"Images/blackJackInfoHeader.png",
 				new Vector4f(1f),
 				this.cam.GetCamera()
 				));
 		
+		new Actor("headerText2").AddComponent(new Mesh2DQuad("blackJackTitle",
+				new Transform(new Vector3f(0,6.75f,-1.5f), new Vector3f(-15f,0f,0f), new Vector3f(2.5f,1.5f,1f)),
+				"Images/menuLogoWhite.png",
+				new Vector4f(1f),
+				this.cam.GetCamera()
+				));
+		
+		
+		
+		new Actor("border1").AddComponent(new Mesh2DBackground("background",
+				new Transform(
+						new Vector3f(0f,10.4f,-5f),  // Position
+						new Vector3f(0f), // Rotation
+						new Vector3f(6f, 3.25f, 1f)), // Scale
+				"Images/wideBorder.png", // Texture
+				new Vector4f(1f) , // Color
+				new Vector2f(1f), // UV Scale
+				this.cam.GetCamera() // Camera
+				));
+		
+		
+		new Actor("edge").AddComponent(new Mesh2DBackground("background",
+				new Transform(
+						new Vector3f(0f,2,-5f),  // Position
+						new Vector3f(0f), // Rotation
+						new Vector3f(14.25f, 5f, 1f)), // Scale
+				"Images/tableEdge4.png", // Texture
+				new Vector4f(1f) , // Color
+				new Vector2f(.99f), // UV Scale
+				this.cam.GetCamera() // Camera
+				));
 		
 		new Actor("background").AddComponent(new Mesh2DBackground("background",
 				new Transform(
 						new Vector3f(0f,0,-50f),  // Position
 						new Vector3f(0f), // Rotation
 						new Vector3f(1000, 1000, 1f)), // Scale
-				"Images/pokerBoard.png", // Texture
-				new Vector4f(0,.8f,.2f,1) , // Color
-				new Vector2f(2500f), // UV Scale
+				"Images/pokerFelt.png", // Texture
+				new Vector4f(0,.75f,.2f,1) , // Color
+				new Vector2f(1e3f), // UV Scale
 				this.cam.GetCamera() // Camera
 				));
-	
 		
-		for (int i = 0; i < 2 ; i++) {
+		
+		
+		
+		stackPosX += -.5f;
+		
+		for (int i = 0; i < 3 ; i++) {
 			
-		stackPosX += -2.0f; 
+		stackPosX += -2f; 
 			
 		new Actor("chipStack1_"+i).AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(-.5f+stackPosX, stackPosY.x, .1f) ),
+				new Transform(new Vector3f(1f+stackPosX, stackPosY.x, .1f) ),
 				"Chip1", amt,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
 				));
 		
 
 		new Actor("chipStack5_"+i).AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(-.5f+stackPosX, stackPosY.y, .095f) ),
+				new Transform(new Vector3f(1f+stackPosX, stackPosY.y, .095f) ),
 				"Chip5", amt,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
 				));
 		
 		
 		new Actor("chipStack10_"+i).AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(-1.f+stackPosX, stackPosY.x, .1f) ),
+				new Transform(new Vector3f(.5f+stackPosX, stackPosY.x, .1f) ),
 				"Chip10", amt,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
 				));
 		
 
 		new Actor("chipStack25_"+i).AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(-1.f+stackPosX, stackPosY.y, .095f) ),
+				new Transform(new Vector3f(.5f+stackPosX, stackPosY.y, .095f) ),
 				"Chip25", amt,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
 				));
 		
 		
 		new Actor("chipStack50_"+i).AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(-1.5f+stackPosX, stackPosY.x, .1f) ),
+				new Transform(new Vector3f(0f+stackPosX, stackPosY.x, .1f) ),
 				"Chip50", amt,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
 				));
 		
 
 		new Actor("chipStack100_"+i).AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(-1.5f+stackPosX, stackPosY.y, .095f) ),
+				new Transform(new Vector3f(0f+stackPosX, stackPosY.y, .095f) ),
 				"Chip100", amt,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
 				));
 		
 		new Actor("chipStack500_"+i).AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(-2.0f+stackPosX, stackPosY.x, .1f) ),
+				new Transform(new Vector3f(-.50f+stackPosX, stackPosY.x, .1f) ),
 				"Chip500", amt,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
 				));
 		
 
 		new Actor("chipStack1000_"+i).AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(-2.0f+stackPosX, stackPosY.y, .095f) ),
+				new Transform(new Vector3f(-.50f+stackPosX, stackPosY.y, .095f) ),
 				"Chip1000", amt,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
 				));
 		

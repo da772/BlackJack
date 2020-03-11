@@ -129,6 +129,55 @@ import java.util.List;
     	return 0;//never reached
     }
     
+    
+	public int getTotalDealer() { // Calculate total of hand skipping the flipped card
+    	ArrayList<Integer> totals = new ArrayList<Integer>(); //all possible totals
+    	totals.add(0); //start with 0
+    	for(int i = 1; i < this.handValues.size(); i++) { //for every card in a hand
+    		ArrayList<Integer> curValue = this.handValues.get(i); //get the value
+    		if(curValue.size() == 1) { //not an ace
+    			for(int j = 0; j < totals.size(); j++) { 
+    				//add current card value to every total
+    				totals.set(j, totals.get(j) + curValue.get(0)); 
+    			}
+    		}
+    		else { //ace found
+    			ArrayList<Integer> newTotals = new ArrayList<Integer>(); //multiple totals (ace = 1 or 11)
+    			for(int j = 0; j < totals.size(); j++) { //for every total
+    				int curTotal = totals.get(j); //get the value
+    				newTotals.add(curTotal + 1); // add 1 to the current total
+    				newTotals.add(curTotal + 11); // add 11 to the current total
+    			}
+    			totals = newTotals; //old totals are replaced by the new ones with an extra path
+    		}
+    	}
+    	
+    	int minimum = Integer.MAX_VALUE;
+    	int maximum = Integer.MIN_VALUE;
+    	for(int i = 0; i < totals.size(); i++) {
+    		int curTotal = totals.get(i);
+    		if(curTotal == 21) {//if 21 is a total, then end here
+    			return 21;
+    		}
+    		else {//total is not 21
+    			if(curTotal < 21 && curTotal < minimum) {//update minimum under 21
+    				minimum = curTotal;
+    			}
+    			if(curTotal < 21 && curTotal > maximum) {//update maximum under 21
+    				maximum = curTotal;
+    			}
+    			if(curTotal > 21) { //get the largest total over 21 that is not Integer.MAX_VALUE or Integer.MIN_VALUE
+    				return Math.max(Math.min(curTotal, maximum), Math.min(curTotal, minimum));
+    			}
+    		}
+    	}
+    	if(maximum < 21 || minimum < 21) {
+    		return Math.max(maximum, minimum); //return largest value under 21
+    	}
+    	return 0;//never reached
+	}
+    
+    
     public static void main(String[] args) {
     	//test
     	Hand curHand = new Hand();
@@ -238,7 +287,8 @@ import java.util.List;
     	
     	
     }
-    
+
+
     
   
     

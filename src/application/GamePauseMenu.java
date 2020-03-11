@@ -60,8 +60,8 @@ public class GamePauseMenu extends Actor {
 		GUIQuad backGround = new GUIQuad(
 				"Background",
 				new Transform(new Vector3f(0f,0f,500f),new Vector3f(0f), new Vector3f(1f)),
-				"Images/testBack.png",
-				new Vector4f(.25f,.25f,.25f,1f),
+				"Images/blankTexture.png",
+				new Vector4f(.0f,0f,0f,.9f),
 				new Vector2f(1f)
 				);
 		
