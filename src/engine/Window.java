@@ -275,6 +275,8 @@ public class Window {
 		glfwSwapBuffers(window);
 		// Poll events
 		glfwPollEvents();
+		// Swap interval
+		glfwSwapInterval(this.vsync);
 	}
 	
 	/**

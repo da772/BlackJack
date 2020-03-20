@@ -239,7 +239,7 @@ public class Application {
 			AudioManager.Update();
 			Renderer.Render();
 			window.Update();
-			Timing.sync(fpsCap, window.Vsync());
+			Timing.sync(fpsCap, GetWindow().Vsync());
 		}
 	}
 	
@@ -323,6 +323,7 @@ public class Application {
 	
 	public static void SetVSync(boolean b) {
 		app.vsync = b;
+		GetWindow().SetVSync(b);
 	}
 	
 	public static Application GetApp() {

@@ -11,15 +11,8 @@ import engine.Events;
 import engine.KeyCodes;
 import engine.Events.Event;
 import engine.renderer.Transform;
-import engine.renderer.GUI.GUI;
-import engine.renderer.GUI.GUIButton;
-import engine.renderer.GUI.GUIQuad;
-import engine.renderer.GUI.GUIQuad_Draggable;
-import engine.renderer.GUI.GUISlider;
-import engine.renderer.GUI.GUISliderBar;
-import engine.renderer.GUI.GUIText;
-import engine.renderer.mesh.Mesh2DBackground;
-import engine.renderer.mesh.Mesh2DQuad;
+import engine.renderer.GUI.*;
+import engine.renderer.mesh.*;
 import engine.Scene;
 import engine.ShaderLib;
 import engine.WindowFrame;
@@ -27,8 +20,8 @@ import engine.audio.AudioManager;
 
 public class TestScene extends Scene {
 
-	private float rotationSpeed = 180f;
 	boolean scanLines = false;
+	Table table = new Table();
 	
 	public TestScene(String name, CameraController cam) {
 		super(name, cam);
@@ -36,37 +29,27 @@ public class TestScene extends Scene {
 
 	@Override
 	public void OnUpdate(float deltaTime) {
-		if (GetActor("cardPlayer_0") != null) {
-			((CardMesh)GetActor("cardPlayer_0").GetComponent("Mesh")).SetRotation(((CardMesh)GetActor("cardPlayer_0").GetComponent("Mesh")).GetRotation().x,
-					((CardMesh)GetActor("cardPlayer_0").GetComponent("Mesh")).GetRotation().y, ((CardMesh)GetActor("cardPlayer_0").GetComponent("Mesh")).GetRotation().z+rotationSpeed*deltaTime );
-		}
+		
 	}
 
+	// Called when scene is created
 	@Override
 	public void OnBegin() {
-		
+		// Set up Camera
 		cam.SetPosition(new Vector3f(0,-3.25f, cam.Position.z));
 		cam.SetRotation(51f);
 		((CameraController.Orthographic)this.cam).SetZoomLevel(4.f);
 		
-		Deck myDeck = new Deck(8);
-		myDeck.shuffle();
 		
-		Hand player1Hand = new Hand();
-		player1Hand.addCards(3, myDeck);
+		table.playRound();
 		
-		// Player Cards
-		for (int i = 0; i < player1Hand.GetCardCount(); i ++) {
-			new Actor("cardPlayer_"+i).AddComponent(new CardMesh("Mesh", 
-					new Transform( // Card Transform
-							new Vector3f(-.125f+(i*.25f), -.75f-(i*.01f), 1.f+(i*.01f)), // Position
-							new Vector3f(0f, 0, 0), // Rotation
-							new Vector3f(1f, 1f, 1f) ), // Scale
-					player1Hand.getCard(i).getCardTextureID(), // Card front Suit
-					"card_back_red", // Card back Suit
-					this.cam.GetCamera()));// Camera))
+		for (int i =0; i < table.getPlayers().size(); i++) {
+			this.SetupPlayer(table.getPlayerFromID(i), i);
 		}
 		
+		this.SetupDealer(table.getDealer());
+		
+		// Add chips (place holder for now)
 		new Actor("chipStack25_p1").AddComponent(new ChipStackMesh("chipStack",
 				new Transform(new Vector3f(0.f, 0f, 1.25f) ),
 				"Chip25", 2,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
@@ -81,51 +64,8 @@ public class TestScene extends Scene {
 				new Transform(new Vector3f(-0.525f, 0f, 1.25f) ),
 				"Chip5", 8,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
 				));
-		
 
-		
-		// Player 2 Cards
-		
-		Hand player2Hand = new Hand();
-		player2Hand.addCards(3, myDeck);
-		
-		for (int i = 0; i < player2Hand.GetCardCount(); i++) {
-			new Actor("cardPlayer2_"+i).AddComponent(new CardMesh("Mesh", 
-					new Transform( // Card Transform
-							new Vector3f(-5.5f+(.25f*i), 0f+(-.21f*i), .99f+(.01f*i)), // Position
-							new Vector3f(0, 0, -40f), // Rotation
-							new Vector3f(1.f, 1.f, 1f) ), // Scale
-					player2Hand.getCard(i).getCardTextureID(), // Card front Suit
-					"card_back_red", // Card back Suit
-					this.cam.GetCamera()));// Camera))
-			
-		}
-		
-		
-		
-		new Actor("cpu1").AddComponent(
-				new GUIQuad("quad", new Transform(new Vector3f(-.825f,.15f,1f), new Vector3f(0f), new Vector3f(.125f,.15f, 1f)), "Images/roundedTexture.png", 
-						new Vector4f(0f,0f,0f,.5f))
-				.AddChild(new GUIText(
-						"name",
-						new Transform(new Vector3f(0f,.085f,.01f)),
-						"Fonts/morningStar",
-						"Computer One",
-						new Vector4f(1f),
-						.125f,
-						1f,
-						true)).AddChild(
-						new GUIText(
-						"text",
-						new Transform(new Vector3f(0f,-.04f,.01f)),
-						"Fonts/BebasNeue",
-						"Bet: $200\nHand Total: "+ player2Hand.getTotal() + (player2Hand.getTotal()>21 ? "\nBust..." : player2Hand.getTotal() == 21 ? "\nBlack Jack!" : "\nWaiting..."),
-						new Vector4f(1f),
-						.125f,
-						1f,
-						true))
-				);
-		
+		// Create player 2 chips
 		float o_set = -5f;
 		new Actor("chipStack2_p2").AddComponent(new ChipStackMesh("chipStack",
 				new Transform(new Vector3f(0.f+o_set, 1f, 1.25f) ),
@@ -142,103 +82,12 @@ public class TestScene extends Scene {
 				"Chip100", 2,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
 				));
 		
-		
-		Hand player3Hand = new Hand();
-		player3Hand.addCards(3,myDeck);
 
-		// Player 3 Cards
-		
-		for (int i = 0; i < player3Hand.GetCardCount(); i++) {
-		
-		new Actor("cardPlayer3_"+i).AddComponent(new CardMesh("Mesh", 
-				new Transform( // Card Transform
-						new Vector3f(5.5f-(.25f*i), 0f-(.21f*i), 1f+(.01f*i)), // Position
-						new Vector3f(0f, 0, 40f), // Rotation
-						new Vector3f(1.f, 1.f, 1f) ), // Scale
-				player3Hand.getCard(i).getCardTextureID(), // Card front Suit
-				"card_back_red", // Card back Suit
-				this.cam.GetCamera()));// Camera))
-		}
-		
-		new Actor("cpu2").AddComponent(
-				new GUIQuad("quad", new Transform(new Vector3f(.825f,.15f,1f), new Vector3f(0f), new Vector3f(.125f,.15f, 1f)), "Images/roundedTexture.png", 
-						new Vector4f(0f,0f,0f,.5f))
-				.AddChild(new GUIText(
-						"name",
-						new Transform(new Vector3f(0f,.085f,.01f)),
-						"Fonts/morningStar",
-						"Computer One",
-						new Vector4f(1f),
-						.125f,
-						1f,
-						true)).AddChild(
-						new GUIText(
-						"text",
-						new Transform(new Vector3f(0f,-.04f,.01f)),
-						"Fonts/BebasNeue",
-						"Bet: $200\nHand Total: "+ player3Hand.getTotal() + (player3Hand.getTotal()>21 ? "\nBust..." : player3Hand.getTotal() == 21 ? "\nBlack Jack!" : "\nWaiting..."),
-						new Vector4f(1f),
-						.125f,
-						1f,
-						true)));
-	
-		
-		
-	
-		/*
-		new Actor("player3Count").AddComponent(new GUIText("text",
-				new Transform(new Vector3f(.55f,0f,0f)),
-				"Fonts/verdana",
-				"Total: " + player3Hand.getTotal(),
-				new Vector4f(1f,0,0,1),
-				.25f,
-				1f,
-				true
-				));
-		*/
-		// Dealer Cards
-		
-		Hand dealerHand = new Hand();
-		dealerHand.addCards(5, myDeck);
-		
-		for (int i = 0; i < dealerHand.GetCardCount(); i++) {
-			new Actor("cardDealer"+i).AddComponent(new CardMesh("Mesh", 
-					new Transform( // Card Transform
-							new Vector3f(.25f-(.25f*i), 5f-(.01f*i), 1f+(.01f*i)), // Position
-							new Vector3f(0f, 0f, 0f), // Rotation
-							new Vector3f(1.f, 1.f, 1f) ), // Scale
-					i == 0 ? "card_back_red" : dealerHand.getCard(i).getCardTextureID(), // Card front Suit
-					"card_back_red", // Card back Suit
-					this.cam.GetCamera()));// Camera))
-		}
-		
-		new Actor("dealerUI").AddComponent(
-				new GUIQuad("quad", new Transform(new Vector3f(0,.8f,1f), new Vector3f(0f), new Vector3f(.125f,.125f, 1f)), "Images/roundedTexture.png", 
-						new Vector4f(0f,0f,0f,.5f))
-				.AddChild(new GUIText(
-						"name",
-						new Transform(new Vector3f(0f,.075f,.01f)),
-						"Fonts/morningStar",
-						"Dealer",
-						new Vector4f(1f),
-						.125f,
-						1f,
-						true)).AddChild(
-						new GUIText(
-						"text",
-						new Transform(new Vector3f(0f,-.035f,.01f)),
-						"Fonts/BebasNeue",
-						"Hand Total: "+ dealerHand.getTotalDealer() + (dealerHand.getTotalDealer() >21 ? "\nBust..." : dealerHand.getTotal() == 21 ? "\nBlack Jack!" : "\nWaiting..."),
-						new Vector4f(1f),
-						.125f,
-						1f,
-						true))
-				);
-		
-		
-		
+		// Create background
 		CreateBackground();
 
+		
+		// Test GUI (eventually will be player's GUI, for now just a draggable quad with slider and a button that plays sound when pressed)
 		new Actor("blackJackText").AddComponent(new GUIQuad_Draggable(
 				"quad",
 				new Transform(
@@ -356,9 +205,159 @@ public class TestScene extends Scene {
 	public void OnEnd() {
 		
 	}
+	
+	private void SetupDealer(Dealer d) {
+		// Dealer
+		Hand hand = d.getHand();
+
+		// Create dealer cards mesh from hand
+		for (int i = 0; i < hand.GetCardCount(); i++) {
+			new Actor("cardDealer"+i).AddComponent(new CardMesh("Mesh", 
+					new Transform( // Card Transform
+							new Vector3f(.25f-(.25f*i), 5f-(.01f*i), 1f+(.01f*i)), // Position
+							new Vector3f(0f, 0f, 0f), // Rotation
+							new Vector3f(1.f, 1.f, 1f) ), // Scale
+					i == 0 ? "card_back_red" : hand.getCard(i).getCardTextureID(), // Card front Suit
+					"card_back_red", // Card back Suit
+					this.cam.GetCamera()));// Camera))
+		}
+		
+		// Create dealer UI
+		new Actor("dealerUI").AddComponent(
+				new GUIQuad("quad", new Transform(new Vector3f(0,.8f,1f), new Vector3f(0f), new Vector3f(.125f,.125f, 1f)), "Images/roundedTexture.png", 
+						new Vector4f(0f,0f,0f,.5f))
+				.AddChild(new GUIText(
+						"name",
+						new Transform(new Vector3f(0f,.075f,.01f)),
+						"Fonts/morningStar",
+						"Dealer",
+						new Vector4f(1f),
+						.125f,
+						1f,
+						true)).AddChild(
+						new GUIText(
+						"text",
+						new Transform(new Vector3f(0f,-.035f,.01f)),
+						"Fonts/BebasNeue",
+						"Hand Total: "+ hand.getTotalDealer() + (hand.getTotalDealer() >21 ? "\nBust..." : hand.getTotal() == 21 ? "\nBlack Jack!" : "\nWaiting..."),
+						new Vector4f(1f),
+						.125f,
+						1f,
+						true))
+				);
+
+	}
+	
+	private void SetupPlayer(Player p, int location) {
+		Hand hand = p.getHand();
+		int balance = p.getBalance();
+		int bet = hand != null ? hand.getBet() : -1;
+	
+		switch (location) {
+		case 0: {
+			// Add player cards in correct position (creates meshes)
+			for (int i = 0; i < hand.GetCardCount(); i ++) {
+				new Actor("cardPlayer_"+i).AddComponent(new CardMesh("Mesh", 
+						new Transform( // Card Transform
+								new Vector3f(-.125f+(i*.25f), -.75f-(i*.01f), 1.f+(i*.01f)), // Position
+								new Vector3f(0f, 0, 0), // Rotation
+								new Vector3f(1f, 1f, 1f) ), // Scale
+						hand.getCard(i).getCardTextureID(), // Card front Suit
+						"card_back_red", // Card back Suit
+						this.cam.GetCamera()));// Camera))
+			}
+			break;
+		}
+		case 1: {
+			for (int i = 0; i < hand.GetCardCount(); i++) {
+				new Actor("cardPlayer2_"+i).AddComponent(new CardMesh("Mesh", 
+						new Transform( // Card Transform
+								new Vector3f(-5.5f+(.25f*i), 0f+(-.21f*i), .99f+(.01f*i)), // Position
+								new Vector3f(0, 0, -40f), // Rotation
+								new Vector3f(1.f, 1.f, 1f) ), // Scale
+						hand.getCard(i).getCardTextureID(), // Card front Suit
+						"card_back_red", // Card back Suit
+						this.cam.GetCamera()));// Camera))
+			}
+				
+				new Actor("cpu1").AddComponent(
+						// background image
+						new GUIQuad("quad", new Transform(new Vector3f(-.825f,.15f,1f), new Vector3f(0f), new Vector3f(.125f,.175f, 1f)), "Images/roundedTexture.png", 
+								new Vector4f(0f,0f,0f,.5f))
+						.AddChild(
+								// Text
+								new GUIText(
+								"name",
+								new Transform(new Vector3f(0f,.12f,.01f)),
+								"Fonts/morningStar",
+								"Computer One",
+								new Vector4f(1f),
+								.125f,
+								1f,
+								true)).AddChild(
+								new GUIText(
+								"text",
+								new Transform(new Vector3f(0f,-.04f,.01f)),
+								"Fonts/BebasNeue",
+								"Balance: $"+balance+"\nBet: "+bet+"\nHand Total: "+ hand.getTotal() + (hand.getTotal()>21 ? "\nBust..." : hand.getTotal() == 21 ? "\nBlack Jack!" : "\nWaiting..."),
+								new Vector4f(1f),
+								.125f,
+								1f,
+								true))
+						);
+				break;
+			}
+		
+		
+		case 2: {
+
+			for (int i = 0; i < hand.GetCardCount(); i++) {
+			
+			new Actor("cardPlayer3_"+i).AddComponent(new CardMesh("Mesh", 
+					new Transform( // Card Transform
+							new Vector3f(5.5f-(.25f*i), 0f-(.21f*i), 1f+(.01f*i)), // Position
+							new Vector3f(0f, 0, 40f), // Rotation
+							new Vector3f(1.f, 1.f, 1f) ), // Scale
+					hand.getCard(i).getCardTextureID(), // Card front Suit
+					"card_back_red", // Card back Suit
+					this.cam.GetCamera()));// Camera))
+			}
+			
+			// Create GUI for player 2 
+			new Actor("cpu2").AddComponent(
+					// create background image
+					new GUIQuad("quad", new Transform(new Vector3f(.825f,.15f,1f), new Vector3f(0f), new Vector3f(.125f,.175f, 1f)), "Images/roundedTexture.png", 
+							new Vector4f(0f,0f,0f,.5f))
+					.AddChild(
+							// Create text
+							new GUIText(
+							"name",
+							new Transform(new Vector3f(0f,.12f,.01f)),
+							"Fonts/morningStar",
+							"Computer Two",
+							new Vector4f(1f),
+							.125f,
+							1f,
+							true)).AddChild(
+							new GUIText(
+							"text",
+							new Transform(new Vector3f(0f,-.04f,.01f)),
+							"Fonts/BebasNeue",
+							"Balance: $"+balance+"\nBet: "+bet+"\nHand Total: "+ hand.getTotal() + (hand.getTotal()>21 ? "\nBust..." : hand.getTotal() == 21 ? "\nBlack Jack!" : "\nWaiting..."),
+							new Vector4f(1f),
+							.125f,
+							1f,
+							true)));
+			break;
+		}
+		}
+	}
 
 	@Override
 	public void OnEvent(Event e) {
+		/*
+		 * Debug Create card at runtime
+		 */
 		if (e instanceof Events.KeyPressedEvent) {
 			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_T) {
 				if (GetActor("cardRunTime") == null) {
@@ -379,6 +378,7 @@ public class TestScene extends Scene {
 				}
 			}
 			
+			// Disable/Enable shader
 			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_Z) {
 				if (!scanLines) {
 					WindowFrame.SetScreenShader(ShaderLib.Shader_GUIQuad);
@@ -390,17 +390,8 @@ public class TestScene extends Scene {
 					scanLines = false;
 				}
 			}
-			
-			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_UP ) {
-				AudioManager.SetCategoryVolume("sfx", 1.5f);
-			}
-			
-			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_DOWN ) {
-				AudioManager.SetCategoryVolume("sfx", .5f);
-			}
-			
-			
-			
+				
+			// Pause menu
 			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_ESCAPE) { 
 				if (!GamePauseMenu.IsActive()) GamePauseMenu.Show(); else GamePauseMenu.Hide();
 				Application.GetApp().SetPaused(!Application.IsPaused());
@@ -410,15 +401,14 @@ public class TestScene extends Scene {
 	}
 
 
+	// Create static game objects
 	private void CreateBackground() {
 
 		Vector2f stackPosY = new Vector2f(7f, 7.75f);
 		float stackPosX = -0.5f; 
 		int amt = 30;
 		
-		
-	
-
+		// 
 		new Actor("cardBorder1").AddComponent(new Mesh2DQuad("blackJackTitle",
 				new Transform(new Vector3f(0,.5f,0f), new Vector3f(0,0f,0f), new Vector3f(1.25f,1.75f,1f)),
 				"Images/cardBorder.png",
@@ -500,10 +490,10 @@ public class TestScene extends Scene {
 				));
 		
 		
-		
-		
 		stackPosX += -.5f;
 		
+		
+		// Create chips at the top left of screen
 		for (int i = 0; i < 3 ; i++) {
 			
 		stackPosX += -2f; 
@@ -561,6 +551,7 @@ public class TestScene extends Scene {
 		stackPosX = 6f;
 		float offset = 0;
 		float row = 0;
+		// Create deck of cards at top right of screen
 		for (int i=0; i < 1; i++) {
 			offset += 1f;
 			offset = i == 3 ? 1f : offset;

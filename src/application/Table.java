@@ -15,7 +15,7 @@ public class Table {
 	// gonna need a dealer at the table
 	private Dealer dealer;
 	private int roundsPlayed;
-
+	private Round currentRound;
 
     // constructor
 	public Table() {
@@ -45,6 +45,7 @@ public class Table {
 	    // data is here anyways
 		
 		//Round(this.dealer, this.players);
+		currentRound = new Round(dealer, this);
 		this.roundsPlayed += 1;
 	}
 	
@@ -90,7 +91,7 @@ public class Table {
 	public static void main(String args[]) {
 		//test functions
 		Table currentTable = new Table();
-		int total_players = 8;
+		int total_players = 3;
 		System.out.println("New table created. Showing every player's balance from left to right at the table: ");
 		for(int i = 0; i < total_players; i++) {
 			System.out.print(currentTable.getPlayerFromID(i).getBalance() + " ");

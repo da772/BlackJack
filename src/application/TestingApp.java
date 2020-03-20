@@ -40,6 +40,7 @@ public class TestingApp extends Application {
 		this.vsync = SaveData.GetSettings().GetVSync();
 		AudioManager.SetCategoryVolume("music", SaveData.GetSettings().GetMusicVolume());
 		AudioManager.SetCategoryVolume("sfx", SaveData.GetSettings().GetSfxVolume());
+		Renderer.SetRenderScale(SaveData.GetSettings().GetRenderScale());
 		WindowFrame.SetScreenShader(ShaderLib.Shader_GUIQuad_CRT_Outline);
 		// Create Camera 
 		cam = new CameraController.Orthographic(16.f/9.f);

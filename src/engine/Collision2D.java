@@ -44,8 +44,12 @@ public class Collision2D extends Thread {
 	 */
 	public void run() {
 		while (Application.app.running && running) {
-			OnUpdate();
-			Timing.sync(Application.app.fpsCap, false);
+			try {
+				OnUpdate();
+				Thread.sleep(25);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}	
 	}
 	
