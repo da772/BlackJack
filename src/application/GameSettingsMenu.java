@@ -79,7 +79,7 @@ public class GameSettingsMenu extends Actor {
 				new Vector2f(1f)
 				);
 		
-		// Create Full
+		// Create items
 		GUIQuad fullScreen = CreateFullScreenButton();
 		
 		GUIQuad musicVolume = CreateMusicVolumeButton();
@@ -154,7 +154,7 @@ public class GameSettingsMenu extends Actor {
 				new Vector2f(1f)).AddChild(
 				// Create slider
 				new GUISlider(
-								"slider",
+					"slider",
 				new Transform(
 						new Vector3f(.25f,0f,.01f),
 						new Vector3f(0f),
@@ -179,6 +179,7 @@ public class GameSettingsMenu extends Actor {
 				@Override
 				public void OnDragComplete() {
 					Renderer.SetRenderScale(_value/100f);
+					SaveData.GetSettings().SetRenderScale(_value/100f);
 					float __value = _value > 25 ? _value : 0f;
 					((GUISliderBar)GetChild("sliderBar")).SetSliderLocation(MathLib.GetMappedRangeValueUnclamped(0, 200, 0, 1, __value));
 				}
@@ -228,10 +229,8 @@ public class GameSettingsMenu extends Actor {
 							_value = Math.round(value) ;
 							if (this.parent != null) {
 								if (_value >= 256) {
-									//Application.SetFPSCap(5000);
 									((GUIText)this.parent.GetChild("fpsValue")).SetText("Infinite");
 								} else {
-									//Application.SetFPSCap(_value);
 									((GUIText)this.parent.GetChild("fpsValue")).SetText( _value + " fps");
 								}
 						}
@@ -241,8 +240,10 @@ public class GameSettingsMenu extends Actor {
 				public void OnDragComplete() {
 					if (_value >= 256) {
 						Application.SetFPSCap(5000);
+						SaveData.GetSettings().SetFpsCap(5000);
 					} else {
 						Application.SetFPSCap(_value);
+						SaveData.GetSettings().SetFpsCap(_value);
 					}
 				}
 				@Override
@@ -297,6 +298,7 @@ public class GameSettingsMenu extends Actor {
 					protected void OnMouseReleased() {
 						SetButtonTexture(startFull ? Application.IsVsync() : !Application.IsVsync());
 						Application.SetVSync(!Application.IsVsync());
+						SaveData.GetSettings().SetVsync(Application.IsVsync());
 					}
 				
 					@Override
@@ -336,6 +338,10 @@ public class GameSettingsMenu extends Actor {
 										((GUIText)this.parent.GetChild("soundVolumeValue")).SetText(Math.round(_value) + "%");
 									}
 								}
+							}
+							@Override
+							public void OnDragComplete() {
+								SaveData.GetSettings().SetSfxVolume(Math.round(_value)/100f);
 							}
 							// Create SLider BAr
 							}.AddChild(new GUISliderBar(
@@ -382,6 +388,10 @@ public class GameSettingsMenu extends Actor {
 										((GUIText)this.parent.GetChild("musicVolumeValue")).SetText(Math.round(_value) + "%");
 									}
 								}
+							}
+							@Override
+							public void OnDragComplete() {
+								SaveData.GetSettings().SetMusicVolume(Math.round(_value)/100f);
 							}
 							// Create Slider Bar
 							}.AddChild(new GUISliderBar(
@@ -430,6 +440,7 @@ public class GameSettingsMenu extends Actor {
 					protected void OnMouseReleased() {
 						SetButtonTexture(startFull ? Application.GetWindow().IsFullScreen() : !Application.GetWindow().IsFullScreen());
 						Application.GetWindow().SetFullScreen(!Application.GetWindow().IsFullScreen());
+						SaveData.GetSettings().SetFullScreen(Application.GetWindow().IsFullScreen());
 					}
 				
 					@Override

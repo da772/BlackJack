@@ -11,28 +11,35 @@ import engine.KeyCodes;
 import engine.SceneManager;
 import engine.ShaderLib;
 import engine.WindowFrame;
+import engine.audio.AudioManager;
+import engine.renderer.Renderer;
 import engine.Events.Event;
 
 
 public class TestingApp extends Application {
 
-
-
 	CameraController cam;
 	
 	public TestingApp() {
-		// Call super - Set window Title to "Blackjack" set width to 1280 set height to 720
-		super("Testing", 1280, 720);
-		this.fpsCap = 5000;
+		// Call super - Set window Title to "Blackjack" set width to previous height and width
+		super("Testing", SaveData.GetSettings().GetWidth(), SaveData.GetSettings().GetHeight());
+		this.fpsCap = SaveData.GetSettings().GetFpsCap();
 		
 	}
 	
 	@Override
 	protected void OnInit() {
 		System.out.println(title+" Init!");
-		window.SetFullScreen(true);
+		
+		window.SetFullScreen(SaveData.GetSettings().GetFullScreen());
+		if (!SaveData.GetSettings().GetFullScreen()) {
+			window.SetWindowSize(SaveData.GetSettings().GetWidth(), SaveData.GetSettings().GetHeight());
+		}
 		// Enable/Disable vsync
-		window.SetVSync(vsync);
+		window.SetVSync(SaveData.GetSettings().GetVSync());
+		this.vsync = SaveData.GetSettings().GetVSync();
+		AudioManager.SetCategoryVolume("music", SaveData.GetSettings().GetMusicVolume());
+		AudioManager.SetCategoryVolume("sfx", SaveData.GetSettings().GetSfxVolume());
 		WindowFrame.SetScreenShader(ShaderLib.Shader_GUIQuad_CRT_Outline);
 		// Create Camera 
 		cam = new CameraController.Orthographic(16.f/9.f);
@@ -52,8 +59,7 @@ public class TestingApp extends Application {
 	@Override
 	protected void OnUpdate(float deltaTime) {
 		
-		// Mesh3 Rotation
-		
+		//Debug
 		
 		// Camera Control
 		if (Input.IsKeyPressed(KeyCodes.KEY_D)) {
@@ -90,7 +96,7 @@ public class TestingApp extends Application {
 	// Camera OnEvent
 	protected void OnEvent(Event event) {
 		if (cam != null)
-		cam.OnEvent(event);
+			cam.OnEvent(event);
 	};
 	
 	//Key Event
@@ -127,6 +133,8 @@ public class TestingApp extends Application {
 	// Called on application end
 	@Override
 	protected void OnShutdown() {
+		SaveData.SaveSettings(new SaveData.Settings(GetWindow().GetWidth(), GetWindow().GetHeight(), this.fpsCap, GetWindow().IsFullScreen(),
+				this.vsync, AudioManager.GetCategoryVolume("music"), AudioManager.GetCategoryVolume("sfx"), Renderer.GetRenderScale()));
 		System.out.println(title+ " Shutdown!");	
 	}
 	

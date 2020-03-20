@@ -76,6 +76,11 @@ public class AudioManager {
 		AL10.alListener3f(AL10.AL_VELOCITY, 0, 0, 0);
 	}
 	
+	/**
+	 * 
+	 * @param category - category of sound to set volume of
+	 * @param volume - how loud the volume is
+	 */
 	public static void SetCategoryVolume(String category, float volume) {
 		if (manager.sourceCategory.containsKey(category)) {
 			manager.sourceCategoryVolume.put(category, volume);
@@ -87,6 +92,11 @@ public class AudioManager {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param category - category of sound to get
+	 * @return
+	 */
 	public static float GetCategoryVolume(String category) {
 		if (manager.sourceCategoryVolume.containsKey(category)) {
 			return manager.sourceCategoryVolume.get(category);

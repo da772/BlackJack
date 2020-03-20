@@ -5,8 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+
 
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.BufferUtils;
@@ -33,6 +35,34 @@ public class FileLoader {
 		
 	}
 	
+	public static String GetPath(String path) {
+		try {
+			URL url = ClassLoader.getSystemClassLoader().getResource(path);
+			
+			if (url != null)
+				return url.getPath();
+			
+		} catch (Exception e) {
+			e.printStackTrace(); 
+		}
+		
+		return null;
+	}
+	
+	public static File CreateFile(String path, String name) {
+		String url = path+"/"+name;
+		try {
+			File f = new File(url);
+			f.getParentFile().mkdirs();
+			f.createNewFile();
+			return f;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
 	
 	public static byte[] getResourceAsByteArray(String resourcePath) {
 
@@ -48,6 +78,24 @@ public class FileLoader {
 
 		return null;
 		
+	}
+	
+	public static String getAppDataDirectory() {
+		String workingDirectory;
+		String OS = (System.getProperty("os.name")).toUpperCase();
+		if (OS.contains("WIN"))
+		{
+		    workingDirectory = System.getenv("AppData");
+		}
+		
+		else
+		{
+		    workingDirectory = System.getProperty("user.home");
+		    workingDirectory += "/Library/Application Support";
+		}
+
+		
+		return workingDirectory;
 	}
 	
 	public static File getResourceAsFile(String resourcePath) {
