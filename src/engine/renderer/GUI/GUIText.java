@@ -201,7 +201,7 @@ public class GUIText extends GUI {
 		if (varray == null && vbuffer == null) return;
 		UpdateMeshInfo();
 		if (this.parent != null && this.RelativePosition.x == 0 && this.RelativePosition.y == 0)
-		UpdateTransform();
+			UpdateTransform();
 	}
 	
 	

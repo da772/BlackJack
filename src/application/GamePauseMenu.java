@@ -8,21 +8,16 @@ import engine.Actor;
 import engine.Application;
 import engine.SceneManager;
 import engine.audio.AudioManager;
-import engine.renderer.Renderer;
+
 import engine.renderer.Transform;
 import engine.renderer.GUI.GUIButton;
 import engine.renderer.GUI.GUIQuad;
-import engine.renderer.GUI.GUISlider;
-import engine.renderer.GUI.GUISliderBar;
+
 import engine.renderer.GUI.GUIText;
-import engine.util.MathLib;
+
 
 public class GamePauseMenu extends Actor {
 
-
-	
-	
-	
 	private static final Vector4f titleTextColor = ColorPalette.LightGreenBlue;
 	private static final Vector4f buttonBackColor = new Vector4f(0f);
 	private static final Vector4f buttonBackSelectedColor = ColorPalette.Pico8Pink;
@@ -31,6 +26,7 @@ public class GamePauseMenu extends Actor {
 	
 	public static void Show() {
 		if (menu == null) {
+			Application.GetApp().SetPaused(true);
 			menu = new GamePauseMenu("PauseMenu");
 		} 
 	}
@@ -40,6 +36,7 @@ public class GamePauseMenu extends Actor {
 			if (GameSettingsMenu.IsActive()) GameSettingsMenu.Hide();
 			Actor.Remove(menu._name, menu.scene);
 			menu = null;
+			Application.GetApp().SetPaused(false);
 		}
 	}
 	
@@ -101,6 +98,7 @@ public class GamePauseMenu extends Actor {
 	@Override
 	public void OnEnd() {
 		menu = null;
+		
 	};
 	
 	
@@ -241,6 +239,7 @@ public class GamePauseMenu extends Actor {
 
 			@Override
 			protected void OnMouseReleased() {
+				Hide();
 				SceneManager.SetCurrentScene("mainMenu");
 			}
 

@@ -181,7 +181,7 @@ public class GameSettingsMenu extends Actor {
 					Renderer.SetRenderScale(_value/100f);
 					SaveData.GetSettings().SetRenderScale(_value/100f);
 					float __value = _value > 25 ? _value : 0f;
-					((GUISliderBar)GetChild("sliderBar")).SetSliderLocation(MathLib.GetMappedRangeValueUnclamped(0, 200, 0, 1, __value));
+					((GUISliderBar)GetChild("sliderBar")).SetSliderLocation(MathLib.GetMappedRangeValue(0, 200, 0, 1, __value));
 				}
 				@Override
 				protected void OnValueChanged(float value) {
@@ -196,7 +196,7 @@ public class GameSettingsMenu extends Actor {
 						new Vector3f(.02f,.018f,1f)
 						),
 				"Images/blankTexture.png", // Texture of the hud
-				new Vector4f(99/255f, 110/255f, 114/255f,1.0f), MathLib.GetMappedRangeValueUnclamped(0f, 200f, 0f, 1f, (Renderer.GetRenderScale()*100f)),false)).
+				new Vector4f(99/255f, 110/255f, 114/255f,1.0f), MathLib.GetMappedRangeValue(0f, 200f, 0f, 1f, (Renderer.GetRenderScale()*100f)),false)).
 				AddChild(new GUIText("musicVolumeSlider",new Transform(new Vector3f(-.5f,0f,.1f)),"Fonts/BebasNeue","Render Scale",
 											titleTextColor,1f,2.5f,true
 											))
@@ -260,7 +260,7 @@ public class GameSettingsMenu extends Actor {
 						new Vector3f(.02f,.018f,1f)
 						),
 				"Images/blankTexture.png", // Texture of the hud
-				new Vector4f(99/255f, 110/255f, 114/255f,1.0f), Application.GetFPSCap() > 256 ? 1f : MathLib.GetMappedRangeValueUnclamped(30f, 255f, 0, 255/256f, Application.GetFPSCap()),false)).
+				new Vector4f(99/255f, 110/255f, 114/255f,1.0f), Application.GetFPSCap() > 256 ? 1f : MathLib.GetMappedRangeValue(30f, 255f, 0, 255/256f, Application.GetFPSCap()),false)).
 				AddChild(new GUIText("musicVolumeSlider",new Transform(new Vector3f(-.5f,0f,.1f)),"Fonts/BebasNeue","FPS Cap",
 											titleTextColor,1f,2.5f,true
 											))

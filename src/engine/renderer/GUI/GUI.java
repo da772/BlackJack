@@ -317,6 +317,7 @@ public abstract class GUI extends Collider2D {
 		g.SetParent(this);
 		if (added && !g.added) {
 			g.Add();
+			g.SetPosition(this.GetPosition().x, this.GetPosition().y, 0f);
 		}
 		return this;
 	}
@@ -326,7 +327,10 @@ public abstract class GUI extends Collider2D {
 		if (b) g.SetRelativePosition( g.GetPosition().x - this.GetPosition().x, g.GetPosition().y - this.GetPosition().y , g.GetZOrder());
 		if (g.GetActor() != null) g.GetActor().RemoveComponent_NOCLEAN(g);
 		g.SetParent(this);
-		if (added && !g.added) g.Add();
+		if (added && !g.added) {
+			g.Add();
+			g.SetPosition(this.GetPosition().x, this.GetPosition().y, 0f);
+		}
 		return this;
 		
 	}
@@ -345,6 +349,26 @@ public abstract class GUI extends Collider2D {
 			children.remove(g);
 			g.SetParent(null);
 			if (g.added) g.Remove();
+		}
+		return this;
+	}
+	
+	public GUI RemoveChild(String id) {
+		GUI g = GetChild(id);
+		if (g != null) {
+			RemoveChild(g);
+		}
+		return this;
+	}
+	
+	public GUI RemoveChildren() {
+		if (children.size() > 0) {
+			for (int i = 0; i < children.size(); i ++) {
+				GUI g = children.get(i);
+				children.remove(g);
+				g.SetParent(null);
+				if (g.added) g.Remove();
+			}
 		}
 		return this;
 	}
@@ -378,8 +402,8 @@ public abstract class GUI extends Collider2D {
 				, transform.GetPosition().y + (parent == null ? 0 : GetRelativePosition().y), 0f);
 		this._transform = new Transform(transform.GetPosition(), transform.GetRotation(), 
 				transform.GetScale());
-		this._transform.SetPosition(new Vector3f(MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2,_transform.GetPosition().x)/2f, 
-				-MathLib.GetMappedRangeValueUnclamped(-1, 1, -2, 2, -_transform.GetPosition().y)/2f,_transform.GetPosition().z ));
+		this._transform.SetPosition(new Vector3f(MathLib.GetMappedRangeValue(-1, 1, -2, 2,_transform.GetPosition().x)/2f, 
+				-MathLib.GetMappedRangeValue(-1, 1, -2, 2, -_transform.GetPosition().y)/2f,_transform.GetPosition().z ));
 		for (GUI c : children) c.SetPosition(this.GetPosition().x, this.GetPosition().y, 0f);
 	
 	}

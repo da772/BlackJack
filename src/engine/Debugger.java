@@ -54,7 +54,7 @@ public class Debugger {
 			    "Debug Menu: (Drag to move or Press ~ to toggle) \n \n" +
 				"App Info       " + "Title: "+ Application.app.title +" | " + Application.app.fps + " FPS"+
 				"\n                   VSync: " + Application.app.vsync +" | Width: " + Application.app.window.GetWidth() +
-				"\n                   Height: " +Application.app.window.GetHeight() +
+				"\n                   Height: " +Application.app.window.GetHeight() + " | Paused: " + Application.IsPaused() +
 				
 				"\n\nRender Info  " +" Texture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() +
 				"\n                    Font Pool: " + FontType.GetPoolSize() +" | Atlas Pool: " + TextureAtlas.GetCount() +

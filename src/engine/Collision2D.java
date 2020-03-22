@@ -7,7 +7,6 @@ import engine.Collider2D.CollisionObjectType;
 import engine.Events.Event;
 import engine.renderer.GUIRenderer;
 import engine.util.MathLib;
-import engine.util.Timing;
 
 public class Collision2D extends Thread {
 

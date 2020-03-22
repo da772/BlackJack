@@ -24,11 +24,26 @@ public class Actor {
 	 *            - the scene to remove the actor from
 	**/
 	public static boolean Remove(String name, Scene s) {
-		if (s!= null) {
+		if (s != null) {
 			return s.RemoveActor(name);
 		}
 		
 		return false;
+	}
+	
+	public static boolean Remove(String name) {
+		if (SceneManager.GetCurrentScene() != null) {
+			return SceneManager.GetCurrentScene().RemoveActor(name);
+		}
+		
+		return false;
+	}
+	
+	public static Actor Get(String name) {
+		if (SceneManager.GetCurrentScene() != null) {
+			return SceneManager.GetCurrentScene().GetActor(name);
+		}
+		return null;
 	}
 	
 

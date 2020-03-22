@@ -21,7 +21,7 @@ import engine.audio.AudioManager;
 public class TestScene extends Scene {
 
 	boolean scanLines = false;
-	Table table = new Table();
+	Table table;
 	
 	public TestScene(String name, CameraController cam) {
 		super(name, cam);
@@ -29,7 +29,11 @@ public class TestScene extends Scene {
 
 	@Override
 	public void OnUpdate(float deltaTime) {
-		
+		if (table != null) {
+			if (table.getRound() != null) {
+				table.getRound().OnUpdate();
+			}
+		}
 	}
 
 	// Called when scene is created
@@ -39,15 +43,9 @@ public class TestScene extends Scene {
 		cam.SetPosition(new Vector3f(0,-3.25f, cam.Position.z));
 		cam.SetRotation(51f);
 		((CameraController.Orthographic)this.cam).SetZoomLevel(4.f);
-		
+		table = new Table();
 		
 		table.playRound();
-		
-		for (int i =0; i < table.getPlayers().size(); i++) {
-			this.SetupPlayer(table.getPlayerFromID(i), i);
-		}
-		
-		this.SetupDealer(table.getDealer());
 		
 		// Add chips (place holder for now)
 		new Actor("chipStack25_p1").AddComponent(new ChipStackMesh("chipStack",
@@ -86,273 +84,14 @@ public class TestScene extends Scene {
 		// Create background
 		CreateBackground();
 
-		
-		// Test GUI (eventually will be player's GUI, for now just a draggable quad with slider and a button that plays sound when pressed)
-		new Actor("blackJackText").AddComponent(new GUIQuad_Draggable(
-				"quad",
-				new Transform(
-						new Vector3f(0f,-.775f,3f),
-						new Vector3f(0f),
-						new Vector3f(.25f,.225f,1f)
-						),
-				"Images/blankTexture.png", // Texture of the hud
-				new Vector4f(.125f, .125f,.25f,.9f))
-				
-				.AddChild(new GUISlider(
-				"slider",
-				new Transform(
-						new Vector3f(0f,0f,.01f),
-						new Vector3f(0f),
-						new Vector3f(.20f,.02f,1f)
-						),
-				"Images/blankTexture.png", // Texture of the hud
-				new Vector4f(.85f, .85f,.85f,.9f),0f,50f){
-
-					@Override
-					protected void OnValueChanged(float value) {
-						((GUIText)this.parent.GetChild("sliderValueText")).SetText(""+Math.round(value));
-					}
-			
-					
-					}.AddChild(new GUISliderBar(
-						"sliderBar",
-						new Transform(
-								new Vector3f(0f,0f,.01f),
-								new Vector3f(0f),
-								new Vector3f(.021f,.0175f,1f)
-								),
-						"Images/blankTexture.png", // Texture of the hud
-						new Vector4f(.35f, .35f,.35f,1f),.5f,false))
-						
-						
-				).AddChild(new GUIText(
-						"sliderValueText",
-						new Transform(new Vector3f(0f,-.05f,.01f)),
-						"Fonts/BebasNeue",
-						"0.00",
-						new Vector4f(1f),
-						.2f,
-						1f,
-						true
-						))
-				.AddChild(new GUIButton(
-								"AttachButton",new Transform( 
-						new Vector3f(0,-.25f,.1f), // Position x,y, Z-Order higher is on top
-						new Vector3f(0f, 0f,0f),  // Rotation
-						new Vector3f(.2f,.1f,1f)), // Scale x,y,z
-						"Images/Buttons/mainMenuButtonUp.png",  // Button texture
-						"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-						new Vector4f(.55f,.6f,.075f,1f) // Quad Color r,g,b,a
-						
-						) {
-							private GUI lastParent = null;
-							@Override
-							protected void OnSelect() {
-								if (this.GetChild("AttachText") != null) {
-									this.GetChild("AttachText").SetColor(1,0,0,1);
-								}
-							}
-							@Override
-							protected void OnMousePressed() {
-								SetButtonTexture(true);
-							}
-							@Override
-							protected void OnMouseReleased() {
-								SetButtonTexture(false);
-								AudioManager.CreateAudioSource("yeet", "Audio/yeet-sound-effect.wav", "sfx",.15f, 1f, false, true);
-								AudioManager.PlaySource("yeet");
-								if (this.parent != null) {
-									lastParent = this.parent;
-									this.parent.DetachChild(this.parent.GetChild(this.GetName()));
-									if (this.GetChild("AttachText") != null) {
-										((GUIText)this.GetChild("AttachText")).SetText("Re-Attach?");
-									}
-								} else {
-									lastParent.AddChild(this, true);
-									this.parent.UpdateTransform();
-									if (this.GetChild("AttachText") != null) {
-										((GUIText)this.GetChild("AttachText")).SetText("Detach?");
-									}
-								}
-							}
-							@Override
-							public void OnDeselect() {
-								SetButtonTexture(false);
-								if (this.GetChild("AttachText") != null) {
-									this.GetChild("AttachText").SetColor(1,1,1,1);
-								}
-							}
-						}.AddChild(new GUIText(
-								"AttachText",
-								new Transform(
-										new Vector3f(0f,0f,.1f),
-										new Vector3f(0f),
-										new Vector3f(1f)
-										),
-								"Fonts/BebasNeue",
-								"Deatch?",
-								new Vector4f(1f),
-								.2f,
-								1f,
-								true
-								)))
-				);
-	
-		
 	}
 
 	@Override
 	public void OnEnd() {
 		
 	}
+
 	
-	private void SetupDealer(Dealer d) {
-		// Dealer
-		Hand hand = d.getHand();
-
-		// Create dealer cards mesh from hand
-		for (int i = 0; i < hand.GetCardCount(); i++) {
-			new Actor("cardDealer"+i).AddComponent(new CardMesh("Mesh", 
-					new Transform( // Card Transform
-							new Vector3f(.25f-(.25f*i), 5f-(.01f*i), 1f+(.01f*i)), // Position
-							new Vector3f(0f, 0f, 0f), // Rotation
-							new Vector3f(1.f, 1.f, 1f) ), // Scale
-					i == 0 ? "card_back_red" : hand.getCard(i).getCardTextureID(), // Card front Suit
-					"card_back_red", // Card back Suit
-					this.cam.GetCamera()));// Camera))
-		}
-		
-		// Create dealer UI
-		new Actor("dealerUI").AddComponent(
-				new GUIQuad("quad", new Transform(new Vector3f(0,.8f,1f), new Vector3f(0f), new Vector3f(.125f,.125f, 1f)), "Images/roundedTexture.png", 
-						new Vector4f(0f,0f,0f,.5f))
-				.AddChild(new GUIText(
-						"name",
-						new Transform(new Vector3f(0f,.075f,.01f)),
-						"Fonts/morningStar",
-						"Dealer",
-						new Vector4f(1f),
-						.125f,
-						1f,
-						true)).AddChild(
-						new GUIText(
-						"text",
-						new Transform(new Vector3f(0f,-.035f,.01f)),
-						"Fonts/BebasNeue",
-						"Hand Total: "+ hand.getTotalDealer() + (hand.getTotalDealer() >21 ? "\nBust..." : hand.getTotal() == 21 ? "\nBlack Jack!" : "\nWaiting..."),
-						new Vector4f(1f),
-						.125f,
-						1f,
-						true))
-				);
-
-	}
-	
-	private void SetupPlayer(Player p, int location) {
-		Hand hand = p.getHand();
-		int balance = p.getBalance();
-		int bet = hand != null ? hand.getBet() : -1;
-	
-		switch (location) {
-		case 0: {
-			// Add player cards in correct position (creates meshes)
-			for (int i = 0; i < hand.GetCardCount(); i ++) {
-				new Actor("cardPlayer_"+i).AddComponent(new CardMesh("Mesh", 
-						new Transform( // Card Transform
-								new Vector3f(-.125f+(i*.25f), -.75f-(i*.01f), 1.f+(i*.01f)), // Position
-								new Vector3f(0f, 0, 0), // Rotation
-								new Vector3f(1f, 1f, 1f) ), // Scale
-						hand.getCard(i).getCardTextureID(), // Card front Suit
-						"card_back_red", // Card back Suit
-						this.cam.GetCamera()));// Camera))
-			}
-			break;
-		}
-		case 1: {
-			for (int i = 0; i < hand.GetCardCount(); i++) {
-				new Actor("cardPlayer2_"+i).AddComponent(new CardMesh("Mesh", 
-						new Transform( // Card Transform
-								new Vector3f(-5.5f+(.25f*i), 0f+(-.21f*i), .99f+(.01f*i)), // Position
-								new Vector3f(0, 0, -40f), // Rotation
-								new Vector3f(1.f, 1.f, 1f) ), // Scale
-						hand.getCard(i).getCardTextureID(), // Card front Suit
-						"card_back_red", // Card back Suit
-						this.cam.GetCamera()));// Camera))
-			}
-				
-				new Actor("cpu1").AddComponent(
-						// background image
-						new GUIQuad("quad", new Transform(new Vector3f(-.825f,.15f,1f), new Vector3f(0f), new Vector3f(.125f,.175f, 1f)), "Images/roundedTexture.png", 
-								new Vector4f(0f,0f,0f,.5f))
-						.AddChild(
-								// Text
-								new GUIText(
-								"name",
-								new Transform(new Vector3f(0f,.12f,.01f)),
-								"Fonts/morningStar",
-								"Computer One",
-								new Vector4f(1f),
-								.125f,
-								1f,
-								true)).AddChild(
-								new GUIText(
-								"text",
-								new Transform(new Vector3f(0f,-.04f,.01f)),
-								"Fonts/BebasNeue",
-								"Balance: $"+balance+"\nBet: "+bet+"\nHand Total: "+ hand.getTotal() + (hand.getTotal()>21 ? "\nBust..." : hand.getTotal() == 21 ? "\nBlack Jack!" : "\nWaiting..."),
-								new Vector4f(1f),
-								.125f,
-								1f,
-								true))
-						);
-				break;
-			}
-		
-		
-		case 2: {
-
-			for (int i = 0; i < hand.GetCardCount(); i++) {
-			
-			new Actor("cardPlayer3_"+i).AddComponent(new CardMesh("Mesh", 
-					new Transform( // Card Transform
-							new Vector3f(5.5f-(.25f*i), 0f-(.21f*i), 1f+(.01f*i)), // Position
-							new Vector3f(0f, 0, 40f), // Rotation
-							new Vector3f(1.f, 1.f, 1f) ), // Scale
-					hand.getCard(i).getCardTextureID(), // Card front Suit
-					"card_back_red", // Card back Suit
-					this.cam.GetCamera()));// Camera))
-			}
-			
-			// Create GUI for player 2 
-			new Actor("cpu2").AddComponent(
-					// create background image
-					new GUIQuad("quad", new Transform(new Vector3f(.825f,.15f,1f), new Vector3f(0f), new Vector3f(.125f,.175f, 1f)), "Images/roundedTexture.png", 
-							new Vector4f(0f,0f,0f,.5f))
-					.AddChild(
-							// Create text
-							new GUIText(
-							"name",
-							new Transform(new Vector3f(0f,.12f,.01f)),
-							"Fonts/morningStar",
-							"Computer Two",
-							new Vector4f(1f),
-							.125f,
-							1f,
-							true)).AddChild(
-							new GUIText(
-							"text",
-							new Transform(new Vector3f(0f,-.04f,.01f)),
-							"Fonts/BebasNeue",
-							"Balance: $"+balance+"\nBet: "+bet+"\nHand Total: "+ hand.getTotal() + (hand.getTotal()>21 ? "\nBust..." : hand.getTotal() == 21 ? "\nBlack Jack!" : "\nWaiting..."),
-							new Vector4f(1f),
-							.125f,
-							1f,
-							true)));
-			break;
-		}
-		}
-	}
-
 	@Override
 	public void OnEvent(Event e) {
 		/*
@@ -390,11 +129,15 @@ public class TestScene extends Scene {
 					scanLines = false;
 				}
 			}
-				
+			
+			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_R) { 
+				table.playRound();
+			}
+			
 			// Pause menu
 			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_ESCAPE) { 
 				if (!GamePauseMenu.IsActive()) GamePauseMenu.Show(); else GamePauseMenu.Hide();
-				Application.GetApp().SetPaused(!Application.IsPaused());
+				
 			}
 		}
 		

@@ -36,7 +36,7 @@ public class GUISliderBar extends GUIQuad_Draggable {
 		nXPos = this.transform.GetPosition().x;
 		nYPos = this.transform.GetPosition().y;
 		this.start = start;
-		this.value = MathLib.GetMappedRangeValueUnclamped(0,1, -1, 1, start);
+		this.value = MathLib.GetMappedRangeValue(0,1, -1, 1, start);
 
 	}
 	
@@ -56,7 +56,7 @@ public class GUISliderBar extends GUIQuad_Draggable {
 	
 	protected void SetStartLocation() {
 		if (this.parent != null) {
-			float _start = MathLib.GetMappedRangeValueUnclamped(0,1, -1, 1, start);
+			float _start = MathLib.GetMappedRangeValue(0,1, -1, 1, start);
 			Vector3f pos = new Vector3f(((this.parent.GetScale().x-this.GetScale().x)*_start)*this.slideDir.x+this.GetRelativePosition().x,
 					((this.parent.GetScale().y-this.GetScale().y)*_start)*this.slideDir.y+this.GetRelativePosition().y,this.GetRelativePosition().z );
 			SetRelativePosition(pos);
@@ -67,7 +67,7 @@ public class GUISliderBar extends GUIQuad_Draggable {
 	public void SetSliderLocation(float location) {
 		if (this.parent != null) {
 			start = location;
-			float _start = MathLib.GetMappedRangeValueUnclamped(0,1, -1, 1, start);
+			float _start = MathLib.GetMappedRangeValue(0,1, -1, 1, start);
 			Vector3f pos = new Vector3f(((this.parent.GetScale().x-this.GetScale().x)*_start)*this.slideDir.x,
 					((this.parent.GetScale().y-this.GetScale().y)*_start)*this.slideDir.y, this.GetZOrder() );
 			SetRelativePosition(pos);
@@ -87,10 +87,10 @@ public class GUISliderBar extends GUIQuad_Draggable {
 	protected void SetValue() {
 		if (parent != null) {
 			if (this.slideDir.x > 0) {
-				value = 1-MathLib.GetMappedRangeValueUnclamped(-(this.parent.GetScale().x-this.GetScale().x), this.parent.GetScale().x-this.GetScale().x, 0, 1, 
+				value = 1-MathLib.GetMappedRangeValue(-(this.parent.GetScale().x-this.GetScale().x), this.parent.GetScale().x-this.GetScale().x, 0, 1, 
 						this.GetRealPosition().x-this.parent.GetPosition().x);
 			} else {
-				value = MathLib.GetMappedRangeValueUnclamped(-(this.parent.GetScale().y-this.GetScale().y), this.parent.GetScale().y-this.GetScale().y, 0, 1,
+				value = MathLib.GetMappedRangeValue(-(this.parent.GetScale().y-this.GetScale().y), this.parent.GetScale().y-this.GetScale().y, 0, 1,
 						this.GetRealPosition().y-this.parent.GetPosition().y);
 			}
 			OnValueChange();

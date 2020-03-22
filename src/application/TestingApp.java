@@ -51,7 +51,7 @@ public class TestingApp extends Application {
 		// Initalize Scene Manager
 		new MainMenuScene("mainMenu",cam);
 		new TestScene("testScene",cam);
-		SceneManager.SetCurrentScene("testScene");
+		SceneManager.SetCurrentScene("mainMenu");
 	}
 		
 		
@@ -59,9 +59,7 @@ public class TestingApp extends Application {
 	// Called every frame
 	@Override
 	protected void OnUpdate(float deltaTime) {
-		
-		//Debug
-		
+				
 		// Camera Control
 		if (Input.IsKeyPressed(KeyCodes.KEY_D)) {
 			cam.Position.x += 1 * deltaTime;

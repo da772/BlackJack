@@ -5,79 +5,269 @@
 package application;
 
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Random;
 
 public class Round {
 	
 	private ArrayList<Player> players;
 	private Deck deck;
-	private Hand dealerHand;
-	private Scanner getInput;
+	private RoundState state = RoundState.None;
+	private int playerTurn = -1;
+	private int playerInput = -1;
+	private Dealer dealer;
+	private Table table;
+	
+	public static enum RoundState {
+		None, Betting, Playing, Ending;
+	}
     
     public Round(Dealer dealer, Table table) { //Everything that happens in 1 round of blackjack
     	deck = table.getDeck(); //Get deck
     	players = table.getPlayers(); //players in the order they are sitting at a table
-    	
+    	this.dealer = dealer;
+    	this.table = table;
     	deck.shuffle(); //Shuffle deck
     	deck.checkDeckCount(); //If deck has 20% of cards or less left, add back used cards and shuffle
     	
-    	getInput = new Scanner(System.in); 
-    	for(int i = 0; i < players.size(); i++) { //Set the bet for each hand (gets user input)
-    		setBet(i);
-    	}
+    	playerTurn = 0;
+    	state = RoundState.Betting;
     	
-        dealCards(dealer, players, deck); //Deal cards 
-        
-        //test function start
-        printAllHandTotals(dealer, players);
-        //test function end
-        
-        dealerHand = dealer.getHand();
-        if(dealerHand.getTotal() == 21) { 
-        	//function for when dealer has 21
-        	   //check every persons hand, if it is not 21, then move to next player
-        }
-        else {
-        	for(int i = 0; i < players.size(); i++) {
-        		playerMove(i);
-        	}
-        }
-        
-        getInput.close();
     }
     
-    public void setBet(int id) {
-    	System.out.println("Enter bet for player "+id+": ");
+    /**
+     * Runs every frame, unless game is paused. Acts as a state machine
+     */
+    public void OnUpdate() {
+    	// State Machine
+    	switch (state) {
+    	// Betting Phase
+		case Betting: {
+			// Check if all players have played, skips dealer since dealer doesn't bet?
+			if (playerTurn < players.size()) {
+				// Check if player is not computer
+				if (!players.get(playerTurn).isComputer()) {
+					// Show player betting controls
+					players.get(playerTurn).showPlayerBetControl(this);
+					// Wait for input
+					if (playerInput != -1) {
+						// Set bet based on input
+						setBet(playerTurn, playerInput);
+						// Hide betting controls
+						players.get(playerTurn).hidePlayerBetControl();
+						// Reset input
+						playerInput = -1;
+						// Increment player
+						playerTurn++;
+					}
+				// Player is computer
+				} else {
+					// Check if computer has enough money to bet
+					if (players.get(playerTurn).getBalance() > 0) {
+						// If they do give them random bet, maybe we should give them behaviors instead of random? for now this works
+						// or maybe even a higher chance to bet lower than higher?
+						setBet(playerTurn, new Random().nextInt(players.get(playerTurn).getBalance())/4+1);	
+					} else {
+						// if computer has no money set their bet to 0
+						setBet(playerTurn, 0);
+					}
+					// Reset player input
+					playerInput = -1;
+					// Increment player
+					playerTurn++;
+				}
+				
+			// All players have bet
+			} else {
+				// Change state to playing state
+				state = RoundState.Playing;
+				// Deal cards
+				this.dealCards(dealer, players, deck);
+				// Reset player increment
+				playerTurn = 0;
+			}
+			break;
+		}
+		// Playing Phase
+		case Playing: {	
+			// Check if all players have played
+			if (playerTurn < players.size()) {
+				// Get current player object
+				Player curPlayer = this.players.get(playerTurn);
+				// Get current player hand
+		    	Hand curPlayerHand = curPlayer.getHand();
+		    	// If the player's bet is less than or equal to 0 skip that player
+		    	if (curPlayerHand.getBet() <= 0) {
+		    		playerTurn++;
+		    		return;
+		    	}
+				// User's turn
+				if (!players.get(playerTurn).isComputer()) {
+					if (curPlayerHand.getTotal() < 21) {
+						// Give Options
+						curPlayer.showPlayerButtonControl(this);
+						if (playerInput != -1) {
+							switch (playerInput) {
+								// Hit
+								case 0: {
+									curPlayer.addCard(deck.drawCard());
+									break;
+								}
+								// Stay
+								default:
+								case 1: {
+									playerTurn++;
+									curPlayer.SetResult(-1);
+									break;
+								}
+								// Double
+								case 2 : {
+									curPlayer.doubleBet();
+									curPlayer.addCard(deck.drawCard());
+									curPlayer.SetResult(-1);
+									playerTurn++;
+									break;
+								}
+								// Split (NOT IMPLEMENTED YET)
+								case 3: {
+									curPlayer.addCard(deck.drawCard());
+									break;
+								}
+							
+							}
+							// Reset input
+							playerInput = -1;
+							curPlayer.hidePlayerButtonControl();
+						}
+						
+					} else {
+						// Reset player input
+						playerInput = -1;
+						curPlayer.SetResult(-1);
+						// Increment player
+						playerTurn++;
+					}
+				// Computer's turn
+				} else {
+					if (curPlayerHand.getTotal() < 21) {
+						// Computer logic here
+						curPlayer.addCard(deck.drawCard());
+					} else {
+						playerInput = -1;
+						playerTurn++;
+					}
+				}
+			} else if (playerTurn == players.size()){
+				// Dealer's turn
+				if (dealer.getHand().getTotal() < 21) {
+					// Play dealers turn
+					// Dealer logic here
+					dealer.addCard(deck.drawCard());	
+				} else {
+					playerInput = -1;
+					playerTurn++;
+				}
+			} else {
+				// Done incrementing through players, move to ending state
+				state = RoundState.Ending;
+				// Reset player increment
+				playerTurn = 0;
+				// Reset player input
+				playerInput = -1;
+			}
+				break;
+			}		
+		// Ending phase (determine winners/losers)
+		case Ending:
+			this.dealer.showDealerCard();
+			if (playerTurn < this.players.size()) {
+				Player curPlayer = players.get(playerTurn);
+				// Player lost
+				if (curPlayer.getHand().getTotal() > 21 || (curPlayer.getHand().getTotal() < dealer.getHand().getTotal() && dealer.getHand().getTotal() <= 21)) {
+					curPlayer.SetResult(2);
+				// Player tied with dealer	
+				} else if (curPlayer.getHand().getTotal() == dealer.getHand().getTotal()) {
+					curPlayer.SetResult(3);
+					curPlayer.addToBalance(curPlayer.getBet());
+				} 
+				// Player won with BlackJack pay 3 to 2 
+				else if (curPlayer.getHand().getTotal() == 21 && curPlayer.getHand().GetCardCount() == 2) { 
+					curPlayer.SetResult(1);
+					curPlayer.addToBalance((int) (curPlayer.getBet()*1.5f));
+				}
+				// Player won
+				else if (curPlayer.getHand().getTotal() > dealer.getHand().getTotal() || dealer.getHand().getTotal() > 21) {
+					curPlayer.SetResult(1);
+					curPlayer.addToBalance((int) (curPlayer.getBet()*2));
+				} 
+				playerTurn++;
+			} else {
+				playerTurn = 0;
+				playerInput = -1;
+				state = RoundState.None;
+			}
+			break;
+		case None: {
+			if (playerTurn < this.players.size()) {
+				Player curPlayer = players.get(playerTurn);
+				// Find first none computer player
+				if (!curPlayer.isComputer()) {
+					// Show reset button
+					curPlayer.showPlayerResetButtonControl(this);
+					// If player input create new round
+					if (playerInput != -1) {
+						curPlayer.hidePlayerResetButtonControl();
+						this.table.playRound();
+						break;
+					}
+				} else {
+					// Increment
+					playerTurn++;
+				}
+			}
+			break;
+		}
+		default:
+			break;
+    	
+    	}
+    	
+    }
+    
+    public void setCurrentPlayerInput(int input) {
+    	this.playerInput = input;
+    }
+    
+    public void setBet(int id, int amount) {
     	Player curPlayer = this.players.get(id);
-    	Hand curPlayerHand = curPlayer.getHand();
-    	int bet = getInput.nextInt();
-    	curPlayerHand.setBet(bet);
-    	curPlayer.subtractFromBalance(bet);
+    	curPlayer.setBet(amount);
+    	curPlayer.subtractFromBalance(amount);
     }
     
     public void dealCards(Dealer dealer, ArrayList<Player> players, Deck deck) {
     	//Deal cards out. Deal 1 card to dealer and to each player, then cycle again.
     	//Update GUI inbetween each card deal to reflect hand changes - maybe?? 
-    	Hand dealerHand = dealer.getHand();
     	
-    	dealerHand.addCard(deck.drawCard());
+    	dealer.addCard(deck.drawCard());
     	
         for(int i = 0; i < players.size(); i++) {
         	Player curPlayer = players.get(i);
-        	Hand curPlayerHand = curPlayer.getHand();
-        	curPlayerHand.addCard(deck.drawCard());
+        	if (curPlayer.getHand().getBet() > 0) {
+        		curPlayer.addCard(deck.drawCard());	
+        	}
         }
         
-        dealerHand.addCard(deck.drawCard());
+        dealer.addCard(deck.drawCard());
         
         for(int i = 0; i < players.size(); i++) {
         	Player curPlayer = players.get(i);
-        	Hand curPlayerHand = curPlayer.getHand();
-        	curPlayerHand.addCard(deck.drawCard());
+        	if (curPlayer.getHand().getBet() > 0) {
+        		curPlayer.addCard(deck.drawCard());	
+        	}
         }
         
     }
     
+    // Deprecated function
     public void playerMove(int id) {
     	Player curPlayer = this.players.get(id);
     	Hand curPlayerHand = curPlayer.getHand();
@@ -93,8 +283,8 @@ public class Round {
     		System.out.println("\n\nPlayer"+id+"'s turn:");
     		curPlayerHand.printHandInfo();
         	System.out.println("\nHit (h), Double (d), Stay (s)?: ");
-        	String option = this.getInput.next();
-        	if(option.matches("h")) {
+        	String option = "";//this.getInput.next();
+        	if(option.matches( "h")) {
         		curPlayerHand.addCard(deck.drawCard());
         	}
         	else if(option.matches("d") && turnsCount == 1) {
@@ -124,6 +314,10 @@ public class Round {
     	
     }
     
+    public void endRound() {
+    	this.state = RoundState.None;
+    }
+    
     public void printAllHandTotals(Dealer dealer, ArrayList<Player> players) {
     	//test function
     	Hand dealerHand = dealer.getHand();
@@ -141,10 +335,12 @@ public class Round {
     	
     }
     
+    
+    // Deprecated
     public static void main(String[] args) {
-    	Table table = new Table();
-    	System.out.println("Real player id: " + table.getRealPlayerID());
-    	Round playRound = new Round(table.getDealer(), table);
+    	//Table table = new Table();
+    	//System.out.println("Real player id: " + table.getRealPlayerID());
+    	//Round playRound = new Round(table.getDealer(), table);
     	
     	
     }

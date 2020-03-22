@@ -2,7 +2,6 @@ package application;
 
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Table {
 	//players is an array of player class (have balance, and player tier) in order
@@ -23,16 +22,22 @@ public class Table {
 		int STARTING_BALANCE = 100; // this too
 		int NUM_DECKS = 8; // this too
 		this.roundsPlayed = 0;
+		Player.CURRENT_ID = 0;
 		
 		// initialize all private fields
 		this.players = new ArrayList<Player>();
-		this.deck = new Deck(8);
+		this.deck = new Deck(NUM_DECKS);
 		this.dealer = new Dealer();
 		
-		// loop and add in 8 players to the table
-		for(int i = 0; i < TOTAL_PLAYERS; i++) {
-			this.players.add(new Player(STARTING_BALANCE));
+		// Add user controlled player
+		this.players.add(new Player(STARTING_BALANCE, false));
+		players.get(0).setup();
+		// loop and add in 3 players to the table
+		for(int i = 1; i < TOTAL_PLAYERS; i++) {
+			this.players.add(new Player(STARTING_BALANCE, true));
+			players.get(i).setup();
 		}
+		dealer.setup();
 	}
 	
 	
@@ -45,6 +50,16 @@ public class Table {
 	    // data is here anyways
 		
 		//Round(this.dealer, this.players);
+		if (currentRound != null) {
+			currentRound.endRound();
+			currentRound = null;
+		}
+		for (int i = 0; i < players.size(); i++) {
+			players.get(i).reset();
+		}
+	
+		dealer.reset();
+		
 		currentRound = new Round(dealer, this);
 		this.roundsPlayed += 1;
 	}
@@ -74,6 +89,10 @@ public class Table {
 		return this.dealer;
 	}
 	
+	public Round getRound() {
+		return this.currentRound;
+	}
+	
 	public Deck getDeck() {
 		return this.deck;
 	}
@@ -89,7 +108,8 @@ public class Table {
 	}
 	
 	public static void main(String args[]) {
-		//test functions
+		//test functions 
+		// test functions BROKEN Table now uses opengl functions
 		Table currentTable = new Table();
 		int total_players = 3;
 		System.out.println("New table created. Showing every player's balance from left to right at the table: ");

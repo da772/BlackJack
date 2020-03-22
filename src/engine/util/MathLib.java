@@ -46,7 +46,7 @@ public class MathLib {
 		return (value - minValue) / divisor;
 	}
 	
-	public static float GetMappedRangeValueUnclamped(float xIn, float yIn, float xOut, float yOut, float value) {
+	public static float GetMappedRangeValue(float xIn, float yIn, float xOut, float yOut, float value) {
 		float f = GetRangeValue(xOut, yOut, GetRangePct(xIn, yIn, value));
 		return f;
 	}

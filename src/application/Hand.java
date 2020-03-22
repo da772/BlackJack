@@ -4,7 +4,6 @@
  */
 package application;
 import java.util.ArrayList;
-import java.util.List;
  
  public class Hand {
 	//Store cards into a hand. Adding a card updates a list of cards in the hand, and their corresponding values. 
@@ -69,6 +68,7 @@ import java.util.List;
     
     public void doubleBet() {
     	this.bet *= 2;
+    	
     }
     
     public int getBet() {
