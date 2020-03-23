@@ -322,6 +322,10 @@ public abstract class GUI extends Collider2D {
 		return this;
 	}
 	
+	public List<GUI> GetChildren() {
+		return children;
+	}
+	
 	public GUI AddChild(GUI g, boolean b) {
 		children.add(g);
 		if (b) g.SetRelativePosition( g.GetPosition().x - this.GetPosition().x, g.GetPosition().y - this.GetPosition().y , g.GetZOrder());

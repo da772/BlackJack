@@ -1,6 +1,7 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -317,9 +318,40 @@ public class Player {
 						
 						);
 					}
-			
+					
+					List<GUI> children = buttons.GetChildren();
+					int size = children.size();
+					if (size < 4) {
+						for (int i = 0; i < size; i++) {
+							children.get(i).SetRelativePosition(ButtonLayout(size)[i]);
+						}
+					}
+					
 		}
 		
+	}
+	
+	private Vector3f[] ButtonLayout(int size) {
+		switch (size) {
+			default:
+			case 0:
+			return null;
+			case 1:
+				return new Vector3f[] {
+						new Vector3f(0f)
+				};
+			case 2:
+				return new Vector3f[] {
+					new Vector3f(-.05f, 0f, 0f),
+					new Vector3f(.05f, 0f, 0f)
+				};
+			case 3:
+				return new Vector3f[] {
+					new Vector3f(-.1f, 0f, 0f),
+					new Vector3f(.0f, 0f, 0f),
+					new Vector3f(.1f, 0f, 0f)
+				};
+		}
 	}
 	
 	public void hidePlayerButtonControl() {
