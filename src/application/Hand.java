@@ -4,6 +4,7 @@
  */
 package application;
 import java.util.ArrayList;
+import java.util.HashMap;
  
  public class Hand {
 	//Store cards into a hand. Adding a card updates a list of cards in the hand, and their corresponding values. 
@@ -12,11 +13,19 @@ import java.util.ArrayList;
     private ArrayList<Card> hand;
     private ArrayList<ArrayList<Integer>> handValues;
     private int bet;
+    private HashMap<String, Boolean> options;
+    private int rounds;
     
     public Hand() {
         this.hand = new ArrayList<Card>();
         this.handValues = new ArrayList<ArrayList<Integer>>();
         this.bet = 0;
+        this.options = new HashMap<String, Boolean>();
+        this.options.put("split", false);
+        this.options.put("hit", false);
+        this.options.put("stay", false);
+        this.options.put("double", false);
+        this.rounds = 0;
     }
     
     public void addCard(Card card) {
@@ -33,7 +42,52 @@ import java.util.ArrayList;
 			curValues.add(card.getValue());
 		}
     	this.handValues.add(curValues);
+    	this.rounds += 1;
+    	//update options after adding a card
+    	updateOptions();
     }
+    
+    public void updateOptions() { //update options
+    	if(getTotal() >= 21) {
+            this.options.replace("split", false);
+            this.options.replace("hit", false);
+            this.options.replace("stay", false);
+            this.options.replace("double", false);
+    	}
+    	else { //total less than 21
+    		if(sameValueHand()) { //can split
+                this.options.replace("split", true);
+    		}
+    		else {
+                this.options.replace("split", false);
+    		}
+    		if(this.rounds == 2) { //can double only on first turn of the hand
+                this.options.replace("double", true);
+    		}
+    		else {
+    			this.options.replace("double", false);
+    		}
+    		this.options.replace("stay", true); //can stay
+    		this.options.replace("hit", true); //can hit
+    	}
+    }
+    
+    public boolean canHit() {
+    	return this.options.get("hit");
+    }
+    
+    public boolean canStay() {
+    	return this.options.get("stay");
+    }
+    
+    public boolean canSplit() {
+    	return this.options.get("split");
+    }
+    
+    public boolean canDouble() {
+    	return this.options.get("double");
+    }
+    
     
     public void addCards(int amount, Deck deck) {
     	for (int i = 0; i < amount; i++) {
@@ -75,9 +129,17 @@ import java.util.ArrayList;
     	return this.bet;
     }
     
-    public boolean isSameCard() {
+    public boolean sameValueHand() {
     	if(this.hand.size() == 2) {
-    		return getCard(0).getValue() == getCard(1).getValue(); //possible split
+    		int value1 = getCard(0).getValue();
+    		int value2 = getCard(1).getValue();
+    		if(value1 == 11 || value1 == 12 || value1 == 13) {
+    			value1 = 10;
+    		}
+    		if(value2 == 11 || value2 == 12 || value2 == 13) {
+    			value2 = 10;
+    		}
+    		return value1 == value2; //possible split
     	}
     	return false;
     }
@@ -285,73 +347,34 @@ import java.util.ArrayList;
     	System.out.println("Check current hand (8, Ace, Ace, 4, Ace, 5, Ace): ");
     	curHand.printHand();
     	
+    	curHand.clearHand();
+    	curHand.addCard(new Card(5, "Spade"));
+    	curHand.addCard(new Card(5, "Spade"));
+    	System.out.println("\n\nCur hand is [5 Spade][5 Spade]. Is this splittable? ");
+    	System.out.println(curHand.sameValueHand());
     	
+      	curHand.clearHand();
+    	curHand.addCard(new Card(10, "Spade"));
+    	curHand.addCard(new Card(11, "Spade"));
+    	System.out.println("\n\nCur hand is [10 Spade][J Spade]. Is this splittable? ");
+    	System.out.println(curHand.sameValueHand());
+    	
+      	curHand.clearHand();
+    	curHand.addCard(new Card(13, "Spade"));
+    	curHand.addCard(new Card(12, "Hearts"));
+    	System.out.println("\n\nCur hand is [K Spade][Q Hearts]. Is this splittable? ");
+    	System.out.println(curHand.sameValueHand());
+    	
+      	curHand.clearHand();
+    	curHand.addCard(new Card(10, "Spade"));
+    	curHand.addCard(new Card(13, "Hearts"));
+    	System.out.println("\n\nCur hand is [10 Spade][K Hearts]. Is this splittable? ");
+    	System.out.println(curHand.sameValueHand());
     }
 
 
     
-  
-    
-    
-    
-    /*
-    // for adding a card we're going to determine the value based on
-    // the total for ace
-    // If the total is <= 21 then we'll make an ace be 11 and when total
-    // is above that we'll consider it as a 1 whhich now leads me to the
-    // problem where when we add a card and the total goes over 10 and we
-    // have to go through our hand and see if an ace is in it and then we
-    // can change it to one and it might prevent the total from exceeding
-    // 21, this means total might get changed when an ace occurs
-    
-    // this method adds a card to the hand right now
-    public void addCard(Card card) {
-        cards.add(card);
-        // when card is an ace, count as an 11
-        if (card.getValue() == 1) total += 11;
-        // valid values for cards 2-J where value corresponds with value member
-        else if (card.getValue() >= 2 && card.getValue() <= 10) total += card.getValue();
-        else (card.getValue() > 10) total += 10;
-        
-        // now if total exceeds 21, call aceCheck so we can adjust total before
-        // returning from this method in Round
-        if (total >= 21 && containsUnchangedAce()) {
-            total -= 10; // this will change an ace's value to total from 11 -> 1
-        }
-    }
-    
-    // this method juat checks if any of player's card is an ace
-    // to help 
-    private Boolean containsUnchangedAce() {
-        // loop through the player's hand of cards
-        for (Card card : cards) {
-            // when unchanged ace found, set it to changed and then
-            // return true!
-            if (card.getValue() == 1 && card.beenChanged() == false) {
-                card.beenChanged = true;
-                return true;
-            }
-        }
-        return false; // no valid ace found (maybe was changed before)
-    }
-    
-    
-    
-    // this method will be called when a player busts and the dealer takes
-    // their cards away
-    public ArrayList<Card> returnCards() {
-    
-        // store the list of cards (hand)
-        ArrayList<Card> cardsToReturn = cards;
-        
-        // reinitialize the Hand's cards to empty list and then
-        // put the total back to 0
-        cards = new ArrayList<Card>();
-        total = 0;
-        return cardsToReturn;
-    }
-    */
-    
+ 
     
     
     

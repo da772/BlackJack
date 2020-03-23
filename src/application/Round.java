@@ -158,7 +158,7 @@ public class Round {
 				}
 			} else if (playerTurn == players.size()){
 				// Dealer's turn
-				if (dealer.getHand().getTotal() < 21) {
+				if (dealer.getHand().getTotal() < 17) {
 					// Play dealers turn
 					// Dealer logic here
 					dealer.addCard(deck.drawCard());	
@@ -267,55 +267,12 @@ public class Round {
         
     }
     
-    // Deprecated function
-    public void playerMove(int id) {
-    	Player curPlayer = this.players.get(id);
-    	Hand curPlayerHand = curPlayer.getHand();
-    	
-		if(curPlayerHand.isSameCard() == true) {
-			//split function here
-			System.out.print("split function here");
-		}
-
-		int turnsCount = 0;
-    	while(curPlayerHand.getTotal() < 21) {
-    		turnsCount += 1;
-    		System.out.println("\n\nPlayer"+id+"'s turn:");
-    		curPlayerHand.printHandInfo();
-        	System.out.println("\nHit (h), Double (d), Stay (s)?: ");
-        	String option = "";//this.getInput.next();
-        	if(option.matches( "h")) {
-        		curPlayerHand.addCard(deck.drawCard());
-        	}
-        	else if(option.matches("d") && turnsCount == 1) {
-        		curPlayerHand.addCard(deck.drawCard());
-        		curPlayerHand.doubleBet();
-        		break;
-        	}
-        	else if(option.matches("s")){
-        		break;
-        	}
-        	else {
-        		System.out.println("Invalid option");
-        	}
-    	}
-    	
-    	
-    	curPlayerHand.printHandInfo();
-    	if(curPlayerHand.getTotal() == 21) { //hit 21, change some condition to indicate win
-    		System.out.println("Player " + id + " hit 21!!");
-    	}
-    	else if(curPlayerHand.getTotal() < 21){
-    		System.out.println("Player " + id + " ended with " + curPlayerHand.getTotal());
-    	}
-    	else { //over 21 bust condition
-    		System.out.println("Player " + id + " bust with " + curPlayerHand.getTotal());
-    	}
-    	
-    }
-    
     public void endRound() {
     	this.state = RoundState.None;
+    }
+    
+    public Player getRealPlayer() {
+    	return this.players.get(0);
     }
     
     public void printAllHandTotals(Dealer dealer, ArrayList<Player> players) {
@@ -336,13 +293,6 @@ public class Round {
     }
     
     
-    // Deprecated
-    public static void main(String[] args) {
-    	//Table table = new Table();
-    	//System.out.println("Real player id: " + table.getRealPlayerID());
-    	//Round playRound = new Round(table.getDealer(), table);
-    	
-    	
-    }
+
     
 }

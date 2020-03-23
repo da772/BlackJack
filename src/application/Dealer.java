@@ -17,14 +17,6 @@ public class Dealer{
 	private boolean uiCreated = false, handCreated = false, cardShow = false;
 	private int handSize = 0;
 
-	/*
-    // new simple constructor
-	public Player() {
-	    this.name = "Dealer";
-	    this.balance = 500000;
-	    this.hand = new Hand();
-	}
-	*/
 	public Dealer() {
 		this.balance = 500000;
 		this.hand = new Hand();

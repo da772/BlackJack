@@ -167,148 +167,158 @@ public class Player {
 	
 	public void showPlayerButtonControl(Round r) {
 		this.round = r;
+		Player realPlayer = this.round.getRealPlayer();
+		Hand curHand = realPlayer.getHand();
 		
 		if (this.uiCreated && !this.showButtonsControl) {
 			this.showButtonsControl = true;
 			this.SetResult(0);
-			((GUI) Actor.Get("player" + id + "ui").GetComponent("quad")).AddChild(new GUIQuad("buttons",
-				new Transform(new Vector3f(0f,-.125f,.1f), new Vector3f(0f), new Vector3f(.25f, .075f, 1f)),
-				"Images/blankTexture.png",
-				new Vector4f(0f)
-			).AddChild(new GUIButton("hitButton", new Transform(new Vector3f(-.15f, 0f, .1f), // Position x,y,
-							new Vector3f(0f, 0f, 0f), // Rotation
-							new Vector3f(.05f, .1f, 1f)), // Scale x,y,z
-							"Images/Buttons/mainMenuButtonUp.png", // Button texture
-							"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-							ColorPalette.HotPink // Quad Color r,g,b,a
-
-					) {
-						@Override
-						protected void OnSelect() {
-
-						}
-
-						@Override
-						protected void OnMousePressed() {
-							SetButtonTexture(true);
-						}
-
-						@Override
-						protected void OnMouseReleased() {
-							SetButtonTexture(false);
-							round.setCurrentPlayerInput(0);
-						}
-
-						@Override
-						public void OnDeselect() {
-							SetButtonTexture(false);
-
-						}
-					}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/morningStar",
-							"Hit", new Vector4f(1f), .125f, 1f, true)))
+			GUIQuad buttons = new GUIQuad("buttons",
+					new Transform(new Vector3f(0f,-.125f,.1f), new Vector3f(0f), new Vector3f(.25f, .075f, 1f)),
+					"Images/blankTexture.png",
+					new Vector4f(0f)
+				);
+			GUI curGUI = ((GUI) Actor.Get("player" + id + "ui").GetComponent("quad")).AddChild(buttons);
+					if(curHand.canHit()) {
+						buttons.AddChild(new GUIButton("hitButton", new Transform(new Vector3f(-.15f, 0f, .1f), // Position x,y,
+								new Vector3f(0f, 0f, 0f), // Rotation
+								new Vector3f(.05f, .1f, 1f)), // Scale x,y,z
+								"Images/Buttons/mainMenuButtonUp.png", // Button texture
+								"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
+								ColorPalette.HotPink // Quad Color r,g,b,a
+	
+						) {
+							@Override
+							protected void OnSelect() {
+	
+							}
+	
+							@Override
+							protected void OnMousePressed() {
+								SetButtonTexture(true);
+							}
+	
+							@Override
+							protected void OnMouseReleased() {
+								SetButtonTexture(false);
+								round.setCurrentPlayerInput(0);
+							}
+	
+							@Override
+							public void OnDeselect() {
+								SetButtonTexture(false);
+	
+							}
+						}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/morningStar",
+								"Hit", new Vector4f(1f), .125f, 1f, true)));
+					}
 					
-					
-					.AddChild(new GUIButton("doubleButton", new Transform(new Vector3f(-.05f, 0f, .1f), // Position x,y,
-									new Vector3f(0f, 0f, 0f), // Rotation
-									new Vector3f(.05f, .1f, 1f)), // Scale x,y,z
-									"Images/Buttons/mainMenuButtonUp.png", // Button texture
-									"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-									ColorPalette.HotPink // Quad Color r,g,b,a
-
-							) {
-								@Override
-								protected void OnSelect() {
-
-								}
-
-								@Override
-								protected void OnMousePressed() {
-									SetButtonTexture(true);
-								}
-
-								@Override
-								protected void OnMouseReleased() {
-									SetButtonTexture(false);
-									if (hand.getBet()*2 <= balance) {
-										round.setCurrentPlayerInput(2);
+					if(curHand.canDouble()) {
+						buttons.AddChild(new GUIButton("doubleButton", new Transform(new Vector3f(-.05f, 0f, .1f), // Position x,y,
+										new Vector3f(0f, 0f, 0f), // Rotation
+										new Vector3f(.05f, .1f, 1f)), // Scale x,y,z
+										"Images/Buttons/mainMenuButtonUp.png", // Button texture
+										"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
+										ColorPalette.HotPink // Quad Color r,g,b,a
+	
+								) {
+									@Override
+									protected void OnSelect() {
+	
 									}
-								}
-
-								@Override
-								public void OnDeselect() {
-									SetButtonTexture(false);
-
-								}
-							}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/morningStar",
-									"Double", new Vector4f(1f), .125f, 1f, true))
-							)
-					.AddChild(new GUIButton("splitButton", new Transform(new Vector3f(.05f, 0f, .1f), // Position x,y,
-							new Vector3f(0f, 0f, 0f), // Rotation
-							new Vector3f(.05f, .1f, 1f)), // Scale x,y,z
-							"Images/Buttons/mainMenuButtonUp.png", // Button texture
-							"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-							ColorPalette.HotPink // Quad Color r,g,b,a
-
-					) {
-						@Override
-						protected void OnSelect() {
-
-						}
-
-						@Override
-						protected void OnMousePressed() {
-							SetButtonTexture(true);
-						}
-
-						@Override
-						protected void OnMouseReleased() {
-							SetButtonTexture(false);
-							round.setCurrentPlayerInput(3);
-						}
-
-						@Override
-						public void OnDeselect() {
-							SetButtonTexture(false);
-
-						}
-					}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/morningStar",
-							"Split", new Vector4f(1f), .125f, 1f, true))
+	
+									@Override
+									protected void OnMousePressed() {
+										SetButtonTexture(true);
+									}
+	
+									@Override
+									protected void OnMouseReleased() {
+										SetButtonTexture(false);
+										if (hand.getBet()*2 <= balance) {
+											round.setCurrentPlayerInput(2);
+										}
+									}
+	
+									@Override
+									public void OnDeselect() {
+										SetButtonTexture(false);
+	
+									}
+								}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/morningStar",
+										"Double", new Vector4f(1f), .125f, 1f, true))
+								);
+					}
 					
-					).AddChild(new GUIButton("stayButton", new Transform(new Vector3f(.15f, 0f, .1f), // Position x,y,
-							new Vector3f(0f, 0f, 0f), // Rotation
-							new Vector3f(.05f, .1f, 1f)), // Scale x,y,z
-							"Images/Buttons/mainMenuButtonUp.png", // Button texture
-							"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
-							ColorPalette.HotPink // Quad Color r,g,b,a
-
-					) {
-						@Override
-						protected void OnSelect() {
-
-						}
-
-						@Override
-						protected void OnMousePressed() {
-							SetButtonTexture(true);
-						}
-
-						@Override
-						protected void OnMouseReleased() {
-							SetButtonTexture(false);
-							round.setCurrentPlayerInput(1);
-						}
-
-						@Override
-						public void OnDeselect() {
-							SetButtonTexture(false);
-
-						}
-					}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/morningStar",
-							"Stay", new Vector4f(1f), .125f, 1f, true))
+					if(curHand.canSplit()) {
+						buttons.AddChild(new GUIButton("splitButton", new Transform(new Vector3f(.05f, 0f, .1f), // Position x,y,
+								new Vector3f(0f, 0f, 0f), // Rotation
+								new Vector3f(.05f, .1f, 1f)), // Scale x,y,z
+								"Images/Buttons/mainMenuButtonUp.png", // Button texture
+								"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
+								ColorPalette.HotPink // Quad Color r,g,b,a
+	
+						) {
+							@Override
+							protected void OnSelect() {
+	
+							}
+	
+							@Override
+							protected void OnMousePressed() {
+								SetButtonTexture(true);
+							}
+	
+							@Override
+							protected void OnMouseReleased() {
+								SetButtonTexture(false);
+								round.setCurrentPlayerInput(3);
+							}
+	
+							@Override
+							public void OnDeselect() {
+								SetButtonTexture(false);
+	
+							}
+						}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/morningStar",
+								"Split", new Vector4f(1f), .125f, 1f, true)));
+					}
 					
-					)
-					
-					);
+					if(curHand.canStay()) {
+						buttons.AddChild(new GUIButton("stayButton", new Transform(new Vector3f(.15f, 0f, .1f), // Position x,y,
+								new Vector3f(0f, 0f, 0f), // Rotation
+								new Vector3f(.05f, .1f, 1f)), // Scale x,y,z
+								"Images/Buttons/mainMenuButtonUp.png", // Button texture
+								"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
+								ColorPalette.HotPink // Quad Color r,g,b,a
+	
+						) {
+							@Override
+							protected void OnSelect() {
+	
+							}
+	
+							@Override
+							protected void OnMousePressed() {
+								SetButtonTexture(true);
+							}
+	
+							@Override
+							protected void OnMouseReleased() {
+								SetButtonTexture(false);
+								round.setCurrentPlayerInput(1);
+							}
+	
+							@Override
+							public void OnDeselect() {
+								SetButtonTexture(false);
+	
+							}
+						}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/morningStar",
+								"Stay", new Vector4f(1f), .125f, 1f, true))
+						
+						);
+					}
 			
 		}
 		
