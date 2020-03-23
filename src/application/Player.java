@@ -178,7 +178,7 @@ public class Player {
 					"Images/blankTexture.png",
 					new Vector4f(0f)
 				);
-			GUI curGUI = ((GUI) Actor.Get("player" + id + "ui").GetComponent("quad")).AddChild(buttons);
+			((GUI) Actor.Get("player" + id + "ui").GetComponent("quad")).AddChild(buttons);
 					if(curHand.canHit()) {
 						buttons.AddChild(new GUIButton("hitButton", new Transform(new Vector3f(-.15f, 0f, .1f), // Position x,y,
 								new Vector3f(0f, 0f, 0f), // Rotation
@@ -213,7 +213,7 @@ public class Player {
 								"Hit", new Vector4f(1f), .125f, 1f, true)));
 					}
 					
-					if(curHand.canDouble()) {
+					if(curHand.canDouble() && hand.getBet()*2 <= balance) {
 						buttons.AddChild(new GUIButton("doubleButton", new Transform(new Vector3f(-.05f, 0f, .1f), // Position x,y,
 										new Vector3f(0f, 0f, 0f), // Rotation
 										new Vector3f(.05f, .1f, 1f)), // Scale x,y,z
@@ -235,9 +235,7 @@ public class Player {
 									@Override
 									protected void OnMouseReleased() {
 										SetButtonTexture(false);
-										if (hand.getBet()*2 <= balance) {
-											round.setCurrentPlayerInput(2);
-										}
+										round.setCurrentPlayerInput(2);
 									}
 	
 									@Override
