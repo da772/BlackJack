@@ -213,7 +213,7 @@ public class Player {
 								"Hit", new Vector4f(1f), .125f, 1f, true)));
 					}
 					
-					if(curHand.canDouble() && hand.getBet() < balance) {
+					if(curHand.canDouble() && hand.getBet()*2 <= balance) {
 						buttons.AddChild(new GUIButton("doubleButton", new Transform(new Vector3f(-.05f, 0f, .1f), // Position x,y,
 										new Vector3f(0f, 0f, 0f), // Rotation
 										new Vector3f(.05f, .1f, 1f)), // Scale x,y,z
