@@ -82,6 +82,9 @@ public class Round {
 				state = RoundState.Playing;
 				// Deal cards
 				this.dealCards(dealer, players, deck);
+				if(dealer.getHand().getTotal() == 21) {//dealer has 21 as init hand, immediately go to end state
+					state = RoundState.Ending;
+				}
 				// Reset player increment
 				playerTurn = 0;
 			}
