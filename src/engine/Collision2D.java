@@ -156,7 +156,7 @@ public class Collision2D extends Thread {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("Collision2D: " + e.getMessage());
 		}
 		
 	}

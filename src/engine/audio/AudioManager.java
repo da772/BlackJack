@@ -110,10 +110,13 @@ public class AudioManager {
 	
 	private void OnUpdate() {
 		if (!play.isEmpty()) {
-			AudioSource s = play.pop();
+			AudioSource s = AudioSource.Get(play.pop().name);
 			s.SetUp();
 			SetVolume(s.name, s.volume);
-			manager.loadAudio(s);
+			if (!s.IsLoaded()) {
+				System.out.println(s.fileName + " - " + s);
+				loadAudio(s);	
+			}
 			s.Play();
 			if (s.ShouldAutoDelete()) {
 				delete.push(s);
@@ -123,6 +126,7 @@ public class AudioManager {
 		if (!delete.isEmpty()) {
 			AudioSource s = delete.peek();
 			if (!s.IsPlaying()) {
+				s.OnEnd();
 				RemoveSource(delete.pop());
 			}
 		}
@@ -141,10 +145,22 @@ public class AudioManager {
 	 */
 	public static String CreateAudioSource(String name, String fileName, String category, float volume, float pitch, boolean loop, boolean autoDelete) {
 		if (!manager.sources.containsKey(name)) {
-			AddSource(new AudioSource(name, fileName, volume, pitch, loop, autoDelete, category));
-			manager.sources.get(name).SetVolume(volume);
+			AddSource(AudioSource.Create(name, fileName, volume, pitch, loop, autoDelete, category));
+			ResetVolume(name);
 		}
 		return name;
+	}
+	
+	public static String CreateAudioSource(AudioSource source) {
+		if (!manager.sources.containsKey(source.name)) {
+			AddSource(source);
+			ResetVolume(source.name);
+			return source.name;
+		} else {
+			RemoveSource(source.name);
+			CreateAudioSource(source);
+		}
+		return null;
 	}
 	
 	/****
@@ -234,7 +250,7 @@ public class AudioManager {
 				manager.sourceCategory.remove(s.category);
 			}
 		}
-		s.Cleanup();
+		AudioSource.Remove(s);
 	}
 	
 	/**
@@ -270,10 +286,10 @@ public class AudioManager {
 	}
 	
 
-	private void loadAudio(AudioSource s) {
+	public static boolean loadAudio(AudioSource s) {
 		final int MONO = 1, STEREO = 2;
 		int buffer = AL10.alGenBuffers();
-		buffers.add(buffer);
+		manager.buffers.add(buffer);
 		try {
 			AudioInputStream stream = AudioSystem.getAudioInputStream(FileLoader.getResourceAsFile(s.fileName));
 			AudioFormat format = stream.getFormat();
@@ -312,9 +328,13 @@ public class AudioManager {
 	        s.bufferId = buffer;
 	        s.length = (1000f * stream.getFrameLength() / format.getFrameRate());
 	        data.clear();
+	        
+	        return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
+		
+		return false;
 		
 	}
 	
@@ -330,7 +350,7 @@ public class AudioManager {
 		}
 		buffers.clear();
 		for (Map.Entry<String,AudioSource> key : sources.entrySet()) {
-			key.getValue().Cleanup();
+			key.getValue().clean();
 		}
 		sources.clear();
 		ALC10.alcCloseDevice(device);

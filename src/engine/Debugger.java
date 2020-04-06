@@ -6,6 +6,7 @@ import org.joml.Vector4f;
 import engine.Events.Event;
 import engine.Events.KeyEvent;
 import engine.Events.MouseButtonEvent;
+import engine.audio.AudioSource;
 import engine.renderer.Renderer;
 import engine.renderer.Shader;
 import engine.renderer.Texture;
@@ -59,6 +60,10 @@ public class Debugger {
 				"\n\nRender Info  " +" Texture Pool: " + Texture.GetPoolSize() + " | Shader Pool: " + Shader.GetPoolSize() +
 				"\n                    Font Pool: " + FontType.GetPoolSize() +" | Atlas Pool: " + TextureAtlas.GetCount() +
 				"\n                    Vertex Arrays: " + Renderer.GetVertexArrayCount() + " | Buffers: " + Renderer.GetBufferCount() +  
+				
+				
+				"\n\nAudio Info  " +"  Audio Pool: " + AudioSource.GetPoolSize()+
+			
 						
 				"\n\nI/O Info        MouseX: " + (int)Input.GetMouseX() +" | MouseY: " + (int)Input.GetMouseY() +
 				"\n                    Key Input: " + keyPressed + " | Mouse Input: " + mousePressed +

@@ -30,7 +30,7 @@ public class TestingApp extends Application {
 	@Override
 	protected void OnInit() {
 		System.out.println(title+" Init!");
-		
+		MusicPlayer.Next();
 		window.SetFullScreen(SaveData.GetSettings().GetFullScreen());
 		if (!SaveData.GetSettings().GetFullScreen()) {
 			window.SetWindowSize(SaveData.GetSettings().GetWidth(), SaveData.GetSettings().GetHeight());
@@ -110,6 +110,11 @@ public class TestingApp extends Application {
 			if ((( Events.KeyPressedEvent)e).GetKeyCode() == KeyCodes.KEY_V) {
 				SceneManager.SetCurrentScene("mainMenu");
 			}	
+			
+			if ((( Events.KeyPressedEvent)e).GetKeyCode() == KeyCodes.KEY_RIGHT) {
+				MusicPlayer.Next();
+			}
+			
 		}
 		
 		
