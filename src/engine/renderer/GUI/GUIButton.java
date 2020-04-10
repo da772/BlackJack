@@ -117,7 +117,12 @@ public abstract class GUIButton extends GUIQuad {
 		
 		if (e instanceof Events.MouseButtonReleasedEvent) {
 			if (((Events.MouseButtonEvent)e).GetKeyCode() == KeyCodes.MOUSE_LEFT) {
-				if (IsMouseOver() && leftClicked) OnMouseReleased();
+				try {
+					if (IsMouseOver() && leftClicked) OnMouseReleased();	
+				} catch (Exception _e) {
+					_e.printStackTrace();
+				}
+				
 			}
 		}
 		

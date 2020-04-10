@@ -31,7 +31,7 @@ public class TestScene extends Scene {
 	public void OnUpdate(float deltaTime) {
 		if (table != null) {
 			if (table.getRound() != null) {
-				table.getRound().OnUpdate();
+				table.getRound().OnUpdate(deltaTime);
 			}
 		}
 	}
@@ -47,6 +47,8 @@ public class TestScene extends Scene {
 		
 		table.playRound();
 		
+		// Hide chips for now
+		/*
 		// Add chips (place holder for now)
 		new Actor("chipStack25_p1").AddComponent(new ChipStackMesh("chipStack",
 				new Transform(new Vector3f(0.f, 0f, 1.25f) ),
@@ -80,7 +82,7 @@ public class TestScene extends Scene {
 				"Chip100", 2,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
 				));
 		
-
+	*/
 		// Create background
 		CreateBackground();
 

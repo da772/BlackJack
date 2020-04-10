@@ -2,6 +2,7 @@ package application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -9,6 +10,7 @@ import org.joml.Vector4f;
 import engine.Actor;
 import engine.CameraController;
 import engine.SceneManager;
+import engine.audio.AudioManager;
 import engine.renderer.Transform;
 import engine.renderer.GUI.GUI;
 import engine.renderer.GUI.GUIButton;
@@ -17,6 +19,7 @@ import engine.renderer.GUI.GUISlider;
 import engine.renderer.GUI.GUISliderBar;
 import engine.renderer.GUI.GUIText;
 import engine.util.MathLib;
+import engine.util.Timing;
 
 public class Player {
 
@@ -31,8 +34,10 @@ public class Player {
 	private Round round;
 	private int result = -1;
 	private int lastBet = 1;
+	private double waitTimeInMS = 0;
 	private ArrayList<Hand> splitHands;
-	private boolean computer = true, handCreated = false, uiCreated = false, showBetControl = false, showButtonsControl = false, showResetButton = false;
+	private Card nextCard = null;
+	private boolean computer = true, handCreated = false, uiCreated = false, showBetControl = false, showButtonsControl = false, showResetButton = false, betting = false;
 
 	// new simple constructor
 	public Player(int startingBalance, boolean computer) {
@@ -97,10 +102,39 @@ public class Player {
 		updateUI();
 	}
 
-	public void addCard(Card card) {
+	public void addCard(Card card, boolean f) {
 		this.getHand().addCard(card);
 		updateUI();
 		updateHand();
+	}
+	
+	public boolean addCard(Deck d, float deltaTime) {
+		if (this.nextCard == null) {
+			this.nextCard = d.drawCard();
+		}
+		Actor a = Actor.Get(this.toString()+"_"+nextCard.getCardTextureID());
+		if (a != null) {
+			CardMesh mesh = (CardMesh) a.GetComponent("cardMesh");
+			if (mesh != null) {
+				if (mesh.AnimateTo(getCardPos(this.id, this.getHand().GetCardCount()), deltaTime, 2f, .2f)) {
+					this.getHand().addCard(nextCard);
+					updateUI();
+					updateHand();
+					this.nextCard = null;
+					Actor.Remove(a.GetName());
+					return true;
+				}
+			}
+		} else {
+			CardMesh mesh = new CardMesh("cardMesh", new Transform(new Vector3f(4.25f,0,6.25f), new Vector3f(180f,0,180f), new Vector3f(1f))
+					, nextCard.getCardTextureID(), "card_back_red", SceneManager.GetCurrentScene().GetCameraController().GetCamera());
+			new Actor(this.toString()+"_"+nextCard.getCardTextureID()).AddComponent(mesh);
+			AudioManager.CreateAudioSource(this.toString()+"_"+nextCard.getCardTextureID()+"_place", "Audio/cardPlace3.wav", "sfx", 1.f, 1.f, false, true);
+			AudioManager.PlaySource(this.toString()+"_"+nextCard.getCardTextureID()+"_place");
+			return false;
+		}
+		
+		return false;
 	}
 
 	public boolean isComputer() {
@@ -413,6 +447,42 @@ public class Player {
 		}
 	}
 	
+	public void computerSetBet(Round r, double firstCallTimeinMS) {
+		
+		// Make computer wait until they place their bet
+		//
+		if (!betting) {
+			waitTimeInMS = new Random().nextInt(5)*100;	
+			this.betting = true;
+			this.updateUI();
+		}
+		
+		if (Timing.getTimeMS() - firstCallTimeinMS >= waitTimeInMS) {
+			//setBet(playerTurn, new Random().nextInt(players.get(playerTurn).getBalance())/4+1);	
+			int bet = new Random().nextInt(getBalance())/4+1;
+			r.setCurrentPlayerInput(bet);
+			this.betting = false;
+		}
+	}
+	
+	public void computerPlayTurn(Round r, double firstCallTimeinMS) {
+		
+		if (!betting) {
+			waitTimeInMS = new Random().nextInt(5)*100;
+			this.betting = true;
+			this.updateUI();
+		}
+		
+		if (Timing.getTimeMS() - firstCallTimeinMS >= waitTimeInMS) {
+			int play = ComputerHitLogic.getChoice(getHand().getTotal(), r.getDealer().getHand().getTotalDealer());
+			r.setCurrentPlayerInput(play);
+			waitTimeInMS = 0;
+			this.betting = false;
+		}
+	
+		
+	}
+	
 	public void showPlayerBetControl(Round r) {
 		this.round = r;
 		if (this.uiCreated && !this.showBetControl) {
@@ -439,8 +509,10 @@ public class Player {
 						@Override
 						protected void OnMouseReleased() {
 							SetButtonTexture(false);
-							int bet = Math.round(((GUISlider)this.GetChild("slider")).GetValue());
-							round.setCurrentPlayerInput(bet);
+							if (this.GetChild("slider") != null) {
+								int bet = Math.round(((GUISlider)this.GetChild("slider")).GetValue());
+								round.setCurrentPlayerInput(bet);
+							}
 						}
 
 						@Override
@@ -586,6 +658,36 @@ public class Player {
 		}
 		
 	}
+	
+	public Transform getCardPos(int _id, int i) {
+		switch (_id) {
+		case 0: {
+			// Add player cards in correct position (creates meshes)
+			return new Transform( // Card																			
+					new Vector3f(-.125f + (i * .25f), -.75f - (i * .01f), 1.f + (i * .01f)), // Position
+					//Flipped for some reason idk why ???
+					new Vector3f(0f, 0, 180f), // Rotation
+					new Vector3f(1f, 1f, 1f));
+		}
+		case 1: {
+			return new Transform( 
+			new Vector3f(-5.5f + (.25f * i), 0f + (-.21f * i), .99f + (.01f * i)), // Position
+			// Flipped for some reason idk why ???
+			new Vector3f(0, 0, -40f+180f), // Rotation
+			new Vector3f(1.f, 1.f, 1f));
+		}
+		case 2: {
+			return new Transform(// Transform
+					new Vector3f(5.5f - (.25f * i), 0f - (.21f * i), 1f + (.01f * i)), // Position
+					//Flipped for some reason idk why ???
+					new Vector3f(0f, 0, 40f+180f), // Rotation
+					new Vector3f(1.f, 1.f, 1f));
+		}
+		}
+		
+		return null;
+		
+	}
 
 	private void destroyHand() {
 		if (this.handCreated) {
@@ -610,11 +712,17 @@ public class Player {
 			return "Balance: $" + balance + "\nBet: $" + bet + "\nHand Total: " + hand.getTotal()
 					+  "\n" + getResultText();
 		}
+		if (betting) {
+			return "Balance: $" + balance + "\n Placing Bet...";
+		}
 		return "Balance: $" + balance;
 
 	}
 	
 	private String getResultText() {
+		if (betting) {
+			return "Playing...";
+		}
 		switch (this.result) {
 			default:
 				return "Waiting...";

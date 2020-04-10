@@ -60,4 +60,8 @@ public class Timing {
 		return System.nanoTime()/1e6f;
 	}
 	
+	public static double getTimeSeconds() {
+		return System.nanoTime()/1e9f;
+	}
+	
 }

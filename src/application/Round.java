@@ -5,7 +5,8 @@
 package application;
 
 import java.util.ArrayList;
-import java.util.Random;
+
+import engine.util.Timing;
 
 public class Round {
 	
@@ -16,9 +17,10 @@ public class Round {
 	private int playerInput = -1;
 	private Dealer dealer;
 	private Table table;
+	private double lastTime = -1;
 	
 	public static enum RoundState {
-		None, Betting, Playing, Ending;
+		None, Betting, Dealing, Playing, Ending;
 	}
     
     public Round(Dealer dealer, Table table) { //Everything that happens in 1 round of blackjack
@@ -37,7 +39,7 @@ public class Round {
     /**
      * Runs every frame, unless game is paused. Acts as a state machine
      */
-    public void OnUpdate() {
+    public void OnUpdate(float deltaTime) {
     	// State Machine
     	switch (state) {
     	// Betting Phase
@@ -65,28 +67,64 @@ public class Round {
 					if (players.get(playerTurn).getBalance() > 0) {
 						// If they do give them random bet, maybe we should give them behaviors instead of random? for now this works
 						// or maybe even a higher chance to bet lower than higher?
-						setBet(playerTurn, new Random().nextInt(players.get(playerTurn).getBalance())/4+1);	
+						if (lastTime <= 0) {
+							lastTime = Timing.getTimeMS();
+						}
+						players.get(playerTurn).computerSetBet(this, lastTime);
+						
+						if (playerInput != -1) {
+							setBet(playerTurn, playerInput);
+							// Reset last Time
+							lastTime = -1;
+							// Reset player input
+							playerInput = -1;
+							// Increment player
+							playerTurn++;
+						}
+						
+						//setBet(playerTurn, new Random().nextInt(players.get(playerTurn).getBalance())/4+1);	
 					} else {
 						// if computer has no money set their bet to 0
 						setBet(playerTurn, 0);
+						// Reset player input
+						playerInput = -1;
+						// Increment player
+						playerTurn++;
 					}
-					// Reset player input
-					playerInput = -1;
-					// Increment player
-					playerTurn++;
+					
 				}
 				
 			// All players have bet
 			} else {
 				// Change state to playing state
+				state = RoundState.Dealing;	
+				playerTurn = 0;
+				playerInput = -1;
+			}
+			break;
+		}
+		case Dealing: {
+			if (playerTurn < players.size()) {
+				Player curPlayer = this.players.get(playerTurn);
+				if (curPlayer.addCard(deck, deltaTime)) {
+					playerTurn++;
+				}
+			// Dealer
+			} else if (playerTurn == players.size()) {
+				dealer.addCard(deck.drawCard());
+				if (dealer.getHand().GetCardCount() == 2) {
+					playerTurn++;	
+				} else {
+					playerTurn = 0;
+				}
+			} else {
 				state = RoundState.Playing;
-				// Deal cards
-				this.dealCards(dealer, players, deck);
 				if(dealer.getHand().getTotal() == 21) {//dealer has 21 as init hand, immediately go to end state
 					state = RoundState.Ending;
 				}
 				// Reset player increment
 				playerTurn = 0;
+				playerInput = -1;
 			}
 			break;
 		}
@@ -107,12 +145,14 @@ public class Round {
 				if (!players.get(playerTurn).isComputer()) {
 					if (curPlayerHand.getTotal() < 21) {
 						// Give Options
-						curPlayer.showPlayerButtonControl(this);
+						
 						if (playerInput != -1) {
 							switch (playerInput) {
 								// Hit
 								case 0: {
-									curPlayer.addCard(deck.drawCard());
+									if (curPlayer.addCard(deck, deltaTime)) {
+										playerInput = -1;
+									};
 									break;
 								}
 								// Stay
@@ -120,26 +160,31 @@ public class Round {
 								case 1: {
 									playerTurn++;
 									curPlayer.SetResult(-1);
+									playerInput = -1;
 									break;
 								}
 								// Double
 								case 2 : {
-									curPlayer.doubleBet();
-									curPlayer.addCard(deck.drawCard());
-									curPlayer.SetResult(-1);
-									playerTurn++;
+									if (curPlayer.addCard(deck, deltaTime)) {
+										curPlayer.doubleBet();
+										playerInput = -1;
+										curPlayer.SetResult(-1);
+										playerTurn++;
+									};
 									break;
 								}
 								// Split (NOT IMPLEMENTED YET)
 								case 3: {
-									curPlayer.addCard(deck.drawCard());
+									if (curPlayer.addCard(deck, deltaTime)) {
+										playerInput = -1;
+									};
 									break;
 								}
 							
 							}
-							// Reset input
-							playerInput = -1;
 							curPlayer.hidePlayerButtonControl();
+						} else {
+							curPlayer.showPlayerButtonControl(this);
 						}
 						
 					} else {
@@ -149,18 +194,74 @@ public class Round {
 						// Increment player
 						playerTurn++;
 					}
-				// Computer's turn
+				/**
+				 * Computer Turn
+				 */
 				} else {
 					if (curPlayerHand.getTotal() < 21) {
 						// Computer logic here
-						curPlayer.addCard(deck.drawCard());
+						if (lastTime <= 0) {
+							lastTime = Timing.getTimeMS();
+						}
+						curPlayer.computerPlayTurn(this, lastTime);
+						if (playerInput != -1) {
+							switch (playerInput) {
+								// Hit
+								case 0: {
+									if (curPlayer.addCard(deck, deltaTime)) {
+										playerInput = -1;
+										playerInput = -1;
+										lastTime = -1;
+									};
+									break;
+								}
+								// Stay
+								default:
+								case 1: {
+									playerTurn++;
+									curPlayer.SetResult(-1);
+									playerInput = -1;
+									lastTime = -1;
+									break;
+								}
+								// Double
+								case 2 : {
+									if (curPlayer.addCard(deck, deltaTime)) {
+										if (curPlayer.getBalance() - curPlayer.getBet() >= 0) {
+											curPlayer.doubleBet();
+											curPlayer.SetResult(-1);
+										} 
+										playerTurn++;
+										playerInput = -1;
+										lastTime = -1;
+									}
+									break;
+								}
+								// Split (NOT IMPLEMENTED YET)
+								case 3: {
+									if (curPlayer.addCard(deck, deltaTime)) {
+										playerInput = -1;
+										lastTime = -1;
+									};
+									break;
+								}
+							
+							}
+							
+						}
+						// Reset input
+						
 					} else {
 						playerInput = -1;
+						lastTime = -1;
 						playerTurn++;
 					}
 				}
+			/**
+			 *  Dealer's turn
+			 */
 			} else if (playerTurn == players.size()){
-				// Dealer's turn
+				
 				if (dealer.getHand().getTotal() < 17) {
 					// Play dealers turn
 					// Dealer logic here
@@ -246,16 +347,22 @@ public class Round {
     	curPlayer.subtractFromBalance(amount);
     }
     
+    public Dealer getDealer() {
+    	return this.dealer;
+    }
+    
     public void dealCards(Dealer dealer, ArrayList<Player> players, Deck deck) {
     	//Deal cards out. Deal 1 card to dealer and to each player, then cycle again.
     	//Update GUI inbetween each card deal to reflect hand changes - maybe?? 
+    	
+    	
     	
     	dealer.addCard(deck.drawCard());
     	
         for(int i = 0; i < players.size(); i++) {
         	Player curPlayer = players.get(i);
         	if (curPlayer.getHand().getBet() > 0) {
-        		curPlayer.addCard(deck.drawCard());	
+        		curPlayer.addCard(deck.drawCard(), false);	
         	}
         }
         
@@ -264,7 +371,7 @@ public class Round {
         for(int i = 0; i < players.size(); i++) {
         	Player curPlayer = players.get(i);
         	if (curPlayer.getHand().getBet() > 0) {
-        		curPlayer.addCard(deck.drawCard());	
+        		curPlayer.addCard(deck.drawCard(), false);	
         	}
         }
         

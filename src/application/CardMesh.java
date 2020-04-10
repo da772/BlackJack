@@ -1,5 +1,6 @@
 package application;
 
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import engine.Camera;
@@ -9,6 +10,7 @@ import engine.renderer.Texture;
 import engine.renderer.TextureCoords;
 import engine.renderer.Transform;
 import engine.renderer.mesh.Mesh2DQuad;
+import engine.util.MathLib;
 
 /**
  * 
@@ -48,6 +50,23 @@ public class CardMesh extends Mesh2DQuad {
 		this.SetScale(transform.GetScale().x * .75f * 1.25f, transform.GetScale().y*1.5f, transform.GetScale().z);
 		this.SetRotation(transform.GetRotation().x,transform.GetRotation().y,transform.GetRotation().z+180f);
 		SetupTextureCoords();
+		
+	}
+	
+	public boolean AnimateTo(Transform transform, float deltaTime, float speed, float threshold) {
+		Transform trans = new Transform(new Vector3f(
+				MathLib.Lerp(this.GetPosition().x, transform.GetPosition().x, deltaTime*speed), 
+				MathLib.Lerp(this.GetPosition().y, transform.GetPosition().y, deltaTime*speed),
+				MathLib.Lerp(this.GetPosition().z, transform.GetPosition().z, deltaTime*speed)),
+				new Vector3f(
+				MathLib.Lerp(this.GetRotation().x, transform.GetRotation().x, deltaTime*speed), 
+				MathLib.Lerp(this.GetRotation().y, transform.GetRotation().y, deltaTime*speed),
+				MathLib.Lerp(this.GetRotation().z, transform.GetRotation().z, deltaTime*speed)),
+				this.transform.GetScale()
+				);
+		this.SetTransform(trans); 
+		// Check if we are close enough
+		return trans.GetPosition().distance(transform.GetPosition()) + trans.GetRotation().distance(transform.GetRotation()) <= threshold;
 		
 	}
 	

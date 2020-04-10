@@ -156,6 +156,8 @@ public class Collision2D extends Thread {
 				}
 			}
 		} catch (Exception e) {
+			// Since we aren't using a mutex our array may change while we are looping through it
+			// this will cause exceptions
 			System.out.println("Collision2D: " + e.getMessage());
 		}
 		

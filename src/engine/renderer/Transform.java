@@ -132,4 +132,21 @@ public class Transform {
 		return transform;
 	}
 	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof Transform) {
+			Transform transform = (Transform)object;
+			if (transform.GetPosition().equals(this.GetPosition())) {
+				if (transform.GetRotation().equals(this.GetRotation())) {
+					if (transform.GetScale().equals(this.GetScale())) {
+						return true;
+					}
+				}
+			}
+			
+		}
+		
+		return false;
+	}
+	
 }
