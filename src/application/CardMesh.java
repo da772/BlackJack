@@ -27,6 +27,9 @@ public class CardMesh extends Mesh2DQuad {
 	TextureCoords textureCoord;
 	
 	String cardFront, cardBack;
+	boolean isAnimating;
+	Transform animStart;
+	float animationTime = 0.f;
 	
 	static Texture _texture = Texture.Create("Atlas/cardAtlas.png", false, true);
 	
@@ -53,20 +56,55 @@ public class CardMesh extends Mesh2DQuad {
 		
 	}
 	
-	public boolean AnimateTo(Transform transform, float deltaTime, float speed, float threshold) {
-		Transform trans = new Transform(new Vector3f(
-				MathLib.Lerp(this.GetPosition().x, transform.GetPosition().x, deltaTime*speed), 
-				MathLib.Lerp(this.GetPosition().y, transform.GetPosition().y, deltaTime*speed),
-				MathLib.Lerp(this.GetPosition().z, transform.GetPosition().z, deltaTime*speed)),
-				new Vector3f(
-				MathLib.Lerp(this.GetRotation().x, transform.GetRotation().x, deltaTime*speed), 
-				MathLib.Lerp(this.GetRotation().y, transform.GetRotation().y, deltaTime*speed),
-				MathLib.Lerp(this.GetRotation().z, transform.GetRotation().z, deltaTime*speed)),
-				this.transform.GetScale()
-				);
-		this.SetTransform(trans); 
-		// Check if we are close enough
-		return trans.GetPosition().distance(transform.GetPosition()) + trans.GetRotation().distance(transform.GetRotation()) <= threshold;
+	/**
+	 * 
+	 * @param transform - target transformation
+	 * @param deltaTime - time since last frame
+	 * @param speed - speed of animation
+	 * @param threshold - how close to target transformation we want to be
+	 * @return boolean - animation complete
+	 */
+	public boolean AnimateTo(Transform targetTransform, float deltaTime, float speed, float threshold) {
+		
+		if (!isAnimating) {
+			this.animStart = this.transform;
+			this.isAnimating = true;
+			this.animationTime = 0.f;
+		}
+		
+		if (isAnimating) {
+			
+			
+			float posDis = animStart.GetPosition().distance(targetTransform.GetPosition());
+			float rotDis = animStart.GetRotation().distance(targetTransform.GetRotation());
+			float scaleDis = animStart.GetScale().distance(targetTransform.GetScale());
+			
+			float maxDis = Math.max(Math.max(posDis, rotDis), scaleDis);
+			
+			animationTime += deltaTime*speed;
+			
+			Transform trans = new Transform(
+					MathLib.Lerp(animStart.GetPosition(), targetTransform.GetPosition(),animationTime),
+					MathLib.Lerp(animStart.GetRotation(), targetTransform.GetRotation(), animationTime),
+					MathLib.Lerp(animStart.GetScale(), targetTransform.GetScale(),animationTime)
+					);
+			
+			//check if our direction vector does not match the original direction vector this means we overshot our target
+			if (!MathLib.VectorEquals(MathLib.DirectionSign(trans.GetPosition(), targetTransform.GetPosition()),
+							MathLib.DirectionSign(animStart.GetPosition(), targetTransform.GetPosition()), threshold)) {
+				isAnimating = false;
+				return true;
+			}
+			this.SetTransform(trans);
+			// Check if we close enough to our target to stop
+			if (MathLib.VectorEquals(trans.GetPosition(), targetTransform.GetPosition(), threshold)) {
+				isAnimating = false;
+				return true;
+			}
+		}
+		
+		
+		return false;
 		
 	}
 	

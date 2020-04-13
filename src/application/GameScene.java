@@ -18,12 +18,12 @@ import engine.ShaderLib;
 import engine.WindowFrame;
 import engine.audio.AudioManager;
 
-public class TestScene extends Scene {
+public class GameScene extends Scene {
 
 	boolean scanLines = false;
 	Table table;
 	
-	public TestScene(String name, CameraController cam) {
+	public GameScene(String name, CameraController cam) {
 		super(name, cam);
 	}
 

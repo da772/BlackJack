@@ -1,7 +1,6 @@
-package engine;
+package application;
 
-import application.BlackJack;
-import application.TestingApp;
+import engine.Application;
 
 /**
  * 
@@ -12,7 +11,7 @@ import application.TestingApp;
 public class Main {
 
 	public static void main(String[] args) {
-		Application app = new TestingApp();
+		Application app = new BlackJack();
 		app.Init();
 		app.Run();
 		app.Shutdown();

@@ -18,11 +18,11 @@ import engine.renderer.GUI.GUIText;
 
 public class GamePauseMenu extends Actor {
 
-	private static final Vector4f titleTextColor = ColorPalette.LightGreenBlue;
+	private static final Vector4f titleTextColor = ColorPalette.HotPink;
 	private static final Vector4f buttonBackColor = new Vector4f(0f);
 	private static final Vector4f buttonBackSelectedColor = ColorPalette.Pico8Pink;
 	
-	private static final Vector4f mainTitleTextColor = ColorPalette.LightGreenBlue;
+	private static final Vector4f mainTitleTextColor = ColorPalette.HotPink;
 	
 	public static void Show() {
 		if (menu == null) {
@@ -76,7 +76,7 @@ public class GamePauseMenu extends Actor {
 		// Create button container
 		GUIQuad buttonArea = new GUIQuad(
 				"buttonArea",
-				new Transform(new Vector3f(0f,0f,.1f),new Vector3f(0f), new Vector3f(.75f,.75f,1f)),
+				new Transform(new Vector3f(0f, 0f,.1f),new Vector3f(0f), new Vector3f(.75f,.75f,1f)),
 				"Images/blankTexture.png",
 				new Vector4f(1f,1f,1f,0f),
 				new Vector2f(1f)

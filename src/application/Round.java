@@ -111,11 +111,12 @@ public class Round {
 				}
 			// Dealer
 			} else if (playerTurn == players.size()) {
-				dealer.addCard(deck.drawCard());
-				if (dealer.getHand().GetCardCount() == 2) {
-					playerTurn++;	
-				} else {
-					playerTurn = 0;
+				if (dealer.addCard(deck, deltaTime)) {
+					if (dealer.getHand().GetCardCount() == 2) {
+						playerTurn++;	
+					} else {
+						playerTurn = 0;
+					}	
 				}
 			} else {
 				state = RoundState.Playing;
@@ -262,12 +263,40 @@ public class Round {
 			 */
 			} else if (playerTurn == players.size()){
 				
-				if (dealer.getHand().getTotal() < 17) {
-					// Play dealers turn
-					// Dealer logic here
-					dealer.addCard(deck.drawCard());	
+				if (dealer.getHand().getTotal() < 21) {
+					// Computer logic here
+					if (lastTime <= 0) {
+						lastTime = Timing.getTimeMS();
+					}
+					dealer.computerPlayTurn(this, lastTime);
+					if (playerInput != -1) {
+						switch (playerInput) {
+							// Hit
+							case 0: {
+								if (dealer.addCard(deck, deltaTime)) {
+									playerInput = -1;
+									playerInput = -1;
+									lastTime = -1;
+								};
+								break;
+							}
+							// Stay
+							default:
+							case 1: {
+								playerTurn++;
+								playerInput = -1;
+								lastTime = -1;
+								break;
+							}
+						
+						}
+						
+					}
+					// Reset input
+					
 				} else {
 					playerInput = -1;
+					lastTime = -1;
 					playerTurn++;
 				}
 			} else {
@@ -282,7 +311,9 @@ public class Round {
 			}		
 		// Ending phase (determine winners/losers)
 		case Ending:
-			this.dealer.showDealerCard();
+			if (!this.dealer.showDealerCard(true, deltaTime)) {
+				break;
+			}
 			if (playerTurn < this.players.size()) {
 				Player curPlayer = players.get(playerTurn);
 				// Player lost

@@ -116,7 +116,7 @@ public class Player {
 		if (a != null) {
 			CardMesh mesh = (CardMesh) a.GetComponent("cardMesh");
 			if (mesh != null) {
-				if (mesh.AnimateTo(getCardPos(this.id, this.getHand().GetCardCount()), deltaTime, 2f, .2f)) {
+				if (mesh.AnimateTo(getCardPos(this.id, this.getHand().GetCardCount()), deltaTime, 1.5f, .0f)) {
 					this.getHand().addCard(nextCard);
 					updateUI();
 					updateHand();
@@ -126,7 +126,7 @@ public class Player {
 				}
 			}
 		} else {
-			CardMesh mesh = new CardMesh("cardMesh", new Transform(new Vector3f(4.25f,0,6.25f), new Vector3f(180f,0,180f), new Vector3f(1f))
+			CardMesh mesh = new CardMesh("cardMesh", new Transform(new Vector3f(4.25f,0,6.25f), new Vector3f(0.f, 180.f,180f), new Vector3f(1f))
 					, nextCard.getCardTextureID(), "card_back_red", SceneManager.GetCurrentScene().GetCameraController().GetCamera());
 			new Actor(this.toString()+"_"+nextCard.getCardTextureID()).AddComponent(mesh);
 			AudioManager.CreateAudioSource(this.toString()+"_"+nextCard.getCardTextureID()+"_place", "Audio/cardPlace3.wav", "sfx", 1.f, 1.f, false, true);

@@ -40,6 +40,7 @@ public class Application {
 	protected int fpsCap = 255;
 	protected static long threadId = -1;
 	protected boolean vsync = false;
+	protected boolean debugMode = true;
 	
 		
 	public Application() {
@@ -80,7 +81,7 @@ public class Application {
 			window.SetWindowEventCallback(new Window.EventFunction() { @Override public boolean run(Event e) { Event(e); return false; } });
 		}
 		Renderer.Init(window.GetFrameBuffers()[0], window.GetFrameBuffers()[1]);
-		Debugger.Init();
+		if (debugMode) Debugger.Init();
 		Collision2D.Begin();
 		AudioManager.Init();
 		WindowFrame.Init();
@@ -127,7 +128,7 @@ public class Application {
 			@Override public boolean run(Event t) {return WindowClosedEvent((WindowClosedEvent)t ); } });
 		Collision2D.OnEvent(event);
 		WindowFrame.OnEvent(event);
-		Debugger.OnEvent(event);
+		if (debugMode) Debugger.OnEvent(event);
 		OnEvent(event);
 		SceneManager.OnEvent(event);
 		
@@ -235,7 +236,7 @@ public class Application {
 			lastFrameTime = time;
 			OnUpdate(deltaTime);
 			SceneManager.OnUpdate(deltaTime, paused);
-			Debugger.Update();
+			if (debugMode) Debugger.Update();
 			AudioManager.Update();
 			Renderer.Render();
 			window.Update();
@@ -268,7 +269,7 @@ public class Application {
 		OnShutdown();
 		SceneManager.Shutdown();
 		WindowFrame.Shutdown();
-		Debugger.ShutDown();
+		if (debugMode) Debugger.ShutDown();
 		Collision2D.CleanUp();
 		AudioManager.Shutdown();
 		Renderer.ShutDown();
