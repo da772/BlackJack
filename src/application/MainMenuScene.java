@@ -50,7 +50,7 @@ public class MainMenuScene extends Scene {
 								// TODO Auto-generated method stub\
 								AudioManager.CreateAudioSource("gamePauseQuit", "Audio/buttonMouseOver.wav", "sfx", 1f, 1f, false, true);
 								AudioManager.PlaySource("gamePauseQuit");
-								SetColor(ColorPalette.LightGreenBlue);
+								SetColor(ColorPalette.DraculaOrchid);
 							}
 							@Override
 							protected void OnMousePressed() {
@@ -99,7 +99,7 @@ public class MainMenuScene extends Scene {
 								// TODO Auto-generated method stub
 								AudioManager.CreateAudioSource("gamePauseQuit", "Audio/buttonMouseOver.wav", "sfx", 1f, 1f, false, true);
 								AudioManager.PlaySource("gamePauseQuit");
-								SetColor(ColorPalette.LightGreenBlue);
+								SetColor(ColorPalette.DraculaOrchid);
 							}
 							@Override
 							protected void OnMousePressed() {
@@ -145,7 +145,7 @@ public class MainMenuScene extends Scene {
 							protected void OnSelect() {
 								AudioManager.CreateAudioSource("gamePauseQuit", "Audio/buttonMouseOver.wav", "sfx", 1f, 1f, false, true);
 								AudioManager.PlaySource("gamePauseQuit");
-								SetColor(ColorPalette.LightGreenBlue);
+								SetColor(ColorPalette.DraculaOrchid);
 							}
 							@Override
 							protected void OnMousePressed() {

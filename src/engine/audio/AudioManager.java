@@ -118,16 +118,16 @@ public class AudioManager {
 				loadAudio(s);	
 			}
 			s.Play();
-			if (s.ShouldAutoDelete()) {
-				delete.push(s);
-			}
+			delete.push(s);
 		}
 			
 		if (!delete.isEmpty()) {
 			AudioSource s = delete.peek();
 			if (!s.IsPlaying()) {
 				s.OnEnd();
-				RemoveSource(delete.pop());
+				if (s.ShouldAutoDelete())
+					RemoveSource(s);
+				delete.pop();
 			}
 		}
 	}

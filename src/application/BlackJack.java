@@ -9,7 +9,6 @@ import engine.Events;
 import engine.Input;
 import engine.KeyCodes;
 import engine.SceneManager;
-import engine.ShaderLib;
 import engine.WindowFrame;
 import engine.audio.AudioManager;
 import engine.renderer.Renderer;
@@ -42,7 +41,7 @@ public class BlackJack extends Application {
 		AudioManager.SetCategoryVolume("music", SaveData.GetSettings().GetMusicVolume());
 		AudioManager.SetCategoryVolume("sfx", SaveData.GetSettings().GetSfxVolume());
 		Renderer.SetRenderScale(SaveData.GetSettings().GetRenderScale());
-		WindowFrame.SetScreenShader(ShaderLib.Shader_GUIQuad_CRT_Outline);
+		WindowFrame.SetScreenShader(GameShaderLib.Shader_GUIQuad_CRT_Outline);
 		// Create Camera 
 		cam = new CameraController.Orthographic(16.f/9.f);
 		// Move camera backwards 5 units

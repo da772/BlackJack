@@ -77,7 +77,7 @@ public class Dealer{
 			}
 		} else {
 			CardMesh mesh = new CardMesh("cardMesh", new Transform(new Vector3f(4.25f,0,6.25f), new Vector3f(0.f, 180.f,0.f), new Vector3f(1f))
-					, nextCard.getCardTextureID(), "card_back_red", SceneManager.GetCurrentScene().GetCameraController().GetCamera());
+					, nextCard.getCardTextureID(), "card_back_black", SceneManager.GetCurrentScene().GetCameraController().GetCamera());
 			new Actor(this.toString()+"_"+nextCard.getCardTextureID()).AddComponent(mesh);
 			AudioManager.CreateAudioSource(this.toString()+"_"+nextCard.getCardTextureID()+"_place", "Audio/cardPlace3.wav", "sfx", 1.f, 1.f, false, true);
 			AudioManager.PlaySource(this.toString()+"_"+nextCard.getCardTextureID()+"_place");
@@ -208,7 +208,7 @@ public class Dealer{
 								i == 0 && !cardShow ? new Vector3f(0f,180f,0f) : new Vector3f(0f, 0f, 0f), // Rotation
 								new Vector3f(1.f, 1.f, 1f) ), // Scale
 						hand.getCard(i).getCardTextureID(), // Card front Suit
-						"card_back_red", // Card back Suit
+						"card_back_black", // Card back Suit
 						SceneManager.GetCurrentScene().GetCameraController().GetCamera()));// Camera))
 			}
 			this.handCreated = true;

@@ -5,18 +5,15 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import engine.Actor;
-import engine.Application;
 import engine.CameraController;
 import engine.Events;
 import engine.KeyCodes;
 import engine.Events.Event;
 import engine.renderer.Transform;
-import engine.renderer.GUI.*;
 import engine.renderer.mesh.*;
 import engine.Scene;
 import engine.ShaderLib;
 import engine.WindowFrame;
-import engine.audio.AudioManager;
 
 public class GameScene extends Scene {
 
@@ -126,7 +123,7 @@ public class GameScene extends Scene {
 					//WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad_CRT_FishEye);
 					scanLines = true;
 				} else {
-					WindowFrame.SetScreenShader(ShaderLib.Shader_GUIQuad_CRT_Outline);
+					WindowFrame.SetScreenShader(GameShaderLib.Shader_GUIQuad_CRT_Outline);
 					//WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad_CRT_FishEye);
 					scanLines = false;
 				}
@@ -229,7 +226,7 @@ public class GameScene extends Scene {
 						new Vector3f(0f), // Rotation
 						new Vector3f(1000, 1000, 1f)), // Scale
 				"Images/pokerFelt.png", // Texture
-				new Vector4f(0,.75f,.2f,1) , // Color
+				ColorPalette.HotPink , // Color
 				new Vector2f(1e3f), // UV Scale
 				this.cam.GetCamera() // Camera
 				));
@@ -303,7 +300,7 @@ public class GameScene extends Scene {
 			row = i >= 3? -1.5f : 0f;
 			new Actor("cardStack1_"+i).AddComponent(new CardStackMesh("cardStack",
 					new Transform(new Vector3f(stackPosX+offset, stackPosY.y+row, .1f) ),
-					"card_back_red", "card_back_red", 52, new Vector3f(.05f,-0.0025f,.005f),  this.cam.GetCamera()
+					"card_back_black", "card_back_black", 52, new Vector3f(.05f,-0.0025f,.005f),  this.cam.GetCamera()
 					));
 		
 		
