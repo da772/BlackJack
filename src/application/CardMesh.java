@@ -1,6 +1,5 @@
 package application;
 
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import engine.Camera;
@@ -73,13 +72,6 @@ public class CardMesh extends Mesh2DQuad {
 		}
 		
 		if (isAnimating) {
-			
-			
-			float posDis = animStart.GetPosition().distance(targetTransform.GetPosition());
-			float rotDis = animStart.GetRotation().distance(targetTransform.GetRotation());
-			float scaleDis = animStart.GetScale().distance(targetTransform.GetScale());
-			
-			float maxDis = Math.max(Math.max(posDis, rotDis), scaleDis);
 			
 			animationTime += deltaTime*speed;
 			

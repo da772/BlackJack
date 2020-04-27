@@ -23,7 +23,7 @@ public class BlackJack extends Application {
 		// Call super - Set window Title to "Blackjack" set width to previous height and width
 		super("BlackJack", SaveData.GetSettings().GetWidth(), SaveData.GetSettings().GetHeight());
 		this.fpsCap = SaveData.GetSettings().GetFpsCap();
-		this.debugMode = true;
+		this.debugMode = false;
 		
 	}
 	

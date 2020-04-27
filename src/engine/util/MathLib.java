@@ -1,6 +1,7 @@
 package engine.util;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import engine.renderer.Transform;
 
@@ -52,6 +53,10 @@ public class MathLib {
 		return a.distance(b) - threshold <= 0;
 	}
 	
+	public static boolean VectorEquals(Vector4f a, Vector4f b, float threshold) {
+		return a.distance(b) - threshold <= 0;
+	}
+	
 	public static Vector3f MoveTowards(Vector3f current ,Vector3f target, float maxDistanceDelta) {
 		float dX = target.x - current.x;
 		float dY = target.y - current.y;
@@ -84,6 +89,10 @@ public class MathLib {
 	
 	public static Vector3f Lerp(Vector3f a, Vector3f b, float amt) {
 		return new Vector3f( Lerp(a.x,b.x,amt), Lerp(a.y,b.y,amt), Lerp(a.z,b.z,amt));
+	}
+	
+	public static Vector4f Lerp(Vector4f a, Vector4f b, float amt) {
+		return new Vector4f( Lerp(a.x,b.x,amt), Lerp(a.y,b.y,amt), Lerp(a.z,b.z,amt), Lerp(a.w, b.w, amt) );
 	}
 	
 	public static float Lerp(float a, float b, float amt) {

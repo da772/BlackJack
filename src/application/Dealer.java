@@ -25,7 +25,7 @@ public class Dealer{
 
 
 	public Dealer() {
-		this.balance = 500000;
+		this.balance = 1000;
 		this.hand = new Hand();
 	}
 	
@@ -151,7 +151,7 @@ public class Dealer{
 			return;
 		} else {
 			new Actor("dealerUI").AddComponent(
-					new GUIQuad("quad", new Transform(new Vector3f(0,.8f,1f), new Vector3f(0f), new Vector3f(.125f,.125f, 1f)), "Images/roundedTexture.png", 
+					new GUIQuad("quad", new Transform(new Vector3f(0,.8f,1f), new Vector3f(0f), new Vector3f(.125f,.15f, 1f)), "Images/roundedTexture.png", 
 							new Vector4f(0f,0f,0f,.5f))
 					.AddChild(new GUIText(
 							"name",
@@ -180,15 +180,15 @@ public class Dealer{
 	public void updateUI() {
 		if (this.uiCreated) {
 			((GUIQuad) Actor.Get("dealerUI").GetComponent("quad")).RemoveChild("text")
-			.AddChild(new GUIText("text", new Transform(new Vector3f(0f, -.04f, .01f)), "Fonts/BebasNeue",
+			.AddChild(new GUIText("text", new Transform(new Vector3f(0f, -.05f, .01f)), "Fonts/BebasNeue",
 					GenerateText(),
-					new Vector4f(1f), .125f, 1f, true));
+					new Vector4f(1f), .15f, 1f, true));
 		}
 	}
 	
 	private String GenerateText() {
 		int total = cardShow ? hand.getTotal() : hand.getTotalDealer();
-		return total <= 0 ? "Waiting..." : "Hand Total: "+ total + (total > 21 ? "\nBust..." : total == 21 ? "\nBlack Jack!" : "");
+		return total <= 0 ? "Balance: \n$" + getBalance()  + "\nWaiting..." : "Balance: \n$" + getBalance() +"\nHand Total: "+ total;
 	}
 	
 	private void destroyUI() {

@@ -37,6 +37,7 @@ public class Player {
 	private double waitTimeInMS = 0;
 	private ArrayList<Hand> splitHands;
 	private Card nextCard = null;
+	private boolean c1 = false, c2 = false;
 	private boolean computer = true, handCreated = false, uiCreated = false, showBetControl = false, showButtonsControl = false, showResetButton = false, betting = false;
 
 	// new simple constructor
@@ -282,7 +283,7 @@ public class Player {
 										"Double", new Vector4f(1f), .125f, 1f, true))
 								);
 					}
-					
+					/*
 					if(curHand.canSplit()) {
 						buttons.AddChild(new GUIButton("splitButton", new Transform(new Vector3f(.05f, 0f, .1f), // Position x,y,
 								new Vector3f(0f, 0f, 0f), // Rotation
@@ -316,7 +317,7 @@ public class Player {
 						}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/morningStar",
 								"Split", new Vector4f(1f), .125f, 1f, true)));
 					}
-					
+					*/
 					if(curHand.canStay()) {
 						buttons.AddChild(new GUIButton("stayButton", new Transform(new Vector3f(.15f, 0f, .1f), // Position x,y,
 								new Vector3f(0f, 0f, 0f), // Rotation
@@ -487,6 +488,23 @@ public class Player {
 		this.round = r;
 		if (this.uiCreated && !this.showBetControl) {
 			this.showBetControl = true;
+			c1 = true;
+			c2 = false;
+			new Actor("InstructionText").AddComponent(new GUIText(
+					 "myGUI", // Identifying string
+				        new Transform( // Transform (position, rotation, scale)
+				        new Vector3f(0f,.6f,1f),// Position -1 to 1, -1 being far left of screen 1 being far right 
+				                               // and 0 being center, the Z position indicates the order it should be drawn, higher on top
+				        new Vector3f(0f,0f,0f), // Rotation
+				        new Vector3f(1f,1f,1f) // Scale, based on percentage of screen, ex 1 = entire screen, .5 = half of screen
+					),
+				        "Fonts/morningStar", // Name and location of font to use
+				        "P lace your bet", // String to draw
+				        ColorPalette.DraculaOrchid,  // Color of the quad (red, green, blue, alpha)
+				        1.f, // Max Width of each line, 1 is entire screen .5 is half etc.
+				         3f, // Font size
+				         true
+					));
 			((GUI) Actor.Get("player" + id + "ui").GetComponent("quad"))
 					.AddChild(new GUIButton("BetControl", new Transform(new Vector3f(0, -.1f, .1f), // Position x,y,
 							new Vector3f(0f, 0f, 0f), // Rotation
@@ -557,12 +575,28 @@ public class Player {
 											1f,
 											true
 											)));
+		} else if (this.uiCreated && this.showBetControl) {
+			GUIText txt = (GUIText)Actor.Get("InstructionText").GetComponent("myGUI");
+			float lerpAmt = 1.5f * r.dt;
+			if (MathLib.VectorEquals(txt.GetColor(), ColorPalette.DraculaOrchid, .05f)) {
+				c1 = true;
+				c2 = false;
+			} else if (MathLib.VectorEquals(txt.GetColor(), new Vector4f(1.f), .05f)){
+				c2 = true;
+				c1 = false;
+			}
+			if (c1) {
+				txt.SetColor(MathLib.Lerp(txt.GetColor(), new Vector4f(1.f), lerpAmt));
+			} else if (c2) {
+				txt.SetColor(MathLib.Lerp(txt.GetColor(), ColorPalette.DraculaOrchid, lerpAmt));
+			}
 		}
 	}
 
 	public void hidePlayerBetControl() {
 		if (this.showBetControl) {
 			((GUI) Actor.Get("player" + id + "ui").GetComponent("quad")).RemoveChild("BetControl");
+			Actor.Remove("InstructionText");
 			this.showBetControl = false;
 		}
 	}

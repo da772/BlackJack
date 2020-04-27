@@ -10,10 +10,11 @@ import engine.Events;
 import engine.KeyCodes;
 import engine.Events.Event;
 import engine.renderer.Transform;
+import engine.renderer.GUI.GUIButton;
+import engine.renderer.GUI.GUIText;
 import engine.renderer.mesh.*;
 import engine.Scene;
-import engine.ShaderLib;
-import engine.WindowFrame;
+import engine.SceneManager;
 
 public class GameScene extends Scene {
 
@@ -43,47 +44,13 @@ public class GameScene extends Scene {
 		table = new Table();
 		
 		table.playRound();
-		
-		// Hide chips for now
-		/*
-		// Add chips (place holder for now)
-		new Actor("chipStack25_p1").AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(0.f, 0f, 1.25f) ),
-				"Chip25", 2,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
-				));
-		
-		new Actor("chipStack10_p1").AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(0.525f, 0f, 1.25f) ),
-				"Chip10", 7,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
-				));
-		
-		new Actor("chipStack5_p1").AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(-0.525f, 0f, 1.25f) ),
-				"Chip5", 8,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
-				));
-
-		// Create player 2 chips
-		float o_set = -5f;
-		new Actor("chipStack2_p2").AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(0.f+o_set, 1f, 1.25f) ),
-				"Chip5", 6,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
-				));
-		
-		new Actor("chipStack50_p2").AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(0.525f+o_set, .75f, 1.25f) ),
-				"Chip50", 3,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
-				));
-		
-		new Actor("chipStack1_p2").AddComponent(new ChipStackMesh("chipStack",
-				new Transform(new Vector3f(o_set + 1f, .25f, 1.25f), new Vector3f(0,0,34f), new Vector3f(1,1,1) ),
-				"Chip100", 2,new Vector3f(0,0f,.025f),  this.cam.GetCamera()
-				));
-		
-	*/
 		// Create background
 		CreateBackground();
+		CreatePauseButton();
 
 	}
+
+
 
 	@Override
 	public void OnEnd() {
@@ -93,46 +60,8 @@ public class GameScene extends Scene {
 	
 	@Override
 	public void OnEvent(Event e) {
-		/*
-		 * Debug Create card at runtime
-		 */
+
 		if (e instanceof Events.KeyPressedEvent) {
-			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_T) {
-				if (GetActor("cardRunTime") == null) {
-					new Actor("cardRunTime");
-				}
-				else if (GetActor("cardRunTime") != null && GetActor("cardRunTime").GetComponent("Mesh") != null) {
-					Actor.Remove("cardRunTime", this);
-				}
-				if (GetActor("cardRunTime") != null) {
-					GetActor("cardRunTime").AddComponent(new CardMesh("Mesh", 
-							new Transform( // Card Transform
-									new Vector3f(-.75f, .75f, 0f), // Position
-									new Vector3f(0f, 0, 0), // Rotation
-									new Vector3f(.75f, 1f, 1f) ), // Scale
-							"AH", // Card front Suit
-							"card_back_red", // Card back Suit
-							this.cam.GetCamera()));
-				}
-			}
-			
-			// Disable/Enable shader
-			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_Z) {
-				if (!scanLines) {
-					WindowFrame.SetScreenShader(ShaderLib.Shader_GUIQuad);
-					//WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad_CRT_FishEye);
-					scanLines = true;
-				} else {
-					WindowFrame.SetScreenShader(GameShaderLib.Shader_GUIQuad_CRT_Outline);
-					//WindowFrame.SetMeshShader(ShaderLib.Shader_GUIQuad_CRT_FishEye);
-					scanLines = false;
-				}
-			}
-			
-			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_R) { 
-				table.playRound();
-			}
-			
 			// Pause menu
 			if (((Events.KeyPressedEvent)e ).GetKeyCode() == KeyCodes.KEY_ESCAPE) { 
 				if (!GamePauseMenu.IsActive()) GamePauseMenu.Show(); else GamePauseMenu.Hide();
@@ -305,6 +234,42 @@ public class GameScene extends Scene {
 		
 		
 		}
+		
+	}
+	
+	private void CreatePauseButton() {
+		new Actor("Pause").AddComponent((new GUIButton("pause", new Transform(new Vector3f(-.85f, -.85f, .1f), // Position x,y,
+							new Vector3f(0f, 0f, 0f), // Rotation
+							new Vector3f(.05f, .1f, 1f)), // Scale x,y,z
+							"Images/Buttons/mainMenuButtonUp.png", // Button texture
+							"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
+							ColorPalette.DraculaOrchid // Quad Color r,g,b,a
+
+					) {
+						@Override
+						protected void OnSelect() {
+
+						}
+
+						@Override
+						protected void OnMousePressed() {
+							SetButtonTexture(true);
+						}
+
+						@Override
+						protected void OnMouseReleased() {
+							SetButtonTexture(false);
+							if (!GamePauseMenu.IsActive()) GamePauseMenu.Show(); else GamePauseMenu.Hide();
+						}
+
+						@Override
+						public void OnDeselect() {
+							SetButtonTexture(false);
+
+						}
+					}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/morningStar",
+							"Pause", new Vector4f(1f), .125f, 1f, true))));
+	
 		
 	}
 	

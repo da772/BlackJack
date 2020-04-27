@@ -6,6 +6,14 @@ package application;
 
 import java.util.ArrayList;
 
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
+import engine.Actor;
+import engine.SceneManager;
+import engine.renderer.Transform;
+import engine.renderer.GUI.GUIButton;
+import engine.renderer.GUI.GUIText;
 import engine.util.Timing;
 
 public class Round {
@@ -18,9 +26,10 @@ public class Round {
 	private Dealer dealer;
 	private Table table;
 	private double lastTime = -1;
+	float dt;
 	
 	public static enum RoundState {
-		None, Betting, Dealing, Playing, Ending;
+		None, Betting, Dealing, Playing, Ending, Finished;
 	}
     
     public Round(Dealer dealer, Table table) { //Everything that happens in 1 round of blackjack
@@ -40,6 +49,7 @@ public class Round {
      * Runs every frame, unless game is paused. Acts as a state machine
      */
     public void OnUpdate(float deltaTime) {
+    	dt = deltaTime;
     	// State Machine
     	switch (state) {
     	// Betting Phase
@@ -318,6 +328,7 @@ public class Round {
 				Player curPlayer = players.get(playerTurn);
 				// Player lost
 				if (curPlayer.getHand().getTotal() > 21 || (curPlayer.getHand().getTotal() < dealer.getHand().getTotal() && dealer.getHand().getTotal() <= 21)) {
+					dealer.addToBalance(curPlayer.getBet());
 					curPlayer.SetResult(2);
 				// Player tied with dealer	
 				} else if (curPlayer.getHand().getTotal() == dealer.getHand().getTotal()) {
@@ -328,21 +339,31 @@ public class Round {
 				else if (curPlayer.getHand().getTotal() == 21 && curPlayer.getHand().GetCardCount() == 2) { 
 					curPlayer.SetResult(1);
 					curPlayer.addToBalance((int) (curPlayer.getBet()*1.5f));
+					dealer.subtractFromBalance((int) (curPlayer.getBet()*.5f));
 				}
 				// Player won
 				else if (curPlayer.getHand().getTotal() > dealer.getHand().getTotal() || dealer.getHand().getTotal() > 21) {
 					curPlayer.SetResult(1);
 					curPlayer.addToBalance((int) (curPlayer.getBet()*2));
+					dealer.subtractFromBalance((int)(curPlayer.getBet()));
 				} 
+				
+				if (!curPlayer.isComputer() && curPlayer.getBalance() <= 0) {
+					playerInput = -2;
+				}
 				playerTurn++;
 			} else {
 				playerTurn = 0;
-				playerInput = -1;
+				if (playerInput != -2)
+					playerInput = -1;
 				state = RoundState.None;
 			}
 			break;
 		case None: {
-			if (playerTurn < this.players.size()) {
+			if (dealer.getBalance() <= 0 || playerInput == -2) {
+				state = RoundState.Finished;
+			}
+			else if (playerTurn < this.players.size()) {
 				Player curPlayer = players.get(playerTurn);
 				// Find first none computer player
 				if (!curPlayer.isComputer()) {
@@ -359,6 +380,116 @@ public class Round {
 					playerTurn++;
 				}
 			}
+			break;
+		}
+		case Finished: {
+			// Player is out of money
+			if (playerInput == -2 ) {
+				if (Actor.Get("gOver") == null) {
+					new Actor("gOver").AddComponent(new GUIText("myGUI", // Identifying string
+					        new Transform( // Transform (position, rotation, scale)
+							        new Vector3f(0f,.3f,1f),// Position -1 to 1, -1 being far left of screen 1 being far right 
+							                               // and 0 being center, the Z position indicates the order it should be drawn, higher on top
+							        new Vector3f(0f,0f,0f), // Rotation
+							        new Vector3f(1f,1f,1f) // Scale, based on percentage of screen, ex 1 = entire screen, .5 = half of screen
+								),
+							        "Fonts/morningStar", // Name and location of font to use
+							        "You lose", // String to draw
+							        ColorPalette.DraculaOrchid,  // Color of the quad (red, green, blue, alpha)
+							         1.f, // Max Width of each line, 1 is entire screen .5 is half etc.
+							         3f, // Font size
+							         true
+								)).AddComponent((new GUIButton("BetControl", new Transform(new Vector3f(0, -.0f, .1f), // Position x,y,
+										new Vector3f(0f, 0f, 0f), // Rotation
+										new Vector3f(.2f, .1f, 1f)), // Scale x,y,z
+										"Images/Buttons/mainMenuButtonUp.png", // Button texture
+										"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
+										ColorPalette.DraculaOrchid // Quad Color r,g,b,a
+
+								) {
+									@Override
+									protected void OnSelect() {
+
+									}
+
+									@Override
+									protected void OnMousePressed() {
+										SetButtonTexture(true);
+									}
+
+									@Override
+									protected void OnMouseReleased() {
+										SetButtonTexture(false);
+										SceneManager.SetCurrentScene("mainMenu");
+									}
+
+									@Override
+									public void OnDeselect() {
+										SetButtonTexture(false);
+
+									}
+								}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/morningStar",
+										"Quit Game", new Vector4f(1f), .125f, 1f, true))));
+				} 	
+			}
+			// Dealer is out of money
+			else {
+				if (Actor.Get("gOver") == null) {
+					int winner = 0;
+					for (int i = 1; i < players.size(); i++) {
+						if (players.get(i).getBalance() > players.get(winner).getBalance()) {
+							winner = i;
+						}
+					}
+					String w = !players.get(winner).isComputer() ? "You won" : "Computer " + winner + " wins";
+					new Actor("gOver").AddComponent(new GUIText("myGUI", // Identifying string
+					        new Transform( // Transform (position, rotation, scale)
+							        new Vector3f(0f,.3f,1f),// Position -1 to 1, -1 being far left of screen 1 being far right 
+							                               // and 0 being center, the Z position indicates the order it should be drawn, higher on top
+							        new Vector3f(0f,0f,0f), // Rotation
+							        new Vector3f(1f,1f,1f) // Scale, based on percentage of screen, ex 1 = entire screen, .5 = half of screen
+								),
+							        "Fonts/morningStar", // Name and location of font to use
+							        w, // String to draw
+							        ColorPalette.DraculaOrchid,  // Color of the quad (red, green, blue, alpha)
+							         1.f, // Max Width of each line, 1 is entire screen .5 is half etc.
+							         3f, // Font size
+							         true
+								)).AddComponent((new GUIButton("BetControl", new Transform(new Vector3f(0, -.0f, .1f), // Position x,y,
+										new Vector3f(0f, 0f, 0f), // Rotation
+										new Vector3f(.2f, .1f, 1f)), // Scale x,y,z
+										"Images/Buttons/mainMenuButtonUp.png", // Button texture
+										"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
+										ColorPalette.DraculaOrchid // Quad Color r,g,b,a
+
+								) {
+									@Override
+									protected void OnSelect() {
+
+									}
+
+									@Override
+									protected void OnMousePressed() {
+										SetButtonTexture(true);
+									}
+
+									@Override
+									protected void OnMouseReleased() {
+										SetButtonTexture(false);
+										SceneManager.SetCurrentScene("mainMenu");
+									}
+
+									@Override
+									public void OnDeselect() {
+										SetButtonTexture(false);
+
+									}
+								}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/morningStar",
+										"Quit Game", new Vector4f(1f), .125f, 1f, true))));
+				}
+			
+			}
+			
 			break;
 		}
 		default:
