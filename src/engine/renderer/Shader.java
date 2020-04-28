@@ -17,6 +17,15 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
+/**
+ * 
+ * Shaders to be applied to graphical objects
+ *
+ * (Requirement 1.1.2)
+ * (Requirement 1.2.2)
+ *
+ */
+
 public class Shader {
 
 	String vertex, fragment;

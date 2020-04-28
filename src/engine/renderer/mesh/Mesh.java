@@ -8,7 +8,7 @@ import engine.Application;
 import engine.Camera;
 import engine.Collider2D;
 import engine.Events.Event;
-import engine.renderer.Renderer2D;
+import engine.renderer.MeshRenderer;
 import engine.renderer.Shader;
 import engine.renderer.Texture;
 import engine.renderer.Transform;
@@ -17,8 +17,12 @@ import engine.renderer.Buffer.IndexBuffer;
 import engine.renderer.Buffer.VertexBuffer;
 import engine.util.MathLib;
 
+/**
+ * 3D Graphics to display on the screen
+ * (Requirement 1.1.0)
+ */
 
-public abstract class  Mesh2D extends Collider2D {
+public abstract class  Mesh extends Collider2D {
 
 	protected Texture texture;
 	protected Shader shader;
@@ -39,7 +43,7 @@ public abstract class  Mesh2D extends Collider2D {
 	 * @param texture
 	 * @param cam - current camera
 	 */
-	public Mesh2D(String name, Transform transform, String[] shader, String texture, Camera cam) {
+	public Mesh(String name, Transform transform, String[] shader, String texture, Camera cam) {
 		super(name);
 		SetTransform(transform);
 		this.cam = cam;
@@ -79,11 +83,11 @@ public abstract class  Mesh2D extends Collider2D {
 	protected abstract void OnInit();
 	
 	public void Add() {
-		Renderer2D.Add(this);
+		MeshRenderer.Add(this);
 	}
 	
 	public void Remove() {
-		Renderer2D.Remove(this);
+		MeshRenderer.Remove(this);
 	}
 	
 	

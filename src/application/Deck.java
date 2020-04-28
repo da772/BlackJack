@@ -25,6 +25,8 @@ public class Deck {
 	
 	
 	// constructor
+	// Decks can use multiple decks
+	// Requirement (4.2.1)
 	public Deck(int decksCount) {
 		this.deck = new Stack<Card>();
 		this.usedCards = new Stack<Card>();
@@ -83,6 +85,10 @@ public class Deck {
 		}
 	}
 	
+	/**
+	 * Deck reshuffles after 80% of the cards have been dealt
+	 * Requirement(4.2.2)
+	 */
 	public void checkDeckCount() { //re-add used cards if 80% of the deck has been dealt
 		if(this.deck.size() <= 0.80 * INITIAL_COUNT) {
 			addUsedCardsBack();

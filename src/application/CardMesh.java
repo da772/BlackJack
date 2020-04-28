@@ -8,7 +8,7 @@ import engine.TextureAtlas;
 import engine.renderer.Texture;
 import engine.renderer.TextureCoords;
 import engine.renderer.Transform;
-import engine.renderer.mesh.Mesh2DQuad;
+import engine.renderer.mesh.MeshQuad;
 import engine.util.MathLib;
 
 /**
@@ -19,7 +19,7 @@ import engine.util.MathLib;
  * @param cardBack - card front image ex: "AS" = ace of spaces, "4H" = 4 of hearts, "card_back_red" = red card back
  * @param cam - camera to render to
  */
-public class CardMesh extends Mesh2DQuad {
+public class CardMesh extends MeshQuad {
 
 	
 	TextureAtlas textureAtlas;

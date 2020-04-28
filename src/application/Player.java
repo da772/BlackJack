@@ -109,6 +109,9 @@ public class Player {
 		updateHand();
 	}
 	
+	// Add and animate card into hand
+	//Requirement(3.2.2) 
+	//Requirement(3.2.3)
 	public boolean addCard(Deck d, float deltaTime) {
 		if (this.nextCard == null) {
 			this.nextCard = d.drawCard();
@@ -151,6 +154,9 @@ public class Player {
 		createHand();
 	}
 
+	// Display Gameplay status
+	// Requirement (3.2.4)
+	// Requirement (3.2.5)
 	public void createUI() {
 		if (this.uiCreated) {
 			destroyUI();
@@ -200,7 +206,10 @@ public class Player {
 	}
 
 
-	
+	/**
+	 * Allow players to hit, stay, double
+	 * Requirement (4.1.2)
+	 */
 	public void showPlayerButtonControl(Round r) {
 		this.round = r;
 		Player realPlayer = this.round.getRealPlayer();
@@ -448,6 +457,10 @@ public class Player {
 		}
 	}
 	
+	/*
+	 * Computers set their bat randomly based on their balance
+	 * Requirement(4.3.1)
+	 */
 	public void computerSetBet(Round r, double firstCallTimeinMS) {
 		
 		// Make computer wait until they place their bet
@@ -460,12 +473,22 @@ public class Player {
 		
 		if (Timing.getTimeMS() - firstCallTimeinMS >= waitTimeInMS) {
 			//setBet(playerTurn, new Random().nextInt(players.get(playerTurn).getBalance())/4+1);	
-			int bet = new Random().nextInt(getBalance())/4+1;
+			int bet = new Random().nextInt(getBalance())/(new Random().nextInt(4)+1);
 			r.setCurrentPlayerInput(bet);
 			this.betting = false;
 		}
 	}
 	
+	/**
+	 * 
+	 * @param r - round
+	 * @param firstCallTimeinMS - first call time
+	 * 
+	 * Computers bet, hit, or double based on the total of their current hand
+	 * Requirement(4.3.2)
+	 * 
+	 *
+	 */
 	public void computerPlayTurn(Round r, double firstCallTimeinMS) {
 		
 		if (!betting) {

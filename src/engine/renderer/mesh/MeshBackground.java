@@ -12,7 +12,7 @@ import engine.renderer.Buffer.IndexBuffer;
 import engine.renderer.Buffer.VertexBuffer;
 import engine.renderer.VertexArray.BufferLayout;
 
-public class Mesh2DBackground extends Mesh2D {
+public class MeshBackground extends Mesh {
 	
 	final static float[] vertices = {
 			 -.5f,  -.5f,   0f,   0.f,0.f, 
@@ -46,7 +46,7 @@ public class Mesh2DBackground extends Mesh2D {
 	 * @param UVScale
 	 * @param camera - active camera
 	 */
-	public Mesh2DBackground(String name, Transform transform, String[] shader, String texture, Vector2f UVScale, Camera camera) {
+	public MeshBackground(String name, Transform transform, String[] shader, String texture, Vector2f UVScale, Camera camera) {
 		super(name, transform, shader, texture, camera);
 		this.UVScale = UVScale;
 	}
@@ -58,7 +58,7 @@ public class Mesh2DBackground extends Mesh2D {
 	 * @param UVScale
 	 * @param camera - active camera
 	 */
-	public Mesh2DBackground(String name, Transform transform, String texture, Vector2f UVScale, Camera camera) {
+	public MeshBackground(String name, Transform transform, String texture, Vector2f UVScale, Camera camera) {
 		super(name, transform, ShaderLib.Shader_2DBackground, texture, camera);
 		this.UVScale = UVScale;
 	}
@@ -72,7 +72,7 @@ public class Mesh2DBackground extends Mesh2D {
 	 * @param UVScale
 	 * @param camera - active camera
 	 */
-	public Mesh2DBackground(String name,Transform transform, String texture, Vector4f color, Vector2f UVScale, Camera camera) {
+	public MeshBackground(String name,Transform transform, String texture, Vector4f color, Vector2f UVScale, Camera camera) {
 		super(name, transform, ShaderLib.Shader_2DBackground, texture, camera);
 		this.color = color;
 		this.UVScale = UVScale;

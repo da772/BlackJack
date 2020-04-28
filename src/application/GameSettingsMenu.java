@@ -16,6 +16,12 @@ import engine.renderer.GUI.GUISliderBar;
 import engine.renderer.GUI.GUIText;
 import engine.util.MathLib;
 
+/**
+ * 
+ * Settings Menu
+ * Requirement (3.3.0)
+ *
+ */
 public class GameSettingsMenu extends Actor {
 
 	
@@ -80,22 +86,27 @@ public class GameSettingsMenu extends Actor {
 				);
 		
 		// Create items
+		// Create Fullscreen toggle button
+		// Requirement(3.3.1)
 		GUIQuad fullScreen = CreateFullScreenButton();
-		
+		// Create Music Volume Slider
+		// Requirement(3.3.2)
 		GUIQuad musicVolume = CreateMusicVolumeButton();
-		
+		// Create Sound effect volume slider
+		// Requirement(3.3.3)
 		GUIQuad soundVolume = CreateSoundVolumeButton();
-			
+		// Create VSync button
+		// Requirement(3.3.4)
 		GUIQuad vsync = CreateVSyncButton();
-			
+		// Create FPS controller
+		// Requirement(3.3.5)
 		GUIQuad fpsCap = CreateFpsButton();
-			
-			
+		// Create render scale 
+		// Requirement(3.3.6)
 		GUIQuad renderScale = CreateRenderScaleButton();
-			
+		// Create back button
 		GUIQuad backButton = CreateBackButton();
 						
-					
 		AddComponent(backGround.AddChild(mainText).
 				AddChild(buttonArea.AddChild(fullScreen).AddChild(musicVolume).AddChild(soundVolume).AddChild(fpsCap).AddChild(vsync).AddChild(renderScale).AddChild(backButton)));
 						

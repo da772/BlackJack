@@ -1,5 +1,9 @@
 package engine;
-
+/**
+ * 
+ * Derivable object which adds additional functionality to parents
+ * (Requirement 2.3.0)
+ */
 public abstract class Component {
 
 	/**

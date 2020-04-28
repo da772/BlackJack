@@ -8,7 +8,12 @@ import engine.Collision2D;
 import engine.WindowFrame;
 import engine.renderer.GUI.GUI;
 
-
+/**
+ * 
+ * Pipeline for rendering combining pipelines
+ * (Requirement 1.3.3)
+ *
+ */
 public class WindowRenderer {
 
 	private static List<GUI> huds = new ArrayList<GUI>();

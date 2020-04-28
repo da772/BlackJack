@@ -1,7 +1,5 @@
 package engine.renderer;
 
-
-
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
@@ -15,6 +13,15 @@ import org.lwjgl.system.MemoryStack;
 import engine.Application;
 import engine.util.FileLoader;
 
+
+/**
+ * 
+ * Textures to be applied to graphical objects
+ * 
+ * (Requirement 1.1.1)
+ * (Requirement 1.2.1)
+ *
+ */
 
 public class Texture {
 	

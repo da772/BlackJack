@@ -19,6 +19,12 @@ import engine.renderer.Texture;
 import engine.renderer.Transform;
 import engine.util.MathLib;
 
+/**
+ * Two dimensional objects are displayed on screen
+ * (Requirement 1.2.0)
+ *
+ */
+
 public abstract class GUI extends Collider2D {
 
 	protected Transform transform;

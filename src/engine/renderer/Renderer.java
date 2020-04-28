@@ -12,7 +12,11 @@ import engine.TextureAtlas;
 import engine.renderer.Buffer.FrameBuffer;
 import engine.renderer.Buffer.RenderBuffer;
 
-
+/**
+ * 
+ * Graphics pipeline split up into three separate pipelines
+ * (Requirement 1.3.0)
+ */
 public class Renderer {
 
 	private static List<Integer> Buffers = new ArrayList<Integer>();
@@ -66,6 +70,12 @@ public class Renderer {
 		GL30.glDisable(GL11.GL_CULL_FACE);
 	}
 	
+	/**
+	 * Enable culling of back faces
+	 * 
+	 * (Requirement 1.1.3)
+	 * 
+	 */
 	public static void EnableCulling() {
 		GL30.glEnable(GL11.GL_CULL_FACE);
 		GL30.glCullFace(GL11.GL_BACK);
@@ -85,7 +95,7 @@ public class Renderer {
 	private static void RenderMesh() {
 		MeshFrameBuffer.Bind();
 		Prepare();
-		Renderer2D.Render();
+		MeshRenderer.Render();
 		MeshFrameBuffer.UnBind();
 	}
 	
@@ -286,7 +296,7 @@ public class Renderer {
 	 */
 	public static void ShutDown() {
 		
-		Renderer2D.CleanUp();
+		MeshRenderer.CleanUp();
 		GUIRenderer.CleanUp();
 		
 		for (int id : Buffers) {

@@ -3,17 +3,29 @@ package engine.renderer;
 import java.util.ArrayList;
 import java.util.List;
 
-import engine.renderer.mesh.Mesh2D;
+import engine.renderer.mesh.Mesh;
 
-public class Renderer2D {
+
+/**
+ * 
+ * Three dimensional mesh pipeline
+ * (Requirement 1.3.1)
+ *
+ */
+
+public class MeshRenderer {
 	
-	public static List<Mesh2D> meshes = new ArrayList<Mesh2D>();
+	public static List<Mesh> meshes = new ArrayList<Mesh>();
 	
 	/**
 	 * 
 	 * @param mesh - mesh to add to pipeline
+	 * 
+	 * 
+	 * Sorts three dimensional graphics by z order
+	 * (Requirement 1.1.4)
 	 */
-	public static void Add(Mesh2D mesh) {
+	public static void Add(Mesh mesh) {
 		if (!meshes.contains(mesh)) {
 			mesh.Init();
 			meshes.add(mesh);
@@ -29,7 +41,7 @@ public class Renderer2D {
 	 * 
 	 * @param mesh - mesh to remove from pipeline
 	 */
-	public static void Remove(Mesh2D mesh) {
+	public static void Remove(Mesh mesh) {
 		if (meshes.contains(mesh)) {
 			meshes.remove(mesh);
 			mesh.CleanUp();
@@ -44,7 +56,7 @@ public class Renderer2D {
 	public static void Render() {
 		Renderer.SetDepth(true);
 		for (int i =0; i < meshes.size(); i++) {
-			Mesh2D m = meshes.get(i);
+			Mesh m = meshes.get(i);
 			m.Bind();
 			m.Draw();
 			m.UnBind();
@@ -56,7 +68,7 @@ public class Renderer2D {
 	 * Cleanup uncleaned meshes
 	 */
 	public static void CleanUp () {
-		for (Mesh2D m : meshes) {
+		for (Mesh m : meshes) {
 			m.CleanUp();
 		}
 		meshes.clear();

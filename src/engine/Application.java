@@ -22,8 +22,11 @@ import engine.util.Timing;
  * 		Applications are created by making children of this object
  * 		Blackjack.java is a child of this class
  * 
- * 		EntryPoint.java creates an Application Object and runs it.
  * 		
+ * 
+ * 		Derivable class with several overrideable functions
+ * 		(Requirement 2.1.0)		
+ * 
  * 		
  **/
 
@@ -299,7 +302,7 @@ public class Application {
 	}
 	/**
 	 * To be overridden by child class
-	 * 	
+	 * 	(Requirement 2.1.1)
 	 **/
 	protected void OnUpdate(float deltaTime) {};
 	/**

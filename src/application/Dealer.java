@@ -57,7 +57,8 @@ public class Dealer{
 	}
 	
 
-	
+	// Add and animate card into hand
+	// Requirement(3.2.3)
 	public boolean addCard(Deck d, float deltaTime) {
 		if (this.nextCard == null) {
 			this.nextCard = d.drawCard();
@@ -110,7 +111,9 @@ public class Dealer{
 	}
 	
 
-	
+
+	// Dealers continue to hit until their hand is atleast 17
+	// Requirement(4.2.3)
 	public void computerPlayTurn(Round r, double firstCallTimeinMS) {
 		
 		if (!betting) {

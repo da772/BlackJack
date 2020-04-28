@@ -24,6 +24,11 @@ import org.lwjgl.openal.EXTEfx;
 
 import engine.util.FileLoader;
 
+/**
+ * 
+ * Play, stop and change the volume of audio
+ * (Requirement 2.6.0)
+ */
 public class AudioManager {
 	
 	private long device = -1;

@@ -4,6 +4,11 @@ import java.util.Map;
 
 import engine.Events.Event;
 
+/**
+ * 
+ * Derivable class which controls the lifespan of attached actors
+ * (Requirement 2.5.0)
+ */
 public abstract class Scene {	
 	private String name;
 	

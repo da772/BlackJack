@@ -3,7 +3,11 @@ package engine;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * 
+ * Derivable object which controls the lifespan of attached components.
+ * (Requirement 2.4.0)
+ */
 
 public class Actor {
 	

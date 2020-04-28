@@ -7,7 +7,7 @@ import engine.Camera;
 import engine.TextureAtlas;
 import engine.renderer.TextureCoords;
 import engine.renderer.Transform;
-import engine.renderer.mesh.Mesh2DInstancedQuad;
+import engine.renderer.mesh.MeshInstancedQuad;
 
 /**
  * 
@@ -17,7 +17,7 @@ import engine.renderer.mesh.Mesh2DInstancedQuad;
  * @param cardBack - card front image ex: "AS" = ace of spaces, "4H" = 4 of hearts, "card_back_red" = red card back
  * @param cam - camera to render to
  */
-public class CardStackMesh extends Mesh2DInstancedQuad {
+public class CardStackMesh extends MeshInstancedQuad {
 
 	TextureAtlas textureAtlas;
 	TextureCoords textureCoord;

@@ -1,5 +1,12 @@
 package engine;
 
+
+/**
+ * 
+ * Records and delegates events to requesting functions
+ * (Requirement 2.2.0)
+ */
+
 public class Events {
 
 	// Event types

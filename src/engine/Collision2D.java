@@ -8,6 +8,13 @@ import engine.Events.Event;
 import engine.renderer.GUIRenderer;
 import engine.util.MathLib;
 
+
+/**
+ * 
+ * Calculates collision for two dimensional objects
+ * (Requirement 1.2.3)
+ *
+ */
 public class Collision2D extends Thread {
 
 	public static List<Collider2D> GUIcolliders = new ArrayList<Collider2D>();

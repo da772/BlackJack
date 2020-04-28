@@ -14,8 +14,14 @@ import engine.renderer.GUI.GUIButton;
 import engine.renderer.GUI.GUIText;
 import engine.renderer.mesh.*;
 import engine.Scene;
-import engine.SceneManager;
 
+
+/**
+ * 
+ * Game play scene
+ * Requirement (3.2.0)
+ *
+ */
 public class GameScene extends Scene {
 
 	boolean scanLines = false;
@@ -44,8 +50,11 @@ public class GameScene extends Scene {
 		table = new Table();
 		
 		table.playRound();
-		// Create background
+		// Create poker table and decorations
+		// Requirement (3.2.1)
 		CreateBackground();
+		// Create pause menu button
+		// Requirement (3.2.6)
 		CreatePauseButton();
 
 	}
@@ -80,7 +89,7 @@ public class GameScene extends Scene {
 		int amt = 30;
 		
 		// 
-		new Actor("cardBorder1").AddComponent(new Mesh2DQuad("blackJackTitle",
+		new Actor("cardBorder1").AddComponent(new MeshQuad("blackJackTitle",
 				new Transform(new Vector3f(0,.5f,0f), new Vector3f(0,0f,0f), new Vector3f(1.25f,1.75f,1f)),
 				"Images/cardBorder.png",
 				new Vector4f(1f),
@@ -89,35 +98,35 @@ public class GameScene extends Scene {
 		
 		
 
-		new Actor("cardBorder2").AddComponent(new Mesh2DQuad("blackJackTitle",
+		new Actor("cardBorder2").AddComponent(new MeshQuad("blackJackTitle",
 				new Transform(new Vector3f(-5.5f,1.25f,0f), new Vector3f(0,0f,-40f), new Vector3f(1.25f,1.75f,1f)),
 				"Images/cardBorder.png",
 				new Vector4f(1f),
 				this.cam.GetCamera()
 				));
 		
-		new Actor("cardBorder3").AddComponent(new Mesh2DQuad("blackJackTitle",
+		new Actor("cardBorder3").AddComponent(new MeshQuad("blackJackTitle",
 				new Transform(new Vector3f(5.5f,1.25f,0f), new Vector3f(0,0f, 40f), new Vector3f(1.25f,1.75f,1f)),
 				"Images/cardBorder.png",
 				new Vector4f(1f),
 				this.cam.GetCamera()
 				));
 
-		new Actor("headerText").AddComponent(new Mesh2DQuad("blackJackTitle",
+		new Actor("headerText").AddComponent(new MeshQuad("blackJackTitle",
 				new Transform(new Vector3f(0,6.25f,-1.5f), new Vector3f(-15f,0f,0f), new Vector3f(6f,3,1f)),
 				"Images/blackJackHeader.png",
 				new Vector4f(1f),
 				this.cam.GetCamera()
 				));
 		
-		new Actor("headerInfoText").AddComponent(new Mesh2DQuad("blackJackTitle",
+		new Actor("headerInfoText").AddComponent(new MeshQuad("blackJackTitle",
 				new Transform(new Vector3f(0,4.75f,-1f), new Vector3f(-15f,0f,0f), new Vector3f(5.5f,2.5f,1f)),
 				"Images/blackJackInfoHeader.png",
 				new Vector4f(1f),
 				this.cam.GetCamera()
 				));
 		
-		new Actor("headerText2").AddComponent(new Mesh2DQuad("blackJackTitle",
+		new Actor("headerText2").AddComponent(new MeshQuad("blackJackTitle",
 				new Transform(new Vector3f(0,6.75f,-1.5f), new Vector3f(-15f,0f,0f), new Vector3f(2.5f,1.5f,1f)),
 				"Images/menuLogoWhite.png",
 				new Vector4f(1f),
@@ -126,7 +135,7 @@ public class GameScene extends Scene {
 		
 		
 		
-		new Actor("border1").AddComponent(new Mesh2DBackground("background",
+		new Actor("border1").AddComponent(new MeshBackground("background",
 				new Transform(
 						new Vector3f(0f,10.4f,-5f),  // Position
 						new Vector3f(0f), // Rotation
@@ -138,7 +147,7 @@ public class GameScene extends Scene {
 				));
 		
 		
-		new Actor("edge").AddComponent(new Mesh2DBackground("background",
+		new Actor("edge").AddComponent(new MeshBackground("background",
 				new Transform(
 						new Vector3f(0f,2,-5f),  // Position
 						new Vector3f(0f), // Rotation
@@ -149,7 +158,7 @@ public class GameScene extends Scene {
 				this.cam.GetCamera() // Camera
 				));
 		
-		new Actor("background").AddComponent(new Mesh2DBackground("background",
+		new Actor("background").AddComponent(new MeshBackground("background",
 				new Transform(
 						new Vector3f(0f,0,-50f),  // Position
 						new Vector3f(0f), // Rotation
@@ -236,7 +245,7 @@ public class GameScene extends Scene {
 		}
 		
 	}
-	
+
 	private void CreatePauseButton() {
 		new Actor("Pause").AddComponent((new GUIButton("pause", new Transform(new Vector3f(-.85f, -.85f, .1f), // Position x,y,
 							new Vector3f(0f, 0f, 0f), // Rotation

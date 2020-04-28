@@ -16,6 +16,13 @@ import static org.lwjgl.system.MemoryUtil.*;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+
+
+/**
+ * Create window for graphics to be displayed on
+ * (Requirement 1.0.0)
+ *
+ */
 public class Window {
 
 	String title;

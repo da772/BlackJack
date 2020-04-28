@@ -17,6 +17,7 @@ public class Table {
 	private Round currentRound;
 
     // constructor
+
 	public Table() {
 		int TOTAL_PLAYERS = 3; //change this later to get a user input
 		int STARTING_BALANCE = 100; // this too

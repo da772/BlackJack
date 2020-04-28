@@ -59,6 +59,7 @@ public class Round {
 				// Check if player is not computer
 				if (!players.get(playerTurn).isComputer()) {
 					// Show player betting controls
+					// Requirement(3.2.4)
 					players.get(playerTurn).showPlayerBetControl(this);
 					// Wait for input
 					if (playerInput != -1) {
@@ -382,8 +383,11 @@ public class Round {
 			}
 			break;
 		}
+		// Game end conditions
+		// Requirement (4.1.5)
 		case Finished: {
 			// Player is out of money
+			// Requirement (4.1.3)
 			if (playerInput == -2 ) {
 				if (Actor.Get("gOver") == null) {
 					new Actor("gOver").AddComponent(new GUIText("myGUI", // Identifying string
@@ -433,6 +437,7 @@ public class Round {
 				} 	
 			}
 			// Dealer is out of money
+			// Requirement (4.1.4)
 			else {
 				if (Actor.Get("gOver") == null) {
 					int winner = 0;

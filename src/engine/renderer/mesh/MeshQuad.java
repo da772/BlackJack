@@ -13,7 +13,7 @@ import engine.renderer.Buffer.IndexBuffer;
 import engine.renderer.Buffer.VertexBuffer;
 import engine.renderer.VertexArray.BufferLayout;
 
-public class Mesh2DQuad extends Mesh2D {
+public class MeshQuad extends Mesh {
 	
 	/**
 	 * Cube vertices 
@@ -81,7 +81,7 @@ public class Mesh2DQuad extends Mesh2D {
 	 * @param UVScale
 	 * @param camera - active camera
 	 */
-	public Mesh2DQuad(String name, Transform transform, String[] shader, String texture,
+	public MeshQuad(String name, Transform transform, String[] shader, String texture,
 			Vector4f color,TextureCoords TexCoords, Vector2f UVScale, Camera camera) {
 		super(name, transform, shader, texture, camera);
 		this.xCoordsFront = TexCoords.GetXCoords1();
@@ -102,7 +102,7 @@ public class Mesh2DQuad extends Mesh2D {
 	 * @param UVScale
 	 * @param camera - active camera
 	 */
-	public Mesh2DQuad(String name, Transform transform, String texture, Vector4f color, TextureCoords TexCoords, Vector2f UVScale, Camera camera) {
+	public MeshQuad(String name, Transform transform, String texture, Vector4f color, TextureCoords TexCoords, Vector2f UVScale, Camera camera) {
 		super(name, transform, ShaderLib.Shader_2DQuad, texture, camera);
 		this.xCoordsFront = TexCoords.GetXCoords1();
 		this.yCoordsFront = TexCoords.GetYCoords1();
@@ -120,7 +120,7 @@ public class Mesh2DQuad extends Mesh2D {
 	 * @param color
 	 * @param camera - active camera
 	 */
-	public Mesh2DQuad(String name, Transform transform, String texture, Vector4f color, Camera camera) {
+	public MeshQuad(String name, Transform transform, String texture, Vector4f color, Camera camera) {
 		super(name, transform, ShaderLib.Shader_2DQuad, texture, camera);
 		this.xCoordsFront = new Vector4f(0,0,1f,1f);
 		this.yCoordsFront = new Vector4f(0,0f,1f,1f);
@@ -139,7 +139,7 @@ public class Mesh2DQuad extends Mesh2D {
 	 * @param color
 	 * @param camera - active camera
 	 */
-	public Mesh2DQuad(String name, Transform transform, String[] shader, 
+	public MeshQuad(String name, Transform transform, String[] shader, 
 			String texture, Vector4f color, Camera camera) {
 		super(name, transform, shader, texture, camera);
 		this.xCoordsFront = new Vector4f(0,0,1f,1f);

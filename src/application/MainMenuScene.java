@@ -19,6 +19,12 @@ import engine.CameraController;
 import engine.Scene;
 import engine.SceneManager;
 
+
+/**
+ * 
+ * Main menu scene
+ * (Requirement 3.1.0)
+ */
 public class MainMenuScene extends Scene {
 	
 	public MainMenuScene(String name, CameraController cam) {
@@ -35,6 +41,7 @@ public class MainMenuScene extends Scene {
 	public void OnBegin() {
 		Renderer.SetClearColor(0f,0f,1f,1f);
 		// Create Start Button
+		// Requirement(3.1.1)
 		new Actor("StartButton").AddComponent(new GUIButton(
 				"Button",new Transform( 
 						new Vector3f(0,0,1.f), // Position x,y, Z-Order higher is on top
@@ -84,6 +91,7 @@ public class MainMenuScene extends Scene {
 	
 		
 		// Create Settings button
+		// Requirement (3.1.2)
 		new Actor("SettingButton").AddComponent(new GUIButton(
 				"Button",new Transform( 
 						new Vector3f(0,-.25f,1.f), // Position x,y, Z-Order higher is on top
@@ -132,6 +140,7 @@ public class MainMenuScene extends Scene {
 										true)));
 			
 		// Create Quit Button
+		// Requirement(3.1.3)
 		new Actor("QuitButton" ).AddComponent(new GUIButton(
 				"Button",new Transform( 
 						new Vector3f(0,-.5f,1.f), // Position x,y, Z-Order higher is on top

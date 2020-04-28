@@ -8,7 +8,12 @@ import engine.Collision2D;
 import engine.WindowFrame;
 import engine.renderer.GUI.GUI;
 
-
+/**
+ * 
+ * Two dimensional pipeline
+ * (Requirement 1.3.2)
+ *
+ */
 public class GUIRenderer {
 
 	public static List<GUI> huds = new ArrayList<GUI>();
