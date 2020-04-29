@@ -248,6 +248,51 @@ public class Texture {
 		CreateTexture();
 	}
 	
+	public static class Image {
+		public ByteBuffer data;
+		public int width, height;
+		public String path;
+		
+		public Image(String path) {
+			this.path = path;
+		}
+		
+		public void Clean() {
+			stbi_image_free(data);
+		}
+	}
+	
+	public static Image LoadImage(String path) {
+		Image image = new Image(path);
+		try (MemoryStack stack = MemoryStack.stackPush()){
+					
+					IntBuffer w = stack.mallocInt(1);
+					IntBuffer h = stack.mallocInt(1);
+					IntBuffer comp = stack.mallocInt(1);
+					
+					stbi_set_flip_vertically_on_load(false);
+					
+					
+					ByteBuffer buffer = FileLoader.getResourceAsByteBuffer(path);
+					
+					image.data = stbi_load_from_memory(buffer, w, h, comp, 4);
+					
+					if (image.data == null) {
+						 throw new RuntimeException("Failed to load a texture file!"
+		                         + System.lineSeparator() + stbi_failure_reason());
+					}
+					
+					image.width = w.get();
+					image.height = h.get();
+					w.clear();
+					h.clear();
+					comp.clear();
+					
+			}
+		return image;
+							
+	}
+	
 	protected void CleanUp() {
 		if (Application.ThreadSafe())
 			GL30.glDeleteTextures(rendererId);

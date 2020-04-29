@@ -86,12 +86,12 @@ public class GamePauseMenu extends Actor {
 			
 		GUIQuad backButton = CreateBackButton();
 		GUIQuad settingButton = CreateSettingButton();
-		GUIQuad saveGameButton = SaveGameButton();	
+		//GUIQuad saveGameButton = SaveGameButton();	
 		GUIQuad quitGameButton = QuitGameButton();
 		
 					
 		AddComponent(backGround.AddChild(mainText).
-				AddChild(buttonArea.AddChild(backButton).AddChild(settingButton).AddChild(saveGameButton).AddChild(quitGameButton)));
+				AddChild(buttonArea.AddChild(backButton).AddChild(settingButton).AddChild(quitGameButton)));
 						
 	};
 					
@@ -218,7 +218,7 @@ public class GamePauseMenu extends Actor {
 	
 	private static GUIQuad QuitGameButton() {
 		return (GUIQuad) new GUIQuad("quitButtonBack",
-				new Transform(new Vector3f(0f, -.2f, .1f),new Vector3f(0f), new Vector3f(.75f,.08f,1f)),
+				new Transform(new Vector3f(0f, -.0f, .1f),new Vector3f(0f), new Vector3f(.75f,.08f,1f)),
 				"Images/blankTexture.png",
 				new Vector4f(1f,0f,0f,0f),
 				new Vector2f(1f)).AddChild(new GUIButton("backButton", new Transform(new Vector3f(0f,0f, .1f), new Vector3f(0f), new Vector3f(.15f, .08f, 1f)),

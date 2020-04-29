@@ -12,6 +12,7 @@ import engine.SceneManager;
 import engine.WindowFrame;
 import engine.audio.AudioManager;
 import engine.renderer.Renderer;
+import engine.util.FileLoader;
 import engine.Events.Event;
 
 
@@ -31,6 +32,7 @@ public class BlackJack extends Application {
 	protected void OnInit() {
 		System.out.println(title+" Init!");
 		MusicPlayer.Next();
+		window.SetWindowIcon("Images/icon.png");
 		window.SetFullScreen(SaveData.GetSettings().GetFullScreen());
 		if (!SaveData.GetSettings().GetFullScreen()) {
 			window.SetWindowSize(SaveData.GetSettings().GetWidth(), SaveData.GetSettings().GetHeight());
@@ -106,27 +108,6 @@ public class BlackJack extends Application {
 	//Key Event
 	@Override
 	protected boolean KeyEvent(Events.KeyEvent e) {
-		// Can cast key event to Pressed or Released
-		if (e instanceof Events.KeyPressedEvent) {
-			// We pressed a key!
-			if ((( Events.KeyPressedEvent)e).GetKeyCode() == KeyCodes.KEY_F) {
-				SceneManager.SetCurrentScene("testScene");
-			}
-			if ((( Events.KeyPressedEvent)e).GetKeyCode() == KeyCodes.KEY_V) {
-				SceneManager.SetCurrentScene("mainMenu");
-			}	
-			
-			if ((( Events.KeyPressedEvent)e).GetKeyCode() == KeyCodes.KEY_RIGHT) {
-				MusicPlayer.Next();
-			}
-			
-		}
-		
-		
-		if (e instanceof Events.KeyReleasedEvent) {
-			
-		}
-		
 		return false;
 	}
 	

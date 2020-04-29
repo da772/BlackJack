@@ -7,6 +7,8 @@ import org.lwjgl.system.MemoryStack;
 import engine.Events.Event;
 import engine.Events.WindowFullScreenEvent;
 import engine.Events.WindowSetTitleEvent;
+import engine.renderer.Texture;
+import engine.renderer.Texture.Image;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -35,6 +37,9 @@ public class Window {
 	float xpos = 0, ypos;
 	float contentScaleX, contentScaleY;
 	EventFunction OnEventCallback;
+	GLFWImage image;
+	GLFWImage.Buffer imagebf;
+	
 	
 	//Event category bits
 	public static enum CursorType {
@@ -45,7 +50,7 @@ public class Window {
 			public int getValue() { return bit; }
 			
 		}
-	
+
 	public static Window window_context;
 	
 	public long GetWindowContext() {
@@ -110,9 +115,29 @@ public class Window {
 		glfwWindowHint(GLFW_SAMPLES, 4); // MSAA x4
 		glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE);
 	 
+		
+		
+		
 	    CreateWindow();
 
 		
+	}
+	
+	public void SetWindowIcon(String path) {
+		if (image != null)
+			image.free();
+		image = GLFWImage.malloc();
+		if (imagebf != null)
+			imagebf.free();
+		imagebf = GLFWImage.malloc(1);
+		
+		Image i = Texture.LoadImage(path);
+        image.set(i.width, i.height, i.data);
+        imagebf.put(0, image);
+        glfwSetWindowIcon(window, imagebf);
+        image.close();
+        imagebf.close();
+        i.Clean();
 	}
 	
 	private void CreateWindow() {
