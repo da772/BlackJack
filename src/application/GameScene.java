@@ -247,9 +247,9 @@ public class GameScene extends Scene {
 	}
 
 	private void CreatePauseButton() {
-		new Actor("Pause").AddComponent((new GUIButton("pause", new Transform(new Vector3f(-.85f, -.85f, .1f), // Position x,y,
+		new Actor("Pause").AddComponent((new GUIButton("pause", new Transform(new Vector3f(-.875f, .85f, .1f), // Position x,y,
 							new Vector3f(0f, 0f, 0f), // Rotation
-							new Vector3f(.05f, .1f, 1f)), // Scale x,y,z
+							new Vector3f(.025f, .05f, 1f)), // Scale x,y,z
 							"Images/Buttons/mainMenuButtonUp.png", // Button texture
 							"Images/Buttons/mainMenuButtonDown.png", // Button pressed texture
 							ColorPalette.DraculaOrchid // Quad Color r,g,b,a
@@ -276,8 +276,8 @@ public class GameScene extends Scene {
 							SetButtonTexture(false);
 
 						}
-					}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/morningStar",
-							"Pause", new Vector4f(1f), .125f, 1f, true))));
+					}.AddChild(new GUIText("buttonText", new Transform(new Vector3f(0f, 0f, .01f)), "Fonts/BebasNeue",
+							"||", new Vector4f(1f), .125f, 1f, true))));
 	
 		
 	}

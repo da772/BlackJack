@@ -7,8 +7,10 @@ import engine.audio.AudioSource;
 
 public class MusicPlayer {
 
-	private static final String[] songs = new String[] {"Audio/Music/ComputerGame.wav", "Audio/Music/ElectricDisco.wav",
-			"Audio/Music/KilledRadioStar.wav", "Audio/Music/RadioStar.wav", "Audio/Music/RetroElectricDisco.wav", "Audio/Music/SuperStar.wav"};
+	private static final String[] songs = new String[] {
+			"Audio/Music/ElectricDisco.wav",
+			"Audio/Music/KilledRadioStar.wav",
+			"Audio/Music/SuperStar.wav"};
 	private static String[] _songs = songs.clone();
 	private static int playedSongs = 0;
 	private static int playingSong = -1;
