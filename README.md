@@ -1,10 +1,11 @@
 # BlackJack project for CSC 478
-## System Requirements
+## Build System Requirements
   - Java 8
   - Operating Systems: Mac OS, Windows 7 or newer
   - Memory: 2 GB RAM
   - Graphics: Capable of OpenGL 3.3+ support
   - Storage: 200 MB
+  - Eclipse 2018 or higher
 
 
 ## Build Instructions
